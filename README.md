@@ -19,15 +19,13 @@ An accessible timeslot booking tool for the Dialogue Hub's [Cafe](https://dialog
 pip install -r requirements.txt
 ```
 
-#### Run Backend Server - replace `<app_name>` with the name of the Flask app
+#### Run Backend Server
 
 ```bash
 flask run
 ```
 
 ### Frontend
-
-#### Install Dependencies
 
 ```bash
 npm install
