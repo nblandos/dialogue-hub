@@ -3,6 +3,7 @@
 An accessible timeslot booking tool for the Dialogue Hub's [Cafe](https://dialoguehub.co.uk/dialogue-cafe). Our tool provides an AI chatbot to assist with booking and is designed with accessibility in mind.
 
 ## Group Members
+
 - Nicholas Blandos
 - Emir Durahim
 - Efe Tekin
@@ -13,22 +14,25 @@ An accessible timeslot booking tool for the Dialogue Hub's [Cafe](https://dialog
 ### Backend
 
 #### Install Dependencies
+
 ```bash
 pip install -r requirements.txt
 ```
 
-#### Run Backend Server - replace `<app_name>` with the name of the Flask app
+#### Run Backend Server
+
 ```bash
-flask –app <app_name> run
+flask run
 ```
+
 ### Frontend
 
-#### Install Dependencies
 ```bash
 npm install
 ```
 
 #### Run Frontend Server
+
 ```bash
 npm run dev
 ```
