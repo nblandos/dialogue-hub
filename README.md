@@ -9,7 +9,7 @@ An accessible timeslot booking tool for the Dialogue Hub's [Cafe](https://dialog
 - Efe Tekin
 - Pratham Shah
 
-## How to Run Locally
+## Development
 
 ### Backend
 
@@ -44,6 +44,19 @@ export FLASK_ENV=development
 
 ```bash
 flask run
+```
+
+#### To Run Tests
+
+```bash
+pytest
+```
+
+#### To Check Test Coverage
+
+```bash
+coverage run -m pytest
+coverage report
 ```
 
 Backend runs on `http://localhost:5000`.
@@ -87,3 +100,10 @@ docker-compose down
 ```
 
 _Note_: you may need to start with `sudo` for the above commands if you get permission errors.
+
+### Linters and Formatters
+
+Backend uses autopep8 and flake8 for formatting and linting.
+Frontend uses ESLint and Prettier for formatting and linting.
+
+I recommend installing VSCode extensions and configuring them to format on save.
