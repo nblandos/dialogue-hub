@@ -66,7 +66,7 @@ Frontend runs on `http://localhost:3000`.
 
 ### Docker
 
-If you want to the whole project using Docker, first you must have Docker and Docker Compose installed on your machine.
+If you want to run the whole project using Docker, first you must have Docker and Docker Compose installed on your machine.
 
 #### Build Docker Image
 
