@@ -8,6 +8,7 @@ function App() {
     <div className="flex flex-col grow container mx-auto">
       <Header />
       <Routes>
+        {/* path to schedule timeslot page is / as I think it should be the default page */}
         <Route path="/" element={<SchedulePage />} />
         <Route path="/menu" element={<MenuPage />} />
       </Routes>
