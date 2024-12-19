@@ -1,6 +1,6 @@
 function MenuPage() {
   return (
-    <div>
+    <div className="pt-36">
       <h1>Menu Page</h1>
     </div>
   );

@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const WeeklyTimetable = () => {
+  const navigate = useNavigate();
   const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
   const hours = Array.from({ length: 9 }, (_, i) => i + 8); // 8:00 - 16:00
   const [selectedSlots, setSelectedSlots] = useState([]);
@@ -44,8 +46,11 @@ const WeeklyTimetable = () => {
   };
 
   const handleBookSlots = () => {
-    // TODO: Progress to confirmation page
-    console.log('Booking slots:', selectedSlots);
+    navigate('/confirmation', {
+      state: {
+        selectedSlots,
+      },
+    });
   };
 
   const formatSelectedSlots = (slots) => {
