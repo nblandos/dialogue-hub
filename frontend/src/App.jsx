@@ -5,7 +5,7 @@ import MenuPage from './pages/menu/MenuPage';
 
 function App() {
   return (
-    <div className="flex flex-col grow container mx-auto">
+    <div className="container mx-auto flex grow flex-col">
       <Header />
       <Routes>
         {/* path to schedule timeslot page is / as I think it should be the default page */}
