@@ -116,7 +116,7 @@ const WeeklyTimetable = () => {
   return (
     <div className="container mx-auto p-4">
       <div className="mb-4 flex items-center justify-between">
-        <div className="text-sm font-medium">
+        <div className="text-m font-medium">
           Week of {format(weekStart, 'dd MMM yyyy')}
         </div>
         <WeekNavigation
