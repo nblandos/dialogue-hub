@@ -5,7 +5,13 @@ import SelectedTimeDisplay from './SelectedTimeDisplay';
 
 const WeeklyTimetable = () => {
   const navigate = useNavigate();
-  const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
+  const daysMap = [
+    { full: 'Monday', short: 'Mon' },
+    { full: 'Tuesday', short: 'Tue' },
+    { full: 'Wednesday', short: 'Wed' },
+    { full: 'Thursday', short: 'Thu' },
+    { full: 'Friday', short: 'Fri' },
+  ];
   const hours = Array.from({ length: 9 }, (_, i) => i + 8);
   const [selectedSlots, setSelectedSlots] = useState([]);
 
@@ -32,6 +38,19 @@ const WeeklyTimetable = () => {
 
     setSelectedSlots((prev) => {
       if (prev.includes(slotKey)) {
+        const daySlots = prev
+          .filter((slot) => slot.startsWith(day))
+          .map((slot) => parseInt(slot.split('-')[1]))
+          .sort((a, b) => a - b);
+
+        const hourIndex = daySlots.indexOf(hour);
+        if (hourIndex > 0 && hourIndex < daySlots.length - 1) {
+          return prev.filter((slot) => {
+            const [slotDay, slotHour] = slot.split('-');
+            return slotDay === day && parseInt(slotHour) > hour;
+          });
+        }
+
         return prev.filter((slot) => slot !== slotKey);
       }
 
@@ -73,7 +92,7 @@ const WeeklyTimetable = () => {
   return (
     <div className="container mx-auto p-4">
       <TimeSlotGrid
-        days={days}
+        days={daysMap}
         hours={hours}
         selectedSlots={selectedSlots}
         onSlotClick={handleSlotClick}
