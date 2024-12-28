@@ -8,10 +8,9 @@ import {
   setHours,
   addWeeks,
 } from 'date-fns';
-import { FaCaretLeft, FaCaretRight } from 'react-icons/fa';
-
 import TimeSlotGrid from './TimeSlotGrid';
 import SelectedTimeDisplay from './SelectedTimeDisplay';
+import WeekNavigation from './WeekNavigation';
 
 const WeeklyTimetable = () => {
   const navigate = useNavigate();
@@ -120,28 +119,11 @@ const WeeklyTimetable = () => {
         <div className="text-sm font-medium">
           Week of {format(weekStart, 'dd MMM yyyy')}
         </div>
-        <div className="flex gap-2">
-          <button
-            onClick={handlePrevWeek}
-            className="rounded-md bg-gray-200 p-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-300"
-            aria-label="Previous Week"
-          >
-            <FaCaretLeft size={20} />
-          </button>
-          <button
-            onClick={handleCurrentWeek}
-            className="rounded-md bg-orange-500 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-orange-600"
-          >
-            Current Week
-          </button>
-          <button
-            onClick={handleNextWeek}
-            className="rounded-md bg-gray-200 p-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-300"
-            aria-label="Next Week"
-          >
-            <FaCaretRight size={20} />
-          </button>
-        </div>
+        <WeekNavigation
+          onPrevWeek={handlePrevWeek}
+          onNextWeek={handleNextWeek}
+          onCurrentWeek={handleCurrentWeek}
+        />
       </div>
 
       <TimeSlotGrid
