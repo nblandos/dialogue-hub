@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   startOfWeek,
+  startOfDay,
   addDays,
   format,
   parseISO,
@@ -22,17 +23,27 @@ const WeeklyTimetable = () => {
     weekOffset
   );
 
-  const handlePrevWeek = () => setWeekOffset((prev) => prev - 1);
-  const handleNextWeek = () => setWeekOffset((prev) => prev + 1);
-  const handleCurrentWeek = () => setWeekOffset(0);
+  const handlePrevWeek = () => {
+    setWeekOffset((prev) => prev - 1);
+  };
+
+  const handleNextWeek = () => {
+    setWeekOffset((prev) => prev + 1);
+  };
+
+  const handleCurrentWeek = () => {
+    setWeekOffset(0);
+  };
 
   const daysMap = Array.from({ length: 5 }, (_, index) => {
     const date = addDays(weekStart, index);
+    const isPast = date < startOfDay(new Date());
     return {
       full: format(date, 'EEEE'),
       short: format(date, 'EEE'),
       date: format(date, 'yyyy-MM-dd'),
       displayDate: format(date, 'dd/MM'),
+      isPast,
     };
   });
   const hours = Array.from({ length: 9 }, (_, i) => i + 8);

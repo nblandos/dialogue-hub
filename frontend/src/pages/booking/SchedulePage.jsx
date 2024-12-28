@@ -10,7 +10,8 @@ const SchedulePage = () => {
           </h1>
           <p className="mt-2 text-gray-600">
             Select available time slots for your Dialogue Cafe visit. Please
-            note that you can only book continuous time slots for a single day.
+            note that you can only book consecutive time slots for one day at a
+            time.
           </p>
         </div>
         <div className="rounded-lg bg-white p-6 shadow-sm">
