@@ -13,8 +13,14 @@ const TimeSlotGrid = ({ days, hours, selectedSlots, onSlotClick }) => {
       >
         {days.map((day) => (
           <div key={day.full} className="text-center font-semibold">
-            <span className="hidden md:inline">{day.full}</span>
-            <span className="md:hidden">{day.short}</span>
+            <div className="hidden md:block">
+              <div>{day.full}</div>
+              <div className="text-sm text-gray-600">{day.displayDate}</div>
+            </div>
+            <div className="md:hidden">
+              <div>{day.short}</div>
+              <div className="text-sm text-gray-600">{day.displayDate}</div>
+            </div>
           </div>
         ))}
       </div>
@@ -31,10 +37,10 @@ const TimeSlotGrid = ({ days, hours, selectedSlots, onSlotClick }) => {
           >
             {days.map((day) => (
               <div
-                key={`${day.full}-${hour}`}
-                onClick={() => onSlotClick(day.full, hour)}
+                key={`${day.date}-${hour}`}
+                onClick={() => onSlotClick(day.date, hour)}
                 className={`cursor-pointer rounded-md border p-2 transition-colors ${
-                  selectedSlots.includes(`${day.full}-${hour}`)
+                  selectedSlots.includes(`${day.date}T${hour}`)
                     ? 'bg-[#FA9C18] text-white'
                     : 'hover:bg-orange-100'
                 }`}
