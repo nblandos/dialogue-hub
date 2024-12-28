@@ -1,4 +1,4 @@
-import WeeklyTimetable from '../../components/booking/WeeklySchedule';
+import WeeklyTimetable from '../../components/booking/WeeklyTimetable';
 
 const SchedulePage = () => {
   return (
