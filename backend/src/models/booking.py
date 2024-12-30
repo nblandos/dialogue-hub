@@ -1,16 +1,18 @@
-from datetime import datetime
+from datetime import datetime, timezone
+from app import db
 
 
-class Booking:
-    def __init__(self, id, user_id, date, start_time, end_time,
-                 status="booked"):
-        self.id = id
-        self.user_id = user_id
-        self.date = date
-        self.start_time = start_time
-        self.end_time = end_time
-        self.status = status  # booked, cancelled, finished
-        self.created_at = datetime.now()
+class Booking(db.Model):
+    __tablename__ = 'bookings'
+
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    date = db.Column(db.Date, nullable=False)
+    start_time = db.Column(db.DateTime, nullable=False)
+    end_time = db.Column(db.DateTime, nullable=False)
+    status = db.Column(db.String(20), default='booked')
+    created_at = db.Column(
+        db.DateTime, default=lambda: datetime.now(timezone.utc))
 
     def to_dict(self):
         return {
@@ -26,10 +28,9 @@ class Booking:
     @staticmethod
     def from_dict(data):
         return Booking(
-            id=data.get("id"),
             user_id=data.get("user_id"),
-            date=datetime.fromisoformat(data.get("date")),
+            date=datetime.fromisoformat(data.get("date")).date(),
             start_time=datetime.fromisoformat(data.get("start_time")),
             end_time=datetime.fromisoformat(data.get("end_time")),
-            status=data.get("status", "pending")
+            status=data.get("status", "booked")
         )
