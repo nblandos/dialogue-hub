@@ -8,7 +8,7 @@ db = SQLAlchemy()
 migrate = Migrate()
 
 
-def initialise_app(config_class=Config):
+def create_app(config_class=Config):
     app = Flask(__name__)
     app.config.from_object(config_class)
 
@@ -23,7 +23,7 @@ def initialise_app(config_class=Config):
     return app
 
 
-app = initialise_app()
+app = create_app()
 
 if __name__ == "__main__":
     app.run(debug=True, host='0.0.0.0')
