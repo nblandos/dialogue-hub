@@ -1,5 +1,5 @@
 from datetime import datetime, timezone
-from app import db
+from src.app import db
 
 
 class Booking(db.Model):
