@@ -6,6 +6,16 @@ __pycache__/
 # C extensions
 *.so
 
+# Database
+*.db
+*.sqlite3
+
+# Migrations
+migrations/__pycache__/
+migrations/versions/__pycache__/
+migrations/*.pyc
+migrations/versions/*.pyc
+
 # Distribution / packaging
 .Python
 build/

@@ -11,7 +11,7 @@ import {
 } from 'date-fns';
 import TimeSlotGrid from './TimeSlotGrid';
 import SelectedTimeDisplay from './SelectedTimeDisplay';
-import WeekNavigation from './WeekNavigation';
+import WeekHeader from './WeekHeader';
 
 const WeeklyTimetable = () => {
   const navigate = useNavigate();
@@ -126,16 +126,12 @@ const WeeklyTimetable = () => {
 
   return (
     <div className="container mx-auto p-4">
-      <div className="mb-4 flex items-center justify-between">
-        <div className="text-m font-medium">
-          Week of {format(weekStart, 'dd MMM yyyy')}
-        </div>
-        <WeekNavigation
-          onPrevWeek={handlePrevWeek}
-          onNextWeek={handleNextWeek}
-          onCurrentWeek={handleCurrentWeek}
-        />
-      </div>
+      <WeekHeader
+        weekStart={weekStart}
+        onPrevWeek={handlePrevWeek}
+        onNextWeek={handleNextWeek}
+        onCurrentWeek={handleCurrentWeek}
+      />
 
       <TimeSlotGrid
         days={daysMap}

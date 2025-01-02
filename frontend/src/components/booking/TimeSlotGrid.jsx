@@ -39,12 +39,12 @@ const TimeSlotGrid = ({ days, hours, selectedSlots, onSlotClick }) => {
               <div
                 key={`${day.date}-${hour}`}
                 onClick={() => !day.isPast && onSlotClick(day.date, hour)}
-                className={`relative cursor-pointer rounded-md border p-2 transition-colors ${
+                className={`relative rounded-md border p-2 transition-colors ${
                   selectedSlots.includes(`${day.date}T${hour}`)
-                    ? 'bg-green-500/80 text-white'
+                    ? 'cursor-pointer bg-green-500/80 text-white'
                     : day.isPast
                       ? 'cursor-not-allowed bg-gray-100 opacity-50'
-                      : 'bg-green-100/80 hover:bg-green-300/80'
+                      : 'cursor-pointer bg-green-100/80 hover:bg-green-300/80'
                 }`}
               >
                 {!day.isPast && (
