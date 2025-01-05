@@ -75,6 +75,25 @@ npm install
 npm run dev
 ```
 
+#### To Run Tests
+
+**Unit Tests:**
+
+```bash
+npm run test
+```
+
+**E2E Tests:**
+
+```bash
+npm run test:e2e
+```
+#### To Check Test Coverage
+
+```bash
+npm run test:coverage
+```
+
 Frontend runs on `http://localhost:3000`.
 
 ### Docker
