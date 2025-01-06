@@ -12,13 +12,13 @@ export default defineConfig({
   test: {
     globals: true,
     environment: 'jsdom',
-    setupFiles: ['./src/setupTests.js'],
+    setupFiles: ['src/tests/setupTests.js'],
     coverage: {
       provider: 'v8',
       reporter: ['text', 'html'],
       exclude: [
         'node_modules/',
-        'src/setupTests.js',
+        'src/tests/setupTests.js',
       ]
     }
   }
