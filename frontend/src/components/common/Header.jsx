@@ -11,13 +11,13 @@ const Header = () => {
         <div className="flex gap-12 pr-8 md:pr-48">
           <Link
             to="/"
-            className="text-xl font-medium text-white transition-colors hover:text-gray-900"
+            className="text-xl font-medium text-white transition-colors hover:text-orange-200"
           >
             Book
           </Link>
           <Link
             to="/menu"
-            className="text-xl font-medium text-white transition-colors hover:text-gray-900"
+            className="text-xl font-medium text-white transition-colors hover:text-orange-200"
           >
             Menu
           </Link>

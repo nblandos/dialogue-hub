@@ -9,5 +9,17 @@ export default defineConfig({
     port: 3000,
     strictPort: true,
   },
-  cacheDir: '/app/node_modules/.vite',
+  test: {
+    globals: true,
+    environment: 'jsdom',
+    setupFiles: ['./src/setupTests.js'],
+    coverage: {
+      provider: 'v8',
+      reporter: ['text', 'html'],
+      exclude: [
+        'node_modules/',
+        'src/setupTests.js',
+      ]
+    }
+  }
 });
