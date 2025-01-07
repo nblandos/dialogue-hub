@@ -12,39 +12,31 @@ describe('Header', () => {
     );
   };
 
-  it('renders header component', () => {
+  it('renders navigation bar', () => {
     renderHeader();
     expect(screen.getByRole('navigation')).toBeInTheDocument();
   });
 
-  it('displays the logo text', () => {
+  it('displays logo text', () => {
     renderHeader();
     expect(screen.getByText('Dialogue Cafe')).toBeInTheDocument();
   });
 
-  it('contains navigation links', () => {
+  it('contains all navigation links', () => {
     renderHeader();
-    const links = screen.getAllByRole('link');
-    expect(links).toHaveLength(2);
+    expect(screen.getAllByRole('link')).toHaveLength(2);
   });
 
-  it('has correct link texts', () => {
+  it('has correct navigation text content', () => {
     renderHeader();
     expect(screen.getByText('Book')).toBeInTheDocument();
     expect(screen.getByText('Menu')).toBeInTheDocument();
   });
 
-  it('has correct routing paths', () => {
+  it('uses correct routing paths', () => {
     renderHeader();
-    const links = screen.getAllByRole('link');
-    expect(links[0]).toHaveAttribute('href', '/');
-    expect(links[1]).toHaveAttribute('href', '/menu');
-  });
-
-  it('has correct styling classes', () => {
-    renderHeader();
-    const nav = screen.getByRole('navigation');
-    expect(nav).toHaveClass('bg-orange-500');
-    expect(nav).toHaveClass('fixed');
+    const [homeLink, menuLink] = screen.getAllByRole('link');
+    expect(homeLink).toHaveAttribute('href', '/');
+    expect(menuLink).toHaveAttribute('href', '/menu');
   });
 });

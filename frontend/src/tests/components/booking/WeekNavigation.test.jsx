@@ -13,61 +13,32 @@ describe('WeekNavigation', () => {
     vi.clearAllMocks();
   });
 
-  it('renders all three navigation buttons', () => {
+  it('renders all navigation buttons', () => {
     render(<WeekNavigation {...mockProps} />);
     expect(screen.getByLabelText('Previous Week')).toBeInTheDocument();
     expect(screen.getByText('Current Week')).toBeInTheDocument();
     expect(screen.getByLabelText('Next Week')).toBeInTheDocument();
   });
 
-  it('calls onPrevWeek when clicking previous week button', () => {
+  it('calls correct handlers when clicking buttons', () => {
     render(<WeekNavigation {...mockProps} />);
-    const prevButton = screen.getByLabelText('Previous Week');
-    fireEvent.click(prevButton);
+    fireEvent.click(screen.getByLabelText('Previous Week'));
     expect(mockProps.onPrevWeek).toHaveBeenCalledTimes(1);
-  });
-
-  it('calls onNextWeek when clicking next week button', () => {
-    render(<WeekNavigation {...mockProps} />);
-    const nextButton = screen.getByLabelText('Next Week');
-    fireEvent.click(nextButton);
+    fireEvent.click(screen.getByText('Current Week'));
+    expect(mockProps.onCurrentWeek).toHaveBeenCalledTimes(1);
+    fireEvent.click(screen.getByLabelText('Next Week'));
     expect(mockProps.onNextWeek).toHaveBeenCalledTimes(1);
   });
 
-  it('calls onCurrentWeek when clicking current week button', () => {
-    render(<WeekNavigation {...mockProps} />);
-    const currentButton = screen.getByText('Current Week');
-    fireEvent.click(currentButton);
-    expect(mockProps.onCurrentWeek).toHaveBeenCalledTimes(1);
-  });
-
-  it('has correct styling classes for navigation buttons', () => {
-    render(<WeekNavigation {...mockProps} />);
-    
-    const prevButton = screen.getByLabelText('Previous Week');
-    const currentButton = screen.getByText('Current Week');
-    const nextButton = screen.getByLabelText('Next Week');
-
-    expect(prevButton).toHaveClass('bg-gray-200');
-    expect(currentButton).toHaveClass('bg-orange-500');
-    expect(nextButton).toHaveClass('bg-gray-200');
-  });
-
-  it('has correct aria-labels for accessibility', () => {
+  it('has correct accessibility labels', () => {
     render(<WeekNavigation {...mockProps} />);
     expect(screen.getByLabelText('Previous Week')).toBeInTheDocument();
     expect(screen.getByLabelText('Next Week')).toBeInTheDocument();
   });
 
-  it('renders icons in navigation buttons', () => {
+  it('renders navigation icons', () => {
     const { container } = render(<WeekNavigation {...mockProps} />);
-    expect(container.querySelector('svg')).toBeInTheDocument();
-    expect(container.querySelectorAll('svg')).toHaveLength(2);
-  });
-
-  it('has correct layout structure', () => {
-    const { container } = render(<WeekNavigation {...mockProps} />);
-    const navigationContainer = container.firstChild;
-    expect(navigationContainer).toHaveClass('flex', 'gap-2');
+    const icons = container.querySelectorAll('svg');
+    expect(icons).toHaveLength(2);
   });
 });

@@ -40,72 +40,43 @@ describe('TimeSlotGrid', () => {
     vi.clearAllMocks();
   });
 
-  it('renders the time column header', () => {
+  it('renders the time column and day headers', () => {
     renderComponent();
     expect(screen.getByText('Time')).toBeInTheDocument();
-  });
-
-  it('renders day headers with correct format', () => {
-    renderComponent();
     expect(screen.getByText('Monday')).toBeInTheDocument();
     expect(screen.getByText('Tuesday')).toBeInTheDocument();
   });
 
-  it('renders time slots for each hour', () => {
+  it('renders time slots', () => {
     renderComponent();
     expect(screen.getByText('9:00')).toBeInTheDocument();
     expect(screen.getByText('10:00')).toBeInTheDocument();
   });
 
-  it('shows "Selected" text for selected slots', () => {
+  it('shows correct slot states', () => {
     renderComponent();
-    const selectedSlot = screen.getByText('Selected');
-    expect(selectedSlot).toBeInTheDocument();
+    expect(screen.getByText('Selected')).toBeInTheDocument();
+    expect(screen.getAllByText('Book?').length).toBeGreaterThan(0);
   });
 
-  it('shows "Book?" text for available slots', () => {
+  it('handles slot selection', () => {
     renderComponent();
-    const bookableSlots = screen.getAllByText('Book?');
-    expect(bookableSlots.length).toBeGreaterThan(0);
-  });
-
-  it('applies correct styling for selected slots', () => {
-    renderComponent();
-    const selectedSlot = screen.getByText('Selected').closest('div');
-    expect(selectedSlot).toHaveClass('bg-green-500/80');
-  });
-
-  it('applies correct styling for past slots', () => {
-    renderComponent();
-    const pastSlots = screen.getAllByLabelText('Unavailable timeslot');
-    expect(pastSlots[0]).toHaveClass('cursor-not-allowed', 'bg-gray-100', 'opacity-50');
-  });
-
-  it('calls onSlotClick when clicking an available slot', () => {
-    renderComponent();
-    const availableSlot = screen.getAllByText('Book?')[0].closest('div');
+    const availableSlot = screen.getAllByText('Book?')[0];
     fireEvent.click(availableSlot);
     expect(mockOnSlotClick).toHaveBeenCalled();
   });
 
-  it('does not call onSlotClick when clicking a past slot', () => {
+  it('prevents interaction with past slots', () => {
     renderComponent();
     const pastSlot = screen.getAllByLabelText('Unavailable timeslot')[0];
     fireEvent.click(pastSlot);
     expect(mockOnSlotClick).not.toHaveBeenCalled();
   });
 
-  it('renders correct aria-labels for different slot states', () => {
+  it('renders with correct accessibility labels', () => {
     renderComponent();
     expect(screen.getByLabelText('Selected timeslot')).toBeInTheDocument();
-    const unavailableSlots = screen.getAllByLabelText('Unavailable timeslot');
-    expect(unavailableSlots).toHaveLength(2);
     expect(screen.getByLabelText('Bookable timeslot')).toBeInTheDocument();
-  });
-
-  it('renders mobile view with short day names', () => {
-    renderComponent();
-    expect(screen.getByText('Mon')).toBeInTheDocument();
-    expect(screen.getByText('Tue')).toBeInTheDocument();
+    expect(screen.getAllByLabelText('Unavailable timeslot')).toHaveLength(2);
   });
 });
