@@ -75,7 +75,28 @@ npm install
 npm run dev
 ```
 
+#### To Run Tests
+
+**Unit Tests:**
+
+```bash
+npm run test
+```
+
+**E2E Tests:**
+
+```bash
+npm run test:e2e:run
+```
+#### To Check Test Coverage
+
+```bash
+npm run test:coverage
+```
+
 Frontend runs on `http://localhost:3000`.
+
+### Check package.json for other frontend commands.
 
 ### Docker
 
@@ -84,19 +105,19 @@ If you want to run the whole project using Docker, first you must have Docker an
 #### Build Docker Image
 
 ```bash
-docker-compose build
+docker compose build
 ```
 
 #### Run Docker Container (Start backend and frontend)
 
 ```bash
-docker-compose up
+docker compose up
 ```
 
 #### Stop Docker Container
 
 ```bash
-docker-compose down
+docker compose down
 ```
 
 _Note_: you may need to start with `sudo` for the above commands if you get permission errors.
