@@ -24,9 +24,10 @@ class Booking(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
 
-    status = db.Column(db.Enum(BookingStatus), default=BookingStatus.BOOKED)
+    status = db.Column(db.Enum(BookingStatus), nullable=False,
+                       default=BookingStatus.BOOKED)
     created_at = db.Column(
-        db.DateTime, defaulst=lambda: datetime.now(timezone.utc))
+        db.DateTime, default=lambda: datetime.now(timezone.utc))
 
     # booking has a list of one or more (consecutive) timeslots
     # (many to many relationship)

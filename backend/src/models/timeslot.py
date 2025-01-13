@@ -11,6 +11,10 @@ class Timeslot(db.Model):
     # date is also part of start_time
     start_time = db.Column(db.DateTime, nullable=False)
 
+    @property
+    def booking_count(self):
+        return len(self.bookings)
+
     def __repr__(self):
         return f'<Timeslot {self.id} {self.start_time}>'
 
@@ -19,9 +23,6 @@ class Timeslot(db.Model):
             "id": self.id,
             "start_time": self.start_time.isoformat(),
         }
-
-    def booking_count(self):
-        return len(self.bookings)
 
     @staticmethod
     def from_dict(data):

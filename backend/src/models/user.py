@@ -16,7 +16,7 @@ class User(db.Model):
         'Booking', backref='user', lazy=True, cascade='all, delete-orphan')
 
     def __repr__(self):
-        return f'<User {self.email}>'
+        return f'<User {self.id} {self.email}>'
 
     def to_dict(self):
         return {
