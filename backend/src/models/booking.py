@@ -2,6 +2,15 @@ from datetime import datetime, timezone
 from enum import Enum
 from src.app import db
 
+# many-to-many relationship between bookings and timeslots
+booking_timeslot = db.Table(
+    'booking_timeslot',
+    db.Column('booking_id', db.Integer, db.ForeignKey(
+        'bookings.id'), primary_key=True),
+    db.Column('timeslot_id', db.Integer, db.ForeignKey(
+        'timeslots.id'), primary_key=True)
+)
+
 
 class BookingStatus(Enum):
     BOOKED = 'booked'
@@ -13,20 +22,20 @@ class Booking(db.Model):
     __tablename__ = 'bookings'
 
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.String(100), db.ForeignKey(
-        'users.email'), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+
     status = db.Column(db.Enum(BookingStatus), default=BookingStatus.BOOKED)
     created_at = db.Column(
         db.DateTime, defaulst=lambda: datetime.now(timezone.utc))
 
-    # booking has a list of one or more timeslots
-    # (consecutive hours for the same day)
+    # booking has a list of one or more (consecutive) timeslots
+    # (many to many relationship)
     timeslots = db.relationship(
-        'Timeslot', backref='booking', lazy=True, cascade='all, delete-orphan')
+        'Timeslot', secondary=booking_timeslot, backref='bookings')
 
     @property
     def date(self):
-        """Get date from first timeslot"""
+        """extract date from first timeslot"""
         if self.timeslots:
             return self.timeslots[0].start_time.date()
         return None
