@@ -1,73 +1,102 @@
 import pytest
-from datetime import datetime, date, timezone
-from src.app import db
-from src.models.booking import Booking
+from datetime import datetime, timezone
+from src.models.booking import Booking, BookingStatus
+from src.models.timeslot import Timeslot
 from src.models.user import User
+from src.app import db
 
 
 @pytest.fixture
-def test_user(app):
-    user = User(
-        full_name='Test User',
-        email='test@example.com'
-    )
-    db.session.add(user)
-    db.session.commit()
-    return user
+def sample_datetime():
+    return datetime(2024, 1, 1, 9, 0, tzinfo=timezone.utc)
 
 
 @pytest.fixture
-def test_booking(test_user):
-    booking = Booking(
-        user_id=test_user.id,
-        date=date(2025, 1, 1),
-        start_time=datetime(2025, 1, 1, 10, 0, tzinfo=timezone.utc),
-        end_time=datetime(2025, 1, 1, 12, 0, tzinfo=timezone.utc)
-    )
-    db.session.add(booking)
-    db.session.commit()
+def user():
+    return User(email="test@example.com", full_name="Test User")
+
+
+@pytest.fixture
+def timeslot(sample_datetime):
+    return Timeslot(start_time=sample_datetime)
+
+
+@pytest.fixture
+def booking(user, timeslot):
+    booking = Booking(user=user)
+    booking.timeslots.append(timeslot)
     return booking
 
 
-def test_create_booking(test_user):
-    booking = Booking(
-        user_id=test_user.id,
-        date=date(2024, 3, 20),
-        start_time=datetime(2025, 1, 2, 9, 0, tzinfo=timezone.utc),
-        end_time=datetime(2025, 1, 2, 11, 0, tzinfo=timezone.utc),
-    )
+def test_create_booking(app, booking):
     db.session.add(booking)
     db.session.commit()
 
-    assert booking.id is not None
-    assert booking.user_id == test_user.id
-    assert booking.status == "booked"
-    assert booking.created_at is not None
+    assert booking.status == BookingStatus.BOOKED
+    assert len(booking.timeslots) == 1
+    assert isinstance(booking.created_at, datetime)
 
 
-def test_to_dict(test_booking):
-    data = test_booking.to_dict()
-    assert data["id"] == test_booking.id
-    assert data["user_id"] == test_booking.user_id
-    assert data["date"] == "2025-01-01"
-    assert data["start_time"] == "2025-01-01T10:00:00"
-    assert data["end_time"] == "2025-01-01T12:00:00"
-    assert data["status"] == "booked"
-    assert "created_at" in data
+def test_booking_status_changes(booking):
+    booking.cancel()
+    assert booking.status == BookingStatus.CANCELLED
+
+    booking.complete()
+    assert booking.status == BookingStatus.COMPLETED
 
 
-def test_from_dict():
+def test_booking_date_property(booking, sample_datetime):
+    assert booking.date == sample_datetime.date()
+
+    # test with no timeslots
+    empty_booking = Booking(user_id=1)
+    assert empty_booking.date is None
+
+
+def test_booking_to_dict(app, booking, sample_datetime):
+    db.session.add(booking)
+    db.session.commit()
+
+    booking_dict = booking.to_dict()
+    assert booking_dict["status"] == "booked"
+    assert booking_dict["date"] == sample_datetime.date().isoformat()
+    assert len(booking_dict["timeslots"]) == 1
+
+
+def test_booking_from_dict():
     data = {
         "user_id": 1,
-        "date": "2025-01-03",
-        "start_time": "2025-01-03T11:00:00+00:00",
-        "end_time": "2025-01-03T12:00:00+00:00",
-        "status": "booked"
+        "status": "cancelled"
     }
     booking = Booking.from_dict(data)
     assert booking.user_id == 1
-    assert booking.date == date(2025, 1, 3)
-    assert booking.start_time == datetime(
-        2025, 1, 3, 11, 0, tzinfo=timezone.utc)
-    assert booking.end_time == datetime(2025, 1, 3, 12, 0, tzinfo=timezone.utc)
-    assert booking.status == "booked"
+    assert booking.status == BookingStatus.CANCELLED
+
+
+def test_multiple_timeslots(app, booking):
+    second_timeslot = Timeslot(
+        start_time=datetime(2024, 1, 1, 10, 0, tzinfo=timezone.utc)
+    )
+    booking.timeslots.append(second_timeslot)
+
+    db.session.add(booking)
+    db.session.commit()
+
+    assert len(booking.timeslots) == 2
+
+
+def test_booking_repr(app, booking):
+    db.session.add(booking)
+    db.session.commit()
+
+    assert repr(booking) == f'<Booking {booking.id} booked>'
+
+
+def test_booking_default_values(app, user):
+    booking = Booking(user=user)
+    db.session.add(booking)
+    db.session.commit()
+
+    assert booking.status == BookingStatus.BOOKED
+    assert isinstance(booking.created_at, datetime)
+    assert booking.timeslots == []

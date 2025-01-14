@@ -1,5 +1,21 @@
 from datetime import datetime, timezone
+from enum import Enum
 from src.app import db
+
+# many-to-many relationship between bookings and timeslots
+booking_timeslot = db.Table(
+    'booking_timeslot',
+    db.Column('booking_id', db.Integer, db.ForeignKey(
+        'bookings.id'), primary_key=True),
+    db.Column('timeslot_id', db.Integer, db.ForeignKey(
+        'timeslots.id'), primary_key=True)
+)
+
+
+class BookingStatus(Enum):
+    BOOKED = 'booked'
+    CANCELLED = 'cancelled'
+    COMPLETED = 'completed'
 
 
 class Booking(db.Model):
@@ -7,30 +23,46 @@ class Booking(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
-    date = db.Column(db.Date, nullable=False)
-    start_time = db.Column(db.DateTime, nullable=False)
-    end_time = db.Column(db.DateTime, nullable=False)
-    status = db.Column(db.String(20), default='booked')
+
+    status = db.Column(db.Enum(BookingStatus), nullable=False,
+                       default=BookingStatus.BOOKED)
     created_at = db.Column(
         db.DateTime, default=lambda: datetime.now(timezone.utc))
+
+    # booking has a list of one or more (consecutive) timeslots
+    # (many to many relationship)
+    timeslots = db.relationship(
+        'Timeslot', secondary=booking_timeslot, backref='bookings')
+
+    @property
+    def date(self):
+        """extract date from first timeslot"""
+        if self.timeslots:
+            return self.timeslots[0].start_time.date()
+        return None
+
+    def __repr__(self):
+        return f'<Booking {self.id} {self.status.value}>'
+
+    def cancel(self):
+        self.status = BookingStatus.CANCELLED
+
+    def complete(self):
+        self.status = BookingStatus.COMPLETED
 
     def to_dict(self):
         return {
             "id": self.id,
             "user_id": self.user_id,
-            "date": self.date.isoformat(),
-            "start_time": self.start_time.isoformat(),
-            "end_time": self.end_time.isoformat(),
-            "status": self.status,
-            "created_at": self.created_at.isoformat()
+            "date": self.date.isoformat() if self.date else None,
+            "status": self.status.value,
+            "created_at": self.created_at.isoformat(),
+            "timeslots": [timeslot.to_dict() for timeslot in self.timeslots]
         }
 
     @staticmethod
     def from_dict(data):
         return Booking(
             user_id=data.get("user_id"),
-            date=datetime.fromisoformat(data.get("date")).date(),
-            start_time=datetime.fromisoformat(data.get("start_time")),
-            end_time=datetime.fromisoformat(data.get("end_time")),
-            status=data.get("status", "booked")
+            status=BookingStatus(data.get("status", "booked"))
         )

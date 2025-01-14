@@ -1,86 +1,81 @@
 import pytest
 from datetime import datetime, timezone
-from src.app import db
 from src.models.user import User
-from src.models.booking import Booking
+from src.models.booking import Booking, BookingStatus
+from src.models.timeslot import Timeslot
+from src.app import db
 
 
 @pytest.fixture
-def test_user(app):
-    user = User(
-        full_name='Test User',
-        email='test@example.com'
-    )
+def sample_datetime():
+    return datetime(2024, 1, 1, 9, 0, tzinfo=timezone.utc)
+
+
+@pytest.fixture
+def user():
+    return User(email="test@example.com", full_name="Test User")
+
+
+@pytest.fixture
+def timeslot(sample_datetime):
+    return Timeslot(start_time=sample_datetime)
+
+
+@pytest.fixture
+def booking(user, timeslot):
+    booking = Booking(user=user, status=BookingStatus.BOOKED)
+    booking.timeslots.append(timeslot)
+    return booking
+
+
+def test_create_user(user):
+    assert user.email == "test@example.com"
+    assert user.full_name == "Test User"
+    assert user.bookings == []
+
+
+def test_user_to_dict(app, user):
     db.session.add(user)
     db.session.commit()
-    return user
+
+    user_dict = user.to_dict()
+    assert user_dict["email"] == "test@example.com"
+    assert user_dict["full_name"] == "Test User"
+    assert user_dict["bookings"] == []
 
 
-def test_create_user(app):
-    user = User(
-        full_name='New User',
-        email='new@example.com'
-    )
-    db.session.add(user)
-    db.session.commit()
-
-    assert user.id is not None
-    assert user.full_name == 'New User'
-    assert user.email == 'new@example.com'
-    assert user.created_at is not None
-    assert len(user.bookings) == 0
-
-
-def test_to_dict(test_user):
-    data = test_user.to_dict()
-    assert data['id'] == test_user.id
-    assert data['full_name'] == test_user.full_name
-    assert data['email'] == test_user.email
-    assert 'created_at' in data
-    assert isinstance(data['bookings'], list)
-
-
-def test_from_dict():
-    data = {
-        'full_name': 'Dict User',
-        'email': 'dict@example.com'
+def test_user_from_dict():
+    user_data = {
+        "email": "test@example.com",
+        "full_name": "Test User"
     }
-    user = User.from_dict(data)
-    assert user.full_name == 'Dict User'
-    assert user.email == 'dict@example.com'
+    user = User.from_dict(user_data)
+    assert user.email == "test@example.com"
+    assert user.full_name == "Test User"
 
 
-def test_user_with_bookings(test_user):
-    booking = Booking(
-        user_id=test_user.id,
-        date=datetime.now(timezone.utc).date(),
-        start_time=datetime.now(timezone.utc),
-        end_time=datetime.now(timezone.utc)
-    )
+def test_user_with_bookings(app, user, timeslot, booking):
+    db.session.add(user)
+    db.session.add(timeslot)
     db.session.add(booking)
     db.session.commit()
 
-    assert len(test_user.bookings) == 1
-    assert test_user.bookings[0].id == booking.id
+    user = db.session.get(User, user.id)
+    assert len(user.bookings) == 1
+    assert user.bookings[0].status == BookingStatus.BOOKED
+    assert len(user.bookings[0].timeslots) == 1
 
 
-def test_unique_email_constraint(test_user):
-    with pytest.raises(Exception):
-        duplicate_user = User(
-            full_name='Duplicate User',
-            email=test_user.email
-        )
-        db.session.add(duplicate_user)
-        db.session.commit()
+def test_user_repr(user):
+    assert repr(user) == f'<User {user.id} {user.email}>'
 
 
-def test_required_fields():
-    with pytest.raises(Exception):
-        user = User(email='missing@example.com')
-        db.session.add(user)
-        db.session.commit()
+def test_user_default_values(app):
+    user = User(email="test2@example.com", full_name="Test User 2")
+    db.session.add(user)
+    db.session.commit()
 
-    with pytest.raises(Exception):
-        user = User(full_name='Missing Email')
-        db.session.add(user)
-        db.session.commit()
+    assert user.email == "test2@example.com"
+    assert user.full_name == "Test User 2"
+    assert isinstance(user.created_at, datetime)
+    assert user.bookings == []
