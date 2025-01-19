@@ -2,6 +2,7 @@ from flask import Flask, jsonify
 from flask_cors import CORS
 from src.config.config import Config
 from src.database import db, migrate
+from src.routes.booking_routes import booking_bp
 
 
 def create_app(config_class=Config):
@@ -11,6 +12,9 @@ def create_app(config_class=Config):
     CORS(app)
     db.init_app(app)
     migrate.init_app(app, db)
+
+    # Register blueprints
+    app.register_blueprint(booking_bp)
 
     @app.route("/")
     def home():
