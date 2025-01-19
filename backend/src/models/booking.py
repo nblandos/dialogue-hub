@@ -6,9 +6,10 @@ from src.database import db
 booking_timeslot = db.Table(
     'booking_timeslot',
     db.Column('booking_id', db.Integer, db.ForeignKey(
-        'bookings.id'), primary_key=True),
+        'bookings.id', ondelete='CASCADE'), primary_key=True),
     db.Column('timeslot_id', db.Integer, db.ForeignKey(
-        'timeslots.id'), primary_key=True)
+        'timeslots.id', ondelete='CASCADE'), primary_key=True),
+    db.Index('idx_booking_timeslot', 'booking_id', 'timeslot_id')
 )
 
 
@@ -22,7 +23,8 @@ class Booking(db.Model):
     __tablename__ = 'bookings'
 
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey(
+        'users.id', ondelete='CASCADE'), nullable=False)
 
     status = db.Column(db.Enum(BookingStatus), nullable=False,
                        default=BookingStatus.BOOKED)
@@ -32,14 +34,16 @@ class Booking(db.Model):
     # booking has a list of one or more (consecutive) timeslots
     # (many to many relationship)
     timeslots = db.relationship(
-        'Timeslot', secondary=booking_timeslot, backref='bookings')
+        'Timeslot',
+        secondary=booking_timeslot,
+        backref=db.backref('bookings', lazy='dynamic'),
+        order_by="Timeslot.start_time"
+    )
 
     @property
     def date(self):
         """extract date from first timeslot"""
-        if self.timeslots:
-            return self.timeslots[0].start_time.date()
-        return None
+        return self.timeslots[0].start_time.date() if self.timeslots else None
 
     def __repr__(self):
         return f'<Booking {self.id} {self.status.value}>'
@@ -62,7 +66,15 @@ class Booking(db.Model):
 
     @staticmethod
     def from_dict(data):
+        if 'user_id' not in data:
+            raise ValueError("User ID is required")
+
+        try:
+            status = BookingStatus(data.get("status", "booked"))
+        except ValueError:
+            raise ValueError("Invalid booking status")
+
         return Booking(
-            user_id=data.get("user_id"),
-            status=BookingStatus(data.get("status", "booked"))
+            user_id=data["user_id"],
+            status=status
         )

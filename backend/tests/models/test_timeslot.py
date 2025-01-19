@@ -30,7 +30,7 @@ def booking(user, timeslot):
 
 def test_create_timeslot(timeslot, sample_datetime):
     assert timeslot.start_time == sample_datetime
-    assert timeslot.bookings == []
+    assert timeslot.bookings.count() == 0
 
 
 def test_timeslot_to_dict(timeslot, sample_datetime):
@@ -70,3 +70,23 @@ def test_multiple_bookings(app, timeslot, user):
 
 def test_timeslot_repr(timeslot):
     assert repr(timeslot) == f'<Timeslot {timeslot.id} {timeslot.start_time}>'
+
+
+def test_timeslot_uniqueness(app, sample_datetime):
+    ts1 = Timeslot(start_time=sample_datetime)
+    ts2 = Timeslot(start_time=sample_datetime)
+
+    db.session.add(ts1)
+    db.session.commit()
+
+    with pytest.raises(Exception):
+        db.session.add(ts2)
+        db.session.commit()
+
+
+def test_timeslot_validation_errors():
+    with pytest.raises(ValueError, match="Start time is required"):
+        Timeslot.from_dict({})
+
+    with pytest.raises(ValueError, match="Invalid datetime format"):
+        Timeslot.from_dict({"start_time": "invalid-date"})

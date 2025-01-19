@@ -29,7 +29,18 @@ class User(db.Model):
 
     @staticmethod
     def from_dict(data):
-        return User(
-            email=data.get("email"),
-            full_name=data.get("full_name")
-        )
+        email = data.get("email", "").strip()
+        full_name = data.get("full_name", "").strip()
+
+        if not email:
+            raise ValueError("Email is required")
+        if not full_name:
+            raise ValueError("Full name is required")
+        if len(full_name) < 2:
+            raise ValueError("Full name must be at least 2 characters")
+        if len(full_name) > 100:
+            raise ValueError("Full name must be less than 100 characters")
+        if '@' not in email:
+            raise ValueError("Invalid email format")
+
+        return User(email=email, full_name=full_name)
