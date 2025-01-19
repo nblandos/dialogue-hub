@@ -13,7 +13,6 @@ def create_app(config_class=Config):
     db.init_app(app)
     migrate.init_app(app, db)
 
-    # Register blueprints
     app.register_blueprint(booking_bp)
 
     @app.route("/")
