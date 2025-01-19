@@ -1,5 +1,5 @@
 from datetime import datetime
-from src.app import db
+from src.database import db
 
 
 class Timeslot(db.Model):
