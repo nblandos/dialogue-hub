@@ -41,6 +41,11 @@ To activate a virtual environment in VSCode:
 - Reload your terminal and the new venv should be active
 - You should have a **.venv** folder which contains information about the virtual enviroment, can delete this to remove the virtual environment
 
+#### Applying Migrations (Local Database Setup)
+
+- Run `flask db upgrade` to apply migrations to the database (This will create the local database file)
+- If you make changes to the models, you will need to generate a new migration file by running `flask db migrate -m "migration message"`
+
 ### Frontend Setup
 
 Navigate to the frontend directory `cd frontend`
