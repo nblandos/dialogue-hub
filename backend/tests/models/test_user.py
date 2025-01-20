@@ -3,7 +3,7 @@ from datetime import datetime, timezone
 from src.models.user import User
 from src.models.booking import Booking, BookingStatus
 from src.models.timeslot import Timeslot
-from src.app import db
+from src.database import db
 
 
 @pytest.fixture
@@ -79,3 +79,55 @@ def test_user_default_values(app):
     assert user.full_name == "Test User 2"
     assert isinstance(user.created_at, datetime)
     assert user.bookings == []
+
+
+def test_email_uniqueness(app):
+    user1 = User(email="same@example.com", full_name="User 1")
+    user2 = User(email="same@example.com", full_name="User 2")
+
+    db.session.add(user1)
+    db.session.commit()
+
+    with pytest.raises(Exception):
+        db.session.add(user2)
+        db.session.commit()
+
+
+def test_cascade_delete(app, user, booking):
+    db.session.add(user)
+    db.session.add(booking)
+    db.session.commit()
+
+    db.session.delete(user)
+    db.session.commit()
+
+    assert Booking.query.count() == 0
+
+
+def test_user_validation_errors():
+    test_cases = [
+        (
+            {"email": "invalid-email", "full_name": "Test"},
+            "Invalid email format"
+        ),
+        (
+            {"email": "test@example.com", "full_name": "A"},
+            "Full name must be at least 2 characters"
+        ),
+        (
+            {"email": "test@example.com", "full_name": "A" * 101},
+            "Full name must be less than 100 characters"
+        ),
+        (
+            {"email": "", "full_name": "Test"},
+            "Email is required"
+        ),
+        (
+            {"email": "test@example.com", "full_name": ""},
+            "Full name is required"
+        ),
+    ]
+
+    for data, expected_error in test_cases:
+        with pytest.raises(ValueError, match=expected_error):
+            User.from_dict(data)

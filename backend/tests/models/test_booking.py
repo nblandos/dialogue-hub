@@ -3,7 +3,7 @@ from datetime import datetime, timezone
 from src.models.booking import Booking, BookingStatus
 from src.models.timeslot import Timeslot
 from src.models.user import User
-from src.app import db
+from src.database import db
 
 
 @pytest.fixture
@@ -100,3 +100,22 @@ def test_booking_default_values(app, user):
     assert booking.status == BookingStatus.BOOKED
     assert isinstance(booking.created_at, datetime)
     assert booking.timeslots == []
+
+
+def test_booking_validation_errors():
+    with pytest.raises(ValueError, match="User ID is required"):
+        Booking.from_dict({})
+
+    with pytest.raises(ValueError, match="Invalid booking status"):
+        Booking.from_dict({"user_id": 1, "status": "invalid"})
+
+
+def test_booking_cascade_timeslots(app, booking, timeslot):
+    db.session.add(booking)
+    db.session.add(timeslot)
+    db.session.commit()
+
+    db.session.delete(booking)
+    db.session.commit()
+
+    assert Timeslot.query.count() == 1

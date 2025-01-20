@@ -1,5 +1,6 @@
 import pytest
-from src.app import create_app, db
+from src.database import db
+from app import create_app
 from src.config.config import Config
 
 

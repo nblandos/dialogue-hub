@@ -5,8 +5,9 @@ services:
       - "5000:5000"
     volumes:
       - ./backend:/app
+      - sqlite_data:/app/instance
     environment:
-      - FLASK_APP=src/app.py
+      - FLASK_APP=app.py
       - FLASK_ENV=development
       - PYTHONPATH=/app
 
@@ -21,3 +22,6 @@ services:
       - VITE_API_URL=http://localhost:5000
     depends_on:
       - backend
+
+volumes:
+  sqlite_data:
