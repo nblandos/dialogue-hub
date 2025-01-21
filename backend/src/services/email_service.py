@@ -1,13 +1,16 @@
 from flask import current_app
 from flask_mail import Message
 from ics import Calendar, Event
-from datetime import datetime, timedelta
+from datetime import datetime
 import logging
 
 
 class EmailService:
-    LOCATION = "Royal Docks Center for Sustainability, University of East London Docklands Campus, 4-6 University Way, London E16 2RD"
-    EVENT_DURATION = timedelta(hours=1)
+    LOCATION = (
+        "Royal Docks Center for Sustainability, University of East London "
+        "Docklands Campus, 4-6 University Way, London E16 2RD"
+    )
+    ORGANIZER_NAME = "Dialogue Cafe"
 
     def __init__(self):
         self.mail = None
@@ -24,12 +27,14 @@ class EmailService:
         """generate .ics file"""
         c = Calendar()
         e = Event()
-        e.name = "Café Booking Confirmation"
+        e.name = "Dialogue Cafe Booking"
         e.begin = start_time
         e.end = end_time
         e.location = self.LOCATION
-        e.description = "Your booking at Dialogue Café is confirmed!"
-        e.organizer = f"mailto:{current_app.config['MAIL_USERNAME']}"
+        e.description = "Your booking at Dialogue Cafe is confirmed!"
+
+        organizer_email = current_app.config['MAIL_USERNAME']
+        e.organizer = f"{self.ORGANIZER_NAME};mailto:{organizer_email}"
         e.attendees = [f"mailto:{email}"]
 
         c.events.add(e)
@@ -48,15 +53,15 @@ class EmailService:
         location_encoded = self.LOCATION.replace(' ', '+')
 
         return f"""
-        Your booking is confirmed:
+        Your booking at Dialogue Cafe is confirmed:
         - Date: {booking_date}
         - Time: {booking_time['start']} - {booking_time['end']}
         - Location: {self.LOCATION}
 
         Add to your calendar:
         - Google Calendar: https://www.google.com/calendar/render?action=TEMPLATE&text=Café+Booking+Confirmation&dates={start_str}Z/{end_str}Z&details=Your+booking+at+Dialogue+Café+is+confirmed!&location={location_encoded}
-        - Apple Calendar: See attached .ics file
         - Outlook Calendar: https://outlook.live.com/calendar/0/deeplink/compose?subject=Café+Booking+Confirmation&startdt={start_time.isoformat()}&enddt={end_time.isoformat()}&location={location_encoded}&body=Your+booking+at+Dialogue+Café+is+confirmed!
+        - Apple Calendar: See attached .ics file
         """
 
     def send_confirmation(self, email, booking_date, booking_time):
@@ -77,7 +82,7 @@ class EmailService:
 
             # create email message
             msg = Message(
-                'Café Booking Confirmation',
+                'Dialogue Cafe Booking Confirmation',
                 sender=current_app.config['MAIL_USERNAME'],
                 recipients=[email]
             )
@@ -98,71 +103,4 @@ class EmailService:
             return True
 
         except Exception as e:
-            logging.error(f"Failed to send confirmation email: {str(e)}")
             raise RuntimeError(f"Email service error: {str(e)}")
-
-
-# def send_confirmation(email, booking_date, booking_time):
-#     location = "Dialogue Café, London"
-
-#     # Parse date and time to create datetime objects
-#     start_time = datetime.strptime(
-#         f"{booking_date} {booking_time}", "%Y-%m-%d %H:%M")
-#     end_time = start_time + timedelta(hours=1)
-
-#     # Format times for calendar URLs
-#     start_str = start_time.strftime("%Y%m%dT%H%M%S")
-#     end_str = end_time.strftime("%Y%m%dT%H%M%S")
-
-#     # Generate .ics file
-#     c = Calendar()
-#     e = Event()
-#     e.name = "Café Booking Confirmation"
-#     e.begin = start_time
-#     e.end = end_time
-#     e.location = location
-#     e.description = "Your booking at Dialogue Café is confirmed!"
-#     e.organizer = f"mailto:{current_app.config['MAIL_USERNAME']}"
-#     e.attendees = [f"mailto:{email}"]
-
-#     c.events.add(e)
-
-#     # Add METHOD:REQUEST to the .ics content
-#     ics_content = c.serialize().replace("\n", "\r\n")
-#     ics_content = f"BEGIN:VCALENDAR\r\nMETHOD:REQUEST\r\n{ics_content[13:]}"
-
-#     # Create Email
-#     msg = Message('Café Booking Confirmation',
-#                   sender=current_app.config['MAIL_USERNAME'],
-#                   recipients=[email])
-
-#     msg.body = f"""
-#     Your booking is confirmed:
-#     - Date: {booking_date}
-#     - Time: {booking_time}
-#     - Location: {location}
-
-#     Add to your calendar:
-#     - Google Calendar: https://www.google.com/calendar/render?action=TEMPLATE&text=Café+Booking+Confirmation&dates={start_str}Z/{end_str}Z&details=Your+booking+at+Dialogue+Café+is+confirmed!&location={location.replace(' ', '+')}
-#     - Apple Calendar: See attached .ics file
-#     - Outlook Calendar: https://outlook.live.com/calendar/0/deeplink/compose?subject=Café+Booking+Confirmation&startdt={start_time.isoformat()}&enddt={end_time.isoformat()}&location={location.replace(' ', '+')}&body=Your+booking+at+Dialogue+Café+is+confirmed!
-#     """
-
-#     msg.attach("booking.ics",
-#                "text/calendar; charset=UTF-8; method=REQUEST",
-#                ics_content)
-
-#     # METHOD:REQUEST in .ics file: Defines the purpose of the calendar event
-#     # within the file itself.
-#     # method=REQUEST in MIME type: Tells the email client how to process the
-#     # .ics file as part of the email.
-
-#     # Get mail instance from current_app
-#     mail = current_app.extensions.get('mail')
-#     if not mail:
-#         raise RuntimeError("Mail extension not initialized")
-
-#     mail.send(msg)
-
-#     return True
-#     # return jsonify({"message": "Confirmation email sent!"}), 200

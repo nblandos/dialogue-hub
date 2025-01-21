@@ -27,9 +27,12 @@ def create_booking():
                 booking_date=booking.date,
                 booking_time=booking.time_range
             )
-        except Exception as email_error:
-            print(f"Error sending email: {email_error}")
-            # log error and continue (consider logging library)
+        except Exception as e:
+            return jsonify({
+                'status': 'error',
+                'code': 'EMAIL_ERROR',
+                'message': str(e)
+            }), 500
 
         return jsonify({
             'status': 'success',
