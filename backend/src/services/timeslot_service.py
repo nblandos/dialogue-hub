@@ -67,7 +67,8 @@ class TimeslotService:
             ]:
                 continue
 
-            for timeslot in booking.timeslots:
-                if timeslot.start_time.timestamp() in new_timestamps:
-                    return True
+            existing_timestamps = {ts.start_time.timestamp()
+                                   for ts in booking.timeslots}
+            if new_timestamps.intersection(existing_timestamps):
+                return True
         return False

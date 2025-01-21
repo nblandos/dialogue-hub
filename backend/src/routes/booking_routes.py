@@ -1,8 +1,10 @@
 from flask import Blueprint, request, jsonify
 from src.services.booking_service import BookingService
+from src.services.email_service import EmailService
 
 booking_bp = Blueprint('booking', __name__)
 booking_service = BookingService()
+email_service = EmailService()
 
 
 @booking_bp.route('/create-booking', methods=['POST'])
@@ -19,17 +21,18 @@ def create_booking():
     try:
         booking = booking_service.create_booking(data)
 
-        # example for when email service is implemented,
-        # this is done on successful booking creation
-        # try:
-        #     email_service.send_booking_confirmation(
-        #         email=booking.user.email,
-        #         name=booking.user.full_name,
-        #         booking_id=booking.id,
-        #         timeslots=booking.timeslots
-        #     )
-        # except Exception as email_error:
-        # log error and continue (consider logging library)
+        try:
+            email_service.send_confirmation(
+                email=booking.user.email,
+                booking_date=booking.date,
+                booking_time=booking.time_range
+            )
+        except Exception as e:
+            return jsonify({
+                'status': 'error',
+                'code': 'EMAIL_ERROR',
+                'message': str(e)
+            }), 500
 
         return jsonify({
             'status': 'success',
