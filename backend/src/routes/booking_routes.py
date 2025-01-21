@@ -1,9 +1,10 @@
 from flask import Blueprint, request, jsonify
 from src.services.booking_service import BookingService
-from src.services.email import send_confirmation
+from src.services.email_service import EmailService
 
 booking_bp = Blueprint('booking', __name__)
 booking_service = BookingService()
+email_service = EmailService()
 
 
 @booking_bp.route('/create-booking', methods=['POST'])
@@ -21,10 +22,10 @@ def create_booking():
         booking = booking_service.create_booking(data)
 
         try:
-            send_confirmation(
+            email_service.send_confirmation(
                 email=booking.user.email,
                 booking_date=booking.date,
-                booking_time=booking.timeslots[0].start_time.strftime('%H:%M')
+                booking_time=booking.time_range
             )
         except Exception as email_error:
             print(f"Error sending email: {email_error}")

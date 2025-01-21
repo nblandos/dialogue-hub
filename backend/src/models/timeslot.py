@@ -1,4 +1,4 @@
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
 from src.database import db
 
 
@@ -15,6 +15,11 @@ class Timeslot(db.Model):
     def booking_count(self):
         return self.bookings.count()
 
+    @property
+    def end_time(self):
+        """calculate end time as 1 hour after start time"""
+        return self.start_time + timedelta(hours=1)
+
     def __repr__(self):
         return f'<Timeslot {self.id} {self.start_time}>'
 
@@ -22,6 +27,7 @@ class Timeslot(db.Model):
         return {
             "id": self.id,
             "start_time": self.start_time.isoformat(),
+            "end_time": self.end_time.isoformat()
         }
 
     @staticmethod

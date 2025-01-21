@@ -45,6 +45,18 @@ class Booking(db.Model):
         """extract date from first timeslot"""
         return self.timeslots[0].start_time.date() if self.timeslots else None
 
+    @property
+    def time_range(self):
+        """get time from start of first timeslot to end of last timeslot"""
+        if not self.timeslots:
+            return None
+        start = self.timeslots[0].start_time
+        end = self.timeslots[-1].end_time
+        return {
+            'start': start.strftime('%H:%M'),
+            'end': end.strftime('%H:%M')
+        }
+
     def __repr__(self):
         return f'<Booking {self.id} {self.status.value}>'
 
