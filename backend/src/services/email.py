@@ -1,6 +1,7 @@
-from flask import Flask, jsonify
-from flask_mail import Mail, Message
+from flask import current_app
+from flask_mail import Message
 from ics import Calendar, Event
+from datetime import datetime, timedelta
 """
 Add the following to the requirements.txt file:
 Flask
@@ -9,50 +10,40 @@ ics
 """
 
 
-# Configure Flask-Mail
-
-app = Flask(__name__)
-
-mail = Mail(app)
-
-
 def send_confirmation(email, booking_date, booking_time):
-    # data = request.json
-    # email = data['email']
-    # booking_date = data['date']
-    # booking_time = data['time']
     location = "Dialogue Café, London"
+
+    # Parse date and time to create datetime objects
+    start_time = datetime.strptime(
+        f"{booking_date} {booking_time}", "%Y-%m-%d %H:%M")
+    end_time = start_time + timedelta(hours=1)
+
+    # Format times for calendar URLs
+    start_str = start_time.strftime("%Y%m%dT%H%M%S")
+    end_str = end_time.strftime("%Y%m%dT%H%M%S")
 
     # Generate .ics file
     c = Calendar()
     e = Event()
     e.name = "Café Booking Confirmation"
-    e.begin = f"{booking_date} {booking_time}"
-    e.duration = {"hours": 1}
+    e.begin = start_time
+    e.end = end_time
     e.location = location
-
-    # Add the following lines to make the email an invitation:
-    # Add a description for the event.
     e.description = "Your booking at Dialogue Café is confirmed!"
-    # Set the organizer's email address.
-    e.organizer = "mailto:nblandos@gmail.com"
-    e.attendees = [f"mailto:{email}"]  # Specify the attendee's email address.
+    e.organizer = f"mailto:{current_app.config['MAIL_USERNAME']}"
+    e.attendees = [f"mailto:{email}"]
 
     c.events.add(e)
 
-    # Add METHOD:REQUEST to the .ics content to mark it as an invitation.
-    ics_content = str(c).replace("\n", "\r\n")  # Ensure CRLF line endings.
-    # Add METHOD:REQUEST.
+    # Add METHOD:REQUEST to the .ics content
+    ics_content = str(c).replace("\n", "\r\n")
     ics_content = f"BEGIN:VCALENDAR\r\nMETHOD:REQUEST\r\n{ics_content[13:]}"
-
-    with open("booking.ics", "w") as f:
-        # Write the modified .ics content with METHOD:REQUEST.
-        f.write(ics_content)
 
     # Create Email
     msg = Message('Café Booking Confirmation',
-                  sender='nblandos@gmail.com',
+                  sender=current_app.config['MAIL_USERNAME'],
                   recipients=[email])
+
     msg.body = f"""
     Your booking is confirmed:
     - Date: {booking_date}
@@ -60,18 +51,24 @@ def send_confirmation(email, booking_date, booking_time):
     - Location: {location}
 
     Add to your calendar:
-    - Google Calendar: https://www.google.com/calendar/render?action=TEMPLATE&text=Café+Booking+Confirmation&dates={booking_date}T{booking_time.replace(':', '')}Z/{booking_date}T{booking_time.replace(':', '')}Z&details=Your+booking+at+Dialogue+Café+is+confirmed!&location={location.replace(' ', '+')}
+    - Google Calendar: https://www.google.com/calendar/render?action=TEMPLATE&text=Café+Booking+Confirmation&dates={start_str}Z/{end_str}Z&details=Your+booking+at+Dialogue+Café+is+confirmed!&location={location.replace(' ', '+')}
     - Apple Calendar: See attached .ics file
-    - Outlook Calendar: https://outlook.live.com/calendar/0/deeplink/compose?subject=Café+Booking+Confirmation&startdt={booking_date}T{booking_time}:00&enddt={booking_date}T{booking_time}:00&location={location.replace(" ", "+")}&body=Your+booking+at+Dialogue+Café+is+confirmed!
+    - Outlook Calendar: https://outlook.live.com/calendar/0/deeplink/compose?subject=Café+Booking+Confirmation&startdt={start_time.isoformat()}&enddt={end_time.isoformat()}&location={location.replace(' ', '+')}&body=Your+booking+at+Dialogue+Café+is+confirmed!
     """
 
-    # Attach the .ics file with the appropriate MIME type to ensure it's treated as an invitation.
     msg.attach("booking.ics",
-               "text/calendar; charset=UTF-8; method=REQUEST", ics_content)
+               "text/calendar; charset=UTF-8; method=REQUEST",
+               ics_content)
 
     # METHOD:REQUEST in .ics file: Defines the purpose of the calendar event within the file itself.
     # method=REQUEST in MIME type: Tells the email client how to process the .ics file as part of the email.
 
+    # Get mail instance from current_app
+    mail = current_app.extensions.get('mail')
+    if not mail:
+        raise RuntimeError("Mail extension not initialized")
+
     mail.send(msg)
 
-    return jsonify({"message": "Confirmation email sent!"}), 200
+    return True
+    # return jsonify({"message": "Confirmation email sent!"}), 200
