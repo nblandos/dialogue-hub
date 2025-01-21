@@ -46,6 +46,14 @@ To activate a virtual environment in VSCode:
 - Run `flask db upgrade` to apply migrations to the database (This will create the local database file)
 - If you make changes to the models, you will need to generate a new migration file by running `flask db migrate -m "migration message"`
 
+#### Adding Environment Variables
+
+- These are variables that are used in the backend but stored separately for security reasons so that they are not exposed on GitHub
+- Create a `.env` file in the backend directory
+- Add the following environment variables to the `.env` file:
+  - SENDER_EMAIL="sender_email"
+  - SENDER_PASSWORD="app_password"
+
 ### Frontend Setup
 
 Navigate to the frontend directory `cd frontend`
