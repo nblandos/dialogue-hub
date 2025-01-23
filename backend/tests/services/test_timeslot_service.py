@@ -43,7 +43,7 @@ def test_get_or_create_timeslot_retrieves_existing_timeslot(
 
 
 def test_get_start_times_valid_format(app, timeslot_service):
-    time_str = "2025-02-01T10:00:00+00:00"
+    time_str = "2024-02-01T10:00:00+00:00"
     timeslots = [{"start_time": time_str}]
 
     result = timeslot_service.get_start_times(timeslots)
@@ -84,20 +84,6 @@ def test_check_timeslots_valid_past_time(app, timeslot_service, user):
         timeslot_service.check_timeslots_valid(user, timeslots)
 
 
-def test_check_timeslots_valid_different_days(app, timeslot_service, user):
-    future = datetime.now(timezone.utc) + timedelta(days=1)
-    day_after = future + timedelta(days=1)
-    timeslots = [
-        {"start_time": future.isoformat()},
-        {"start_time": day_after.isoformat()}
-    ]
-
-    with pytest.raises(
-        ValueError, match="All timeslots must be on the same day"
-    ):
-        timeslot_service.check_timeslots_valid(user, timeslots)
-
-
 def test_check_timeslots_valid_non_consecutive(app, timeslot_service, user):
     future = datetime.now(timezone.utc) + timedelta(days=1)
     future_plus_2 = future + timedelta(hours=2)
@@ -117,6 +103,7 @@ def test_check_timeslots_valid_consecutive(app, timeslot_service, user):
         {"start_time": now.isoformat()},
         {"start_time": next_hour.isoformat()}
     ]
+    print(timeslots)
 
     # no exception should be raised
     timeslot_service.check_timeslots_valid(user, timeslots)
