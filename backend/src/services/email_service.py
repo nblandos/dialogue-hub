@@ -1,8 +1,7 @@
 from flask import current_app
 from flask_mail import Message
 from ics import Calendar, Event
-from datetime import datetime
-import logging
+from datetime import datetime, timezone
 
 
 class EmailService:
@@ -72,9 +71,13 @@ class EmailService:
 
             # parse date and time
             start_time = datetime.strptime(
-                f"{booking_date} {booking_time['start']}", "%Y-%m-%d %H:%M")
+                f"{booking_date} {booking_time['start']}",
+                "%Y-%m-%d %H:%M"
+            ).replace(tzinfo=timezone.utc)
             end_time = datetime.strptime(
-                f"{booking_date} {booking_time['end']}", "%Y-%m-%d %H:%M")
+                f"{booking_date} {booking_time['end']}",
+                "%Y-%m-%d %H:%M"
+            ).replace(tzinfo=timezone.utc)
 
             # create calendar event
             calendar = self._create_calendar_event(email, start_time, end_time)
@@ -102,5 +105,7 @@ class EmailService:
             self._get_mail().send(msg)
             return True
 
+        except ValueError as e:
+            raise ValueError(str(e))
         except Exception as e:
             raise RuntimeError(f"Email service error: {str(e)}")

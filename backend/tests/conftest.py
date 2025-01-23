@@ -1,5 +1,5 @@
 import pytest
-from src.database import db
+from src import db
 from app import create_app
 from src.config.config import Config
 

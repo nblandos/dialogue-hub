@@ -1,5 +1,5 @@
 from datetime import datetime, timezone, timedelta
-from src.database import db
+from src import db
 
 
 class Timeslot(db.Model):
@@ -9,7 +9,8 @@ class Timeslot(db.Model):
 
     # time slots are 1 hour long so we only need to store the start time
     # date is also part of start_time
-    start_time = db.Column(db.DateTime, nullable=False, unique=True)
+    start_time = db.Column(db.DateTime(timezone=True),
+                           nullable=False, unique=True)
 
     @property
     def booking_count(self):

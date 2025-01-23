@@ -1,7 +1,7 @@
 from datetime import datetime, timedelta, timezone
 from src.models.timeslot import Timeslot
 from src.models.booking import BookingStatus
-from src.database import db
+from src import db
 
 
 class TimeslotService:
@@ -48,11 +48,7 @@ class TimeslotService:
             raise ValueError(
                 'User already has a booking during selected time slots')
 
-        # check for timeslots on the same day and consecutive
-        first_day = start_times[0].date()
-        if not all(time.date() == first_day for time in start_times):
-            raise ValueError("All timeslots must be on the same day")
-
+        # check for timeslots consecutive
         for i in range(1, len(start_times)):
             if start_times[i] - start_times[i-1] != timedelta(hours=1):
                 raise ValueError('Timeslots must be consecutive')

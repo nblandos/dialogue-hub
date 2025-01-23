@@ -2,7 +2,7 @@ from datetime import datetime, timezone
 from src.models.booking import Booking
 from src.services.user_service import UserService
 from src.services.timeslot_service import TimeslotService
-from src.database import db
+from src import db
 
 
 class BookingService:
