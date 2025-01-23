@@ -1,5 +1,5 @@
 import pytest
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
 from src.models.booking import Booking, BookingStatus
 from src.models.timeslot import Timeslot
 from src.models.user import User
@@ -26,6 +26,15 @@ def booking(user, timeslot):
     booking = Booking(user=user)
     booking.timeslots.append(timeslot)
     return booking
+
+
+@pytest.fixture
+def consecutive_timeslots(sample_datetime):
+    return [
+        Timeslot(start_time=sample_datetime),
+        Timeslot(start_time=sample_datetime + timedelta(hours=1)),
+        Timeslot(start_time=sample_datetime + timedelta(hours=2))
+    ]
 
 
 def test_create_booking(app, booking):
@@ -119,3 +128,35 @@ def test_booking_cascade_timeslots(app, booking, timeslot):
     db.session.commit()
 
     assert Timeslot.query.count() == 1
+
+
+def test_booking_time_range(app, booking, sample_datetime):
+    assert booking.time_range == {
+        'start': '09:00',
+        'end': '10:00'
+    }
+
+    second_slot = Timeslot(start_time=sample_datetime + timedelta(hours=1))
+    booking.timeslots.append(second_slot)
+    assert booking.time_range == {
+        'start': '09:00',
+        'end': '11:00'
+    }
+
+    # test with no timeslots
+    empty_booking = Booking(user_id=1)
+    assert empty_booking.time_range is None
+
+
+def test_timeslots_ordering(app, consecutive_timeslots):
+    # add timeslots in reverse order
+    booking = Booking(user_id=1)
+    for slot in reversed(consecutive_timeslots):
+        booking.timeslots.append(slot)
+
+    db.session.add(booking)
+    db.session.commit()
+
+    # should be ordered by start time
+    times = [ts.start_time for ts in booking.timeslots]
+    assert times == sorted(times)

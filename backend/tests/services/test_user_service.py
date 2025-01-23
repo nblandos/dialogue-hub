@@ -23,7 +23,6 @@ def test_get_or_create_user_creates_new_user(app, user_service):
 
 
 def test_get_or_create_user_retrieves_existing_user(app, user_service):
-    # add existing user to db
     existing_user = User(email="test@example.com", full_name="Test User")
     db.session.add(existing_user)
     db.session.commit()
