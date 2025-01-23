@@ -1,11 +1,8 @@
 from flask import Flask, jsonify
 from flask_cors import CORS
-from flask_mail import Mail
 from src.config.config import Config
-from src.database import db, migrate
+from src import db, migrate, mail
 from src.routes.booking_routes import booking_bp
-
-mail = Mail()
 
 
 def create_app(config_class=Config):

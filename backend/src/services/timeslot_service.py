@@ -1,7 +1,7 @@
 from datetime import datetime, timedelta, timezone
 from src.models.timeslot import Timeslot
 from src.models.booking import BookingStatus
-from src.database import db
+from src import db
 
 
 class TimeslotService:

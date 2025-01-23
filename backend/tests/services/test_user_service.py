@@ -1,7 +1,7 @@
 import pytest
 from src.services.user_service import UserService
 from src.models.user import User
-from src.database import db
+from src import db
 
 
 @pytest.fixture

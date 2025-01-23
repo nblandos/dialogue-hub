@@ -3,7 +3,7 @@ from datetime import datetime, timezone, timedelta
 from src.services.booking_service import BookingService
 from src.models.booking import Booking, BookingStatus
 from src.models.user import User
-from src.database import db
+from src import db
 
 
 @pytest.fixture

@@ -1,5 +1,5 @@
 from src.models.user import User
-from src.database import db
+from src import db
 
 
 class UserService:

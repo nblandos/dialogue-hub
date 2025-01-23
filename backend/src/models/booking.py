@@ -1,6 +1,6 @@
 from datetime import datetime, timezone
 from enum import Enum
-from src.database import db
+from src import db
 
 # many-to-many relationship between bookings and timeslots
 booking_timeslot = db.Table(
