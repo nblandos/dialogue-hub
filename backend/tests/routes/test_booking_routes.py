@@ -87,3 +87,17 @@ def test_create_booking_email_failure(client, valid_booking_data):
         assert data['status'] == 'error'
         assert data['code'] == 'EMAIL_ERROR'
         assert data['message'] == 'Email service failed'
+
+
+def test_create_booking_missing_body(client):
+    response = client.post(
+        '/create-booking',
+        json={},  # empty body
+        headers={'Content-Type': 'application/json'}
+    )
+
+    assert response.status_code == 400
+    data = response.get_json()
+    assert data['status'] == 'error'
+    assert data['code'] == 'INVALID_REQUEST'
+    assert data['message'] == 'Missing request body'
