@@ -134,4 +134,14 @@ describe('WeeklyTimetable', () => {
       state: { selectedSlots: ['2024-03-18T9'] }
     });
   });
+
+  it('starts on the next week when current day is weekend', () => {
+    vi.setSystemTime(new Date('2025-03-16')); // Saturday
+    renderComponent();
+    
+    // should show slots starting from next Monday (18th)
+    fireEvent.click(screen.getByText('Select 9:00 (Mon)'));
+    expect(screen.getByTestId('selected-time-display'))
+      .toHaveTextContent('Monday, 18 Mar 2024');
+  });
 });

@@ -22,6 +22,7 @@ const WeeklyTimetable = () => {
   const weekStart = addWeeks(
     startOfWeek(
       // add 2 days if its a weekend, as cafe only open on weekdays
+      // consider starting from the first week with available slots as a more general approach
       isWeekend(today) ? addDays(today, 2) : today, 
       { weekStartsOn: 1 }
     ),
