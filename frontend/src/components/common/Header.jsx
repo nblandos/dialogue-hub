@@ -16,7 +16,7 @@ const Header = () => {
             Book
           </Link>
           <Link
-            to="https://dialoguehub.co.uk/dialogue-cafe"
+            to="/menu"
             className="text-xl font-medium text-white transition-colors hover:text-orange-200"
           >
             Menu

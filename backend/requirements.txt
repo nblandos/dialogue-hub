@@ -6,12 +6,12 @@ charset-normalizer==3.4.0
 click==8.1.7
 exceptiongroup==1.2.2
 Flask==3.1.0
-Flask-Cors==5.0.0
-Flask-Mail==0.10.0
-Flask-Migrate==4.0.7
+Flask-Cors==5.0.0 #neeeded to install manually
+Flask-Mail==0.10.0 #neeeded to install manually
+Flask-Migrate==4.0.7 #neeeded to install manually
 Flask-SQLAlchemy==3.1.1
 greenlet==3.1.1
-ics==0.7.2
+ics==0.7.2 #neeeded to install manually
 idna==3.10
 iniconfig==2.0.0
 itsdangerous==2.2.0
@@ -27,7 +27,7 @@ pyflakes==3.2.0
 pytest==8.3.3
 pytest-flask==1.3.0
 python-dateutil==2.9.0.post0
-python-dotenv==1.0.1
+python-dotenv==1.0.1 #neeeded to install manually
 requests==2.32.3
 six==1.17.0
 SQLAlchemy==2.0.36
