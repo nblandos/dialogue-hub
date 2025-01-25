@@ -36,6 +36,18 @@
   background-color: #726a5d;
 }
 
+.high-contrast .bg-gray-500 {
+  background-color: #ece8de;
+}
+
+.high-contrast .hover\:bg-gray-600:hover {
+  background-color: #f8f5f0;
+}
+
+.high-contrast .bg-blue-600 {
+  background-color: #fef037;
+}
+
 /* Timeslot Colors */
 .high-contrast .bg-green-500\/80 {
   background-color: #f772e0;
@@ -95,6 +107,7 @@
 .high-contrast input[type="text"]::placeholder {
   color: #bcb4a5;
 }
+
 
 /* Revert inversion for media elements
 .high-contrast img,

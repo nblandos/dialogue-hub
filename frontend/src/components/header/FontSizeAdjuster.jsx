@@ -38,7 +38,7 @@ const FontSizeAdjuster = () => {
       >
         -
       </button>
-      <span className="text-xl font-bold">{fontSize}px</span>
+      <span className="text-xl font-bold text-white">{fontSize}px</span>
       <button
         className={`bg-gray-500 text-white px-3 py-2 rounded-lg hover:bg-gray-600 ${
           fontSize >= maxFontSize ? "opacity-50 cursor-not-allowed" : ""

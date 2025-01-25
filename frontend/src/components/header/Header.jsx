@@ -36,9 +36,9 @@ const Header = () => {
           Dialogue Cafe
         </div>
 
-        <div className="flex gap-4 md:gap-12 md:pr-36 items-center">
+        <div className="flex gap-4 md:gap-6 md:pr-36 items-center">
           {/* Desktop Header Links */}
-          <div className="hidden md:flex gap-8 items-center">
+          <div className="hidden md:flex gap-12 items-center md:mr-16">
             <NavLinks />
           </div>
 

@@ -18,7 +18,7 @@ const HighContrastToggle = ({ isHighContrast, setIsHighContrast }) => {
         checked={isHighContrast}
         onChange={setIsHighContrast}
         className={`${
-          isHighContrast ? 'bg-fuchsia-500' : 'bg-gray-200'
+          isHighContrast ? 'bg-blue-600' : 'bg-gray-200'
         } relative inline-flex h-6 w-11 items-center rounded-full transition-colors`}
       >
         <span className="sr-only">Toggle high contrast mode</span>
