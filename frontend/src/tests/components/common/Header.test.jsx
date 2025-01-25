@@ -1,9 +1,17 @@
-import { describe, it, expect } from 'vitest';
-import { render, screen } from '@testing-library/react';
+import { describe, it, expect, beforeEach, afterEach } from 'vitest';
+import { render, screen, fireEvent } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
 import Header from '../../../components/common/Header';
 
 describe('Header', () => {
+  beforeEach(() => {
+    localStorage.clear();
+  });
+
+  afterEach(() => {
+    localStorage.clear();
+  });
+
   const renderHeader = () => {
     return render(
       <BrowserRouter>
@@ -38,5 +46,45 @@ describe('Header', () => {
     const [homeLink, menuLink] = screen.getAllByRole('link');
     expect(homeLink).toHaveAttribute('href', '/');
     expect(menuLink).toHaveAttribute('href', '/menu');
+  });
+
+  it('renders high contrast toggle switch', () => {
+    renderHeader();
+    expect(screen.getByRole('switch')).toBeInTheDocument();
+  });
+
+  it('renders high contrast icon', () => {
+    renderHeader();
+    expect(screen.getByTestId('high-contrast-icon')).toBeInTheDocument();
+  });
+
+  it('toggles high contrast mode when switch is clicked', () => {
+    renderHeader();
+    const toggle = screen.getByRole('switch');
+    expect(document.documentElement.classList.contains('high-contrast')).toBe(false);
+    
+    fireEvent.click(toggle);
+    expect(document.documentElement.classList.contains('high-contrast')).toBe(true);
+    
+    fireEvent.click(toggle);
+    expect(document.documentElement.classList.contains('high-contrast')).toBe(false);
+  });
+
+  it('persists high contrast preference in localStorage', () => {
+    renderHeader();
+    const toggle = screen.getByRole('switch');
+    
+    fireEvent.click(toggle);
+    expect(localStorage.getItem('highContrast')).toBe('true');
+    
+    fireEvent.click(toggle);
+    expect(localStorage.getItem('highContrast')).toBe('false');
+  });
+
+  it('loads high contrast preference from localStorage', () => {
+    localStorage.setItem('highContrast', 'true');
+    renderHeader();
+    expect(document.documentElement.classList.contains('high-contrast')).toBe(true);
+    expect(screen.getByRole('switch')).toHaveAttribute('aria-checked', 'true');
   });
 });

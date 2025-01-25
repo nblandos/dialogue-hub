@@ -15,10 +15,6 @@ const Header = () => {
     localStorage.setItem('highContrast', isHighContrast);
   }, [isHighContrast]);
 
-  const toggleHighContrast = () => {
-    setIsHighContrast(!isHighContrast);
-  };
-
   return (
     <nav className="fixed inset-x-0 top-0 z-10 h-24 bg-orange-500 p-4 px-4 shadow-md md:px-16">
       <div className="flex h-full items-center justify-between">
@@ -38,7 +34,7 @@ const Header = () => {
             Menu
           </Link>
           <div className="flex items-center gap-3">
-            <FaAdjust size={36} className="text-white" />
+            <FaAdjust size={36} className="text-white" data-testid="high-contrast-icon" />
             <Switch
               checked={isHighContrast}
               onChange={setIsHighContrast}
