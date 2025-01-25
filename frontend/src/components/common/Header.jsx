@@ -1,7 +1,23 @@
 import { Link } from 'react-router-dom';
+import { useState, useEffect} from 'react';
+
 
 const Header = () => {
+  const [isHighContrast, setIsHighContrast] = useState(() => {
+    return localStorage.getItem('highContrast') === 'true';
+  });
+
+  useEffect(() => {
+    document.documentElement.classList.toggle('high-contrast', isHighContrast);
+    localStorage.setItem('highContrast', isHighContrast);
+  }, [isHighContrast]);
+
+  const toggleHighContrast = () => {
+    setIsHighContrast(!isHighContrast);
+  };
+
   return (
+    
     // The header colour has insufficient contrast with the text colour in Lighthouse Accessibility Audit
     // This should be fixed when adding the 'High Contrast Mode' feature
     <nav className="fixed inset-x-0 top-0 z-10 h-24 bg-orange-500 p-4 px-4 shadow-md md:px-16">
@@ -21,6 +37,12 @@ const Header = () => {
           >
             Menu
           </Link>
+          <button
+            onClick={toggleHighContrast}
+            className="text-xl font-medium text-white transition-colors hover:text-orange-200"
+          >
+            Toggle High Contrast
+          </button>
         </div>
       </div>
     </nav>

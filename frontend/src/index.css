@@ -1,3 +1,21 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* High Contrast Mode Styles */
+.high-contrast {
+  background-color: #ffffff;
+  filter: invert(1);
+}
+
+/* Revert inversion for media elements */
+.high-contrast img,
+.high-contrast video,
+.high-contrast iframe {
+  filter: invert(1);
+}
+
+.high-contrast .bg-orange-500 {
+  /* Sets the color to red so it is brighter when inverted */
+  background-color: #ee1801; 
+}
