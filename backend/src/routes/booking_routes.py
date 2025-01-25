@@ -11,6 +11,23 @@ email_service = EmailService()
 def create_booking():
     data = request.get_json()
 
+    """ data in format:
+    {
+        "user": {
+            "email": "Email",
+            "full_name": "Full Name"
+        },
+        "timeslots": [
+            {
+                "start_time": "YYYY-MM-DDTHH:MM:SS+00:00"
+            },
+            {
+                "start_time": "YYYY-MM-DDTHH:MM:SS+00:00"
+            }
+        ]
+    }
+    """
+
     if not data:
         return jsonify({
             'status': 'error',

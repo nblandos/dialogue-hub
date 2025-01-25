@@ -140,3 +140,32 @@ def test_overlapping_with_cancelled_booking(app, timeslot_service, user):
 
     # no exception should be raised
     timeslot_service.check_timeslots_valid(user, new_timeslots)
+
+
+def test_has_overlapping_timeslots_multiple_bookings(
+    app, timeslot_service, user
+):
+    # create two bookings
+    start_time1 = datetime.now(timezone.utc) + timedelta(hours=1)
+    start_time2 = datetime.now(timezone.utc) + timedelta(hours=2)
+
+    # make one booking have status BOOKED
+    timeslot1 = Timeslot(start_time=start_time1)
+    booking1 = Booking(user=user)
+    booking1.timeslots.append(timeslot1)
+
+    # make one booking have status CANCELLED
+    timeslot2 = Timeslot(start_time=start_time2)
+    booking2 = Booking(user=user, status=BookingStatus.CANCELLED)
+    booking2.timeslots.append(timeslot2)
+
+    db.session.add_all([timeslot1, timeslot2, booking1, booking2])
+    db.session.commit()
+
+    # try overlapping booking with active booking - should raise exception
+    assert timeslot_service._has_overlapping_timeslots(
+        user, [start_time1]) is True
+    # try overlapping booking with cancelled booking -
+    # should not raise exception
+    assert timeslot_service._has_overlapping_timeslots(
+        user, [start_time2]) is False

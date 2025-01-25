@@ -69,3 +69,39 @@ def test_create_calendar_event(app, email_service, valid_booking_data):
         assert event.name == "Dialogue Cafe Booking"
         assert event.begin.datetime == start_time
         assert event.end.datetime == end_time
+
+
+def test_mail_not_initialized(app, email_service):
+    with app.app_context():
+        # remove mail extension from app context
+        app.extensions.pop('mail', None)
+        with pytest.raises(
+            RuntimeError, match="Mail extension not initialized"
+        ):
+            email_service._get_mail()
+
+
+def test_get_mail_caching(app, email_service):
+    # tests that mail instance is cached after initial retrieval
+    with app.app_context():
+        first_mail = email_service._get_mail()
+        email_service.mail = first_mail
+        second_mail = email_service._get_mail()
+        assert first_mail is second_mail
+
+
+def test_send_confirmation_non_value_error(
+    app, email_service, valid_booking_data
+):
+    with app.app_context():
+        with patch.object(
+            email_service, '_get_mail', side_effect=Exception("Some error")
+        ):
+            with pytest.raises(
+                RuntimeError, match="Email service error: Some error"
+            ):
+                email_service.send_confirmation(
+                    valid_booking_data['email'],
+                    valid_booking_data['booking_date'],
+                    valid_booking_data['booking_time']
+                )
