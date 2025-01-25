@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import initialMenu from "./menuData";
+import MenuDiv from "../../components/menu/MenuDiv";
 
 const MenuPage = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -20,7 +21,7 @@ const MenuPage = () => {
     });
 
   return (
-    <div className="min-h-screen bg-gray-100 pt-32 p-6"> {/* Adjusted padding */}
+    <div className="min-h-screen bg-gray-100 pt-32 p-6">
       <h1 className="text-3xl font-bold text-center mb-8">Coffee Menu</h1>
       <div className="flex justify-between items-center mb-6">
         <input
@@ -39,39 +40,8 @@ const MenuPage = () => {
           <option value="price">Sort by Price</option>
         </select>
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {filteredMenu.map((item, index) => (
-          <div
-            key={index}
-            className="bg-white shadow-lg p-4 rounded-lg hover:shadow-xl transition-shadow"
-          >
-            <h2 className="text-xl font-semibold text-center mb-2">
-              {item.name} <span className="text-gray-500 text-sm">({item.price})</span>
-            </h2>
-            <div className="relative w-full h-72">
-              <iframe
-                src={item.video}
-                title={item.name}
-                className="w-full h-full rounded-lg"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-                onMouseOver={(e) =>
-                  e.target.contentWindow.postMessage(
-                    '{"event":"command","func":"playVideo","args":""}',
-                    "*"
-                  )
-                }
-                onMouseOut={(e) =>
-                  e.target.contentWindow.postMessage(
-                    '{"event":"command","func":"pauseVideo","args":""}',
-                    "*"
-                  )
-                }
-              ></iframe>
-            </div>
-          </div>
-        ))}
-      </div>
+      {/* Render CoffeeMenu with filteredMenu passed as props */}
+      <MenuDiv filteredMenu={filteredMenu} />
     </div>
   );
 };
