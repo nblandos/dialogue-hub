@@ -19,3 +19,7 @@
   /* Sets the color to red so it is brighter when inverted */
   background-color: #ff0100; 
 }
+
+.dyslexic-font {
+  font-family: 'OpenDyslexic', 'Comic Sans MS', sans-serif;
+}
