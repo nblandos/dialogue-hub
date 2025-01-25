@@ -6,7 +6,6 @@
 .high-contrast {
   background-color: #000000;
   color: #ffffff;
-  transition: color 0.5s;
   /* filter: invert(1); */
 }
 
@@ -103,3 +102,8 @@
 .high-contrast iframe {
   filter: invert(1);
 } */
+
+
+.dyslexic-font {
+  font-family: 'OpenDyslexic', 'Comic Sans MS', sans-serif;
+}
