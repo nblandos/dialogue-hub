@@ -17,12 +17,11 @@ const MenuPage = () => {
       if (sortOption === "price") {
         return parseFloat(a.price.slice(1)) - parseFloat(b.price.slice(1));
       }
-      return 0;
     });
 
   return (
     <div className="min-h-screen bg-gray-100 pt-32 p-6">
-      <h1 className="text-3xl font-bold text-center mb-8">Coffee Menu</h1>
+      <h1 className="text-3xl font-bold text-center mb-8">Cafe Menu</h1>
       <div className="flex justify-between items-center mb-6">
         <input
           type="text"
