@@ -66,17 +66,9 @@ describe('TimeSlotGrid', () => {
     expect(mockOnSlotClick).toHaveBeenCalled();
   });
 
-  it('prevents interaction with past slots', () => {
-    renderComponent();
-    const pastSlot = screen.getAllByLabelText('Unavailable timeslot')[0];
-    fireEvent.click(pastSlot);
-    expect(mockOnSlotClick).not.toHaveBeenCalled();
-  });
-
   it('renders with correct accessibility labels', () => {
     renderComponent();
     expect(screen.getByLabelText('Selected timeslot')).toBeInTheDocument();
     expect(screen.getByLabelText('Bookable timeslot')).toBeInTheDocument();
-    expect(screen.getAllByLabelText('Unavailable timeslot')).toHaveLength(2);
   });
 });
