@@ -8,6 +8,7 @@ import {
   parseISO,
   setHours,
   addWeeks,
+  isWeekend,
 } from 'date-fns';
 import TimeSlotGrid from './TimeSlotGrid';
 import SelectedTimeDisplay from './SelectedTimeDisplay';
@@ -19,7 +20,11 @@ const WeeklyTimetable = () => {
 
   const today = new Date();
   const weekStart = addWeeks(
-    startOfWeek(today, { weekStartsOn: 1 }),
+    startOfWeek(
+      // add 2 days if its a weekend, as cafe only open on weekdays
+      isWeekend(today) ? addDays(today, 2) : today, 
+      { weekStartsOn: 1 }
+    ),
     weekOffset
   );
 
