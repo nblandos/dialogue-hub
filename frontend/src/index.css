@@ -4,18 +4,102 @@
 
 /* High Contrast Mode Styles */
 .high-contrast {
-  background-color: #ffffff;
-  filter: invert(1);
+  background-color: #000000;
+  color: #ffffff;
+  transition: color 0.5s;
+  /* filter: invert(1); */
 }
 
-/* Revert inversion for media elements */
+/*  Main colors */
+
+.high-contrast .bg-orange-500 {
+  background-color: #11e7fe;
+}
+
+.high-contrast .hover\:bg-orange-600:hover {
+  background-color: #39f4fe;
+}
+
+.high-contrast .bg-white {
+  background-color: #000000;
+}
+
+.high-contrast .bg-gray-100 {
+  background-color: #221f1a;
+}
+
+.high-contrast .bg-gray-200 {
+  background-color: #464137;
+}
+
+.high-contrast .bg-gray-300,
+.high-contrast .hover\:bg-gray-300:hover {
+  background-color: #726a5d;
+}
+
+/* Timeslot Colors */
+.high-contrast .bg-green-500\/80 {
+  background-color: #f772e0;
+}
+
+.high-contrast .hover\:bg-green-300\/80:hover {
+  background-color: #c22597;
+}
+
+.high-contrast .bg-green-100\/80 {
+  background-color: #4b0534;
+}
+
+.high-contrast .border {
+  border-color: #464137;
+}
+
+/* Text Colors */
+.high-contrast .text-white {
+  color: #000000;
+}
+
+.high-contrast .text-gray-900 {
+  color: #fefefe;
+}
+.high-contrast .text-gray-700 {
+  color: #faf8f4;
+}
+
+.high-contrast .text-gray-600 {
+  color: #f0ece5;
+}
+
+.high-contrast .text-gray-500 {
+  color: #e3dfd4;
+}
+
+.high-contrast .text-black\/70 {
+  color: #fdf9fc;
+}
+.high-contrast .hover\:text-orange-200:hover {
+  color: #0266b3;
+}
+
+/* Menu Page Search and Sort */
+.high-contrast .border-gray-300 {
+  border-color: #726a5d;
+}
+
+.high-contrast input[type="text"],
+.high-contrast select {
+  background-color: #000000;
+  color: #fbfbfb;
+  border-color: #726a5d;
+}
+
+.high-contrast input[type="text"]::placeholder {
+  color: #bcb4a5;
+}
+
+/* Revert inversion for media elements
 .high-contrast img,
 .high-contrast video,
 .high-contrast iframe {
   filter: invert(1);
-}
-
-.high-contrast .bg-orange-500 {
-  /* Sets the color to red so it is brighter when inverted */
-  background-color: #ff0100; 
-}
+} */

@@ -2,7 +2,7 @@ import WeeklyTimetable from '../../components/booking/WeeklyTimetable';
 
 const SchedulePage = () => {
   return (
-    <div className="min-h-screen bg-gray-50 pb-8 pt-36">
+    <div className="min-h-screen bg-gray-100 pb-8 pt-36">
       <div className="container mx-auto max-w-7xl px-4">
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900">
