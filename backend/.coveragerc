@@ -1,0 +1,20 @@
+[run]
+source =
+    src
+    tests
+branch = True
+omit =
+    */venv/*
+    */migrations/*
+    */__init__.py
+    */.pytest_cache/*
+
+[report]
+show_missing = True
+exclude_lines =
+    pragma: no cover
+    def __repr__
+    raise NotImplementedError
+    if __name__ == "__main__":
+    pass
+precision = 2
