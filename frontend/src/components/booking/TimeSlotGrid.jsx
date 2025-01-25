@@ -47,12 +47,12 @@ const TimeSlotGrid = ({ days, hours, selectedSlots, onSlotClick }) => {
                       : 'cursor-pointer bg-green-100/80 hover:bg-green-300/80'
                 }`}
                 aria-label={
-                  day.isPast
-                    ? 'Unavailable timeslot'
-                    : selectedSlots.includes(`${day.date}T${hour}`)
+                  !day.isPast
+                    ? selectedSlots.includes(`${day.date}T${hour}`)
                       ? 'Selected timeslot'
                       : 'Bookable timeslot'
-                }
+                    : undefined
+                }   
               >
                 {!day.isPast && (
                   <span className="absolute inset-0 flex items-center justify-center text-xs text-black/70 sm:text-sm">
