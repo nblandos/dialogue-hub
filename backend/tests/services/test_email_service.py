@@ -81,6 +81,15 @@ def test_mail_not_initialized(app, email_service):
             email_service._get_mail()
 
 
+def test_get_mail_caching(app, email_service):
+    # tests that mail instance is cached after initial retrieval
+    with app.app_context():
+        first_mail = email_service._get_mail()
+        email_service.mail = first_mail
+        second_mail = email_service._get_mail()
+        assert first_mail is second_mail
+
+
 def test_send_confirmation_non_value_error(
     app, email_service, valid_booking_data
 ):
