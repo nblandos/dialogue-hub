@@ -52,8 +52,8 @@ const Header = () => {
             isDyslexicFont={isDyslexicFont}
             setIsDyslexicFont={setIsDyslexicFont}
           />
-          <FontSizeAdjuster />
           <ScreenReader />
+          <FontSizeAdjuster />
 
           {/* Mobile Menu Button */}
           <button
