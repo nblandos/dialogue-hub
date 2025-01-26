@@ -55,6 +55,9 @@
 .high-contrast .bg-red-500 {
   background-color: #2dfafa;
 }
+.high-contrast .text-red-500 {
+  color: #2dfafa;
+}
 .high-contrast .hover\:bg-red-600:hover {
   background-color: #5bfefe;
 }
