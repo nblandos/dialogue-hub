@@ -34,6 +34,7 @@ const ConfirmationActions = ({
       </div>
       <div className="flex w-full justify-between">
         <button
+          data-screen-reader-text="Cancel"
           className={`rounded-lg px-6 py-2 text-white ${
             loading ? 'bg-red-300' : 'bg-red-500 hover:bg-red-600'
           }`}
@@ -43,6 +44,7 @@ const ConfirmationActions = ({
           Cancel
         </button>
         <button
+          data-screen-reader-text="Confirm"
           className={`rounded-lg px-6 py-2 text-white ${
             loading ? 'bg-green-300' : 'bg-green-500 hover:bg-green-600'
           }`}

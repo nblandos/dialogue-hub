@@ -3,7 +3,7 @@ import { FaFont } from 'react-icons/fa';
 
 const DyslexicFontToggle = ({ isDyslexicFont, setIsDyslexicFont }) => {
   return (
-    <div className="flex items-center gap-2">
+    <div className="flex items-center gap-2" data-screen-reader-text="Toggle dyslexic font mode">
       <FaFont
         size={24}
         className="text-white md:hidden"
@@ -15,6 +15,7 @@ const DyslexicFontToggle = ({ isDyslexicFont, setIsDyslexicFont }) => {
         data-testid="dyslexic-font-icon-desktop"
       />
       <Switch
+      data-screen-reader-text="Toggle dyslexic font mode"
         checked={isDyslexicFont}
         onChange={setIsDyslexicFont}
         className={`${
@@ -27,6 +28,7 @@ const DyslexicFontToggle = ({ isDyslexicFont, setIsDyslexicFont }) => {
             isDyslexicFont ? 'translate-x-6' : 'translate-x-1'
           } inline-block h-4 w-4 transform rounded-full bg-white transition-transform`}
         />
+        
       </Switch>
     </div>
   );

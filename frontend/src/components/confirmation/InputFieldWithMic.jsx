@@ -16,6 +16,7 @@ const InputFieldWithMic = ({
       </label>
       <div className="flex items-center gap-2">
         <input
+        data-screen-reader-text={`${placeholder}`}
           id={id}
           type={id === 'email' ? 'email' : 'text'}
           placeholder={placeholder}
@@ -25,6 +26,7 @@ const InputFieldWithMic = ({
           autoComplete={autoComplete}
         />
         <button
+        data-screen-reader-text={`Voice input for ${label}`}
           onClick={onMicClick}
           className={`${
             recordingField === id ? 'bg-red-500' : 'bg-blue-500'
