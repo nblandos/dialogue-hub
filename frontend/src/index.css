@@ -98,15 +98,18 @@
 }
 
 .high-contrast input[type='text'],
+.high-contrast input[type='email'],
 .high-contrast select {
   background-color: #000000;
   color: #fbfbfb;
   border-color: #726a5d;
 }
 
-.high-contrast input[type='text']::placeholder {
+.high-contrast input[type='text']::placeholder,
+.high-contrast input[type='email']::placeholder {
   color: #bcb4a5;
 }
+
 
 /* Revert inversion for media elements
 .high-contrast img,
