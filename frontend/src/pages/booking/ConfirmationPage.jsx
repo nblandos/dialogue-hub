@@ -132,6 +132,10 @@ function ConfirmationPage() {
     const isNameValid = validateFullName(name);
 
     if (!isEmailValid || !isNameValid) {
+      let errorMsg = '';
+      if (!isNameValid) errorMsg += 'Invalid name. Please enter full name. ';
+      if (!isEmailValid) errorMsg += 'Invalid email address.';
+      setApiError(errorMsg.trim());
       setErrors({
         email: !isEmailValid,
         name: !isNameValid,
@@ -166,7 +170,14 @@ function ConfirmationPage() {
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.message || 'Failed to create booking');
+        if (response.status === 400) {
+          throw new Error(
+            'Missing or invalid data. Please double-check your details.'
+          );
+        } else if (response.status === 500) {
+          throw new Error('Server error. Please try again later.');
+        }
+        throw new Error(data.message || 'Failed to create booking.');
       }
 
       // redirect to success page once implemented, for now redirect to schedule page
