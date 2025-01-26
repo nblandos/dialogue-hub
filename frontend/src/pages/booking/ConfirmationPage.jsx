@@ -98,7 +98,7 @@ function ConfirmationPage() {
   };
 
   const stopRecording = () => {
-    if (recognitionRef.current) {
+    if (recordingField && recognitionRef.current) {
       recognitionRef.current.stop();
       recognitionRef.current = null;
       setRecordingField('');
@@ -121,26 +121,20 @@ function ConfirmationPage() {
   const handleConfirm = async () => {
     stopRecording();
     setApiError('');
-    setErrors({
-      name: false,
-      email: false,
-    });
-    setLoading(true);
+    setErrors({ name: false, email: false });
 
     const isEmailValid = validateEmail(email);
     const isNameValid = validateFullName(name);
 
     if (!isEmailValid || !isNameValid) {
-      let errorMsg = '';
-      if (!isNameValid) errorMsg += 'Invalid name. Please enter full name. ';
-      if (!isEmailValid) errorMsg += 'Invalid email address.';
-      setApiError(errorMsg.trim());
       setErrors({
         email: !isEmailValid,
         name: !isNameValid,
       });
       return;
     }
+
+    setLoading(true);
 
     try {
       const formattedSlots = selectedSlots.map((slot) => {
@@ -245,16 +239,11 @@ function ConfirmationPage() {
         />
       </div>
 
-      {apiError && (
-        <div className="mb-4 w-full max-w-md text-center text-red-500">
-          {apiError}
-        </div>
-      )}
-
       <ConfirmationActions
         onCancel={handleCancel}
         onConfirm={handleConfirm}
         loading={loading}
+        apiError={apiError}
         errors={errors}
       />
     </div>

@@ -1,18 +1,55 @@
-const ConfirmationActions = ({ onCancel, onConfirm }) => {
+const ConfirmationActions = ({
+  onCancel,
+  onConfirm,
+  loading,
+  apiError,
+  errors,
+}) => {
+  // Show one error message at a time
+  const renderError = () => {
+    if (apiError) {
+      return <p className="mt-2 text-sm text-red-500">{apiError}</p>;
+    }
+    if (errors.name) {
+      return (
+        <p className="mt-2 text-sm text-red-500">
+          Please enter a valid full name.
+        </p>
+      );
+    }
+    if (errors.email) {
+      return (
+        <p className="mt-2 text-sm text-red-500">
+          Please enter a valid email address.
+        </p>
+      );
+    }
+    return null;
+  };
+
   return (
-    <div className="mt-6 flex w-full max-w-md flex-col items-center gap-4">
+    <div className="flex w-full max-w-md flex-col items-center gap-5">
+      <div className="flex h-6 items-center justify-center">
+        {renderError()}
+      </div>
       <div className="flex w-full justify-between">
         <button
-          className="rounded-lg bg-red-500 px-6 py-2 text-white hover:bg-red-600"
+          className={`rounded-lg px-6 py-2 text-white ${
+            loading ? 'bg-red-300' : 'bg-red-500 hover:bg-red-600'
+          }`}
           onClick={onCancel}
+          disabled={loading}
         >
           Cancel
         </button>
         <button
-          className="rounded-lg bg-green-500 px-6 py-2 text-white hover:bg-green-600"
+          className={`rounded-lg px-6 py-2 text-white ${
+            loading ? 'bg-green-300' : 'bg-green-500 hover:bg-green-600'
+          }`}
           onClick={onConfirm}
+          disabled={loading}
         >
-          Confirm
+          {loading ? 'Processing...' : 'Confirm'}
         </button>
       </div>
     </div>
