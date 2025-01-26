@@ -9,15 +9,15 @@ describe('TimeSlotGrid', () => {
       short: 'Mon',
       date: '2024-03-18',
       displayDate: '18/03',
-      isPast: false
+      isPast: false,
     },
     {
       full: 'Tuesday',
       short: 'Tue',
       date: '2024-03-19',
       displayDate: '19/03',
-      isPast: true
-    }
+      isPast: true,
+    },
   ];
 
   const mockHours = [9, 10];

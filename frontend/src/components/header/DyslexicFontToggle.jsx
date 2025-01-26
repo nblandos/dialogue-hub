@@ -1,5 +1,5 @@
 import { Switch } from '@headlessui/react';
-import { FaFont } from "react-icons/fa";
+import { FaFont } from 'react-icons/fa';
 
 const DyslexicFontToggle = ({ isDyslexicFont, setIsDyslexicFont }) => {
   return (
@@ -11,7 +11,7 @@ const DyslexicFontToggle = ({ isDyslexicFont, setIsDyslexicFont }) => {
       />
       <FaFont
         size={32}
-        className="text-white hidden md:block"
+        className="hidden text-white md:block"
         data-testid="dyslexic-font-icon-desktop"
       />
       <Switch

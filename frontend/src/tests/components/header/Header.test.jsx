@@ -39,10 +39,10 @@ describe('Header', () => {
     renderHeader();
     const menuButton = screen.getByRole('button');
     const mobileMenu = screen.getByTestId('mobile-menu');
-    
+
     fireEvent.click(menuButton);
     expect(mobileMenu).toHaveClass('flex');
-    
+
     fireEvent.click(menuButton);
     expect(mobileMenu).toHaveClass('hidden');
   });
@@ -50,8 +50,10 @@ describe('Header', () => {
   it('loads and persists high contrast preference', () => {
     localStorage.setItem('highContrast', 'true');
     renderHeader();
-    expect(document.documentElement.classList.contains('high-contrast')).toBe(true);
-    
+    expect(document.documentElement.classList.contains('high-contrast')).toBe(
+      true
+    );
+
     const toggle = screen.getByRole('switch');
     fireEvent.click(toggle);
     expect(localStorage.getItem('highContrast')).toBe('false');

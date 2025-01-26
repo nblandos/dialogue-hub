@@ -1,18 +1,18 @@
-import { FaAdjust } from "react-icons/fa";
+import { FaAdjust } from 'react-icons/fa';
 import { Switch } from '@headlessui/react';
 
 const HighContrastToggle = ({ isHighContrast, setIsHighContrast }) => {
   return (
     <div className="flex items-center gap-2">
-      <FaAdjust 
-        size={24} 
-        className="text-white md:hidden" 
-        data-testid="high-contrast-icon-mobile" 
+      <FaAdjust
+        size={24}
+        className="text-white md:hidden"
+        data-testid="high-contrast-icon-mobile"
       />
-      <FaAdjust 
-        size={32} 
-        className="text-white hidden md:block" 
-        data-testid="high-contrast-icon-desktop" 
+      <FaAdjust
+        size={32}
+        className="hidden text-white md:block"
+        data-testid="high-contrast-icon-desktop"
       />
       <Switch
         checked={isHighContrast}

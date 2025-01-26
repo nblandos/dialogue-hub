@@ -89,8 +89,8 @@ These are instructions on how to run the project after you have completed setup 
 ### Backend Only
 
 - Navigate to `backend/`
-- Run `flask run`
-- Frontend should run on port 5000 and can be accessed at http://localhost:5000/
+- Run `python app.py`
+- Frontend should run on port 5001 and can be accessed at http://localhost:5001/
 
 ### Frontend + Backend with Docker Compose
 

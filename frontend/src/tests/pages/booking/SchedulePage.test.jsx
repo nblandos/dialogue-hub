@@ -4,7 +4,9 @@ import { BrowserRouter } from 'react-router-dom';
 import SchedulePage from '../../../pages/booking/SchedulePage';
 
 vi.mock('../../../components/booking/WeeklyTimetable', () => ({
-  default: () => <div data-testid="mock-weekly-timetable">Weekly Timetable</div>
+  default: () => (
+    <div data-testid="mock-weekly-timetable">Weekly Timetable</div>
+  ),
 }));
 
 describe('SchedulePage', () => {
