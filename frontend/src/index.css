@@ -52,6 +52,10 @@
   background-color: #fef037;
 }
 
+.high-contrast .bg-red-300 {
+  background-color: #08b9b9;
+}
+
 .high-contrast .bg-red-500 {
   background-color: #2dfafa;
 }
@@ -60,6 +64,10 @@
 }
 .high-contrast .hover\:bg-red-600:hover {
   background-color: #5bfefe;
+}
+
+.high-contrast .bg-green-300 {
+  background-color: #d92db0;
 }
 
 .high-contrast .bg-green-500 {
