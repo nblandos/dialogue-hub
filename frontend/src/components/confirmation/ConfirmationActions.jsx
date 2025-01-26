@@ -9,13 +9,15 @@ const ConfirmationActions = ({ onCancel, onConfirm, showEmailError }) => {
         </p>
       )}
       <div className="flex justify-between w-full">
-        <button
+        <button 
+        data-screen-reader-text="Cancel"
           className="bg-red-500 text-white py-2 px-6 rounded-lg hover:bg-red-600"
           onClick={onCancel}
         >
           Cancel
         </button>
         <button
+        data-screen-reader-text="Confirm"
           className="bg-green-500 text-white py-2 px-6 rounded-lg hover:bg-green-600"
           onClick={onConfirm}
         >
