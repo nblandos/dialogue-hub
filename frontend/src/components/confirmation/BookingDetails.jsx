@@ -2,7 +2,7 @@ const BookingDetails = ({ date, time }) => {
   return (
     <div className="mb-8 w-full max-w-md rounded-lg bg-white p-6 shadow-lg">
       <h2
-        tabindex="0"
+        tabIndex="0"
         className="mb-4 text-xl font-semibold"
         data-screen-reader-text="Booking Details"
       >
@@ -12,7 +12,7 @@ const BookingDetails = ({ date, time }) => {
         <p>
           <span
             className="font-bold"
-            tabindex="0"
+            tabIndex="0"
             data-screen-reader-text={`Date is ${date}`}
           >
             Date:
@@ -22,7 +22,7 @@ const BookingDetails = ({ date, time }) => {
         <p>
           <span
             className="font-bold"
-            tabindex="0"
+            tabIndex="0"
             data-screen-reader-text={`Time is ${time}`}
           >
             Time:

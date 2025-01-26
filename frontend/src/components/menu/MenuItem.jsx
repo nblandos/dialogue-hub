@@ -3,7 +3,7 @@ const MenuItem = ({ name, price, video }) => {
     <div className="rounded-lg bg-white p-4 shadow-lg transition-shadow hover:shadow-xl">
       <h2
         className="mb-2 text-center text-xl font-semibold"
-        tabindex="0"
+        tabIndex="0"
         data-screen-reader-text={`${name}`}
       >
         {name} <span className="text-sm text-gray-500">({price})</span>

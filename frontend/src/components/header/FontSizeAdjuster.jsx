@@ -41,7 +41,7 @@ const FontSizeAdjuster = () => {
       </button>
       <span
         className="text-xl font-bold text-white"
-        tabindex="0"
+        tabIndex="0"
         data-screen-reader-text={`Current font size is ${fontSize}px`}
       >
         {fontSize}px
