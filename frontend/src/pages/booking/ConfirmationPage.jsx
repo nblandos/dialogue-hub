@@ -48,6 +48,8 @@ function ConfirmationPage() {
   };
 
   const startRecording = (field) => {
+    stopRecording();
+
     if (
       !('webkitSpeechRecognition' in window || 'SpeechRecognition' in window)
     ) {
@@ -69,37 +71,40 @@ function ConfirmationPage() {
     setIsProcessing(true);
 
     recognition.onresult = (event) => {
-      let transcript = event.results[0][0].transcript.trim();
-
-      if (field === 'email') {
-        transcript = preprocessEmail(transcript);
+      if (recognitionRef.current === recognition) {
+        let transcript = event.results[0][0].transcript.trim();
+        if (field === 'email') transcript = preprocessEmail(transcript);
+        if (field === 'name') setName(transcript);
+        if (field === 'email') setEmail(transcript);
+        setRecordingField('');
+        setIsProcessing(false);
       }
-
-      if (field === 'name') {
-        setName(transcript);
-      } else if (field === 'email') {
-        setEmail(transcript);
-      }
-
-      setRecordingField('');
-      setIsProcessing(false);
     };
 
     recognition.onerror = (event) => {
-      console.error('Speech recognition error:', event.error);
-      setRecordingField('');
-      setIsProcessing(false);
+      if (recognitionRef.current === recognition) {
+        console.error('Speech recognition error:', event.error);
+        setRecordingField('');
+        setIsProcessing(false);
+      }
     };
 
     recognition.onend = () => {
-      setRecordingField('');
-      setIsProcessing(false);
+      if (recognitionRef.current === recognition) {
+        setRecordingField('');
+        setIsProcessing(false);
+        recognitionRef.current = null;
+      }
     };
   };
 
   const stopRecording = () => {
-    if (recordingField && recognitionRef.current) {
-      recognitionRef.current.stop();
+    if (recognitionRef.current) {
+      try {
+        recognitionRef.current.stop();
+      } catch (error) {
+        console.error('Error stopping recognition:', error);
+      }
       recognitionRef.current = null;
       setRecordingField('');
       setIsProcessing(false);
