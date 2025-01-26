@@ -1,5 +1,3 @@
-import React from 'react';
-
 const MenuItem = ({ name, price, video }) => {
   return (
     <div className="rounded-lg bg-white p-4 shadow-lg transition-shadow hover:shadow-xl">
