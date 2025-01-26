@@ -39,7 +39,7 @@ const TimeSlotGrid = ({ days, hours, selectedSlots, onSlotClick }) => {
               <div
                 tabindex="0"
                 data-screen-reader-text={
-                    selectedSlots.includes(`${day.date}T${hour}`)
+                  selectedSlots.includes(`${day.date}T${hour}`)
                     ? `Selected ${hour} o'clock on ${day.date}`
                     : `Enter to select ${hour} o'clock on ${day.date}`
                 }
