@@ -81,9 +81,8 @@ function ConfirmationPage() {
       }
     };
 
-    recognition.onerror = (event) => {
+    recognition.onerror = () => {
       if (recognitionRef.current === recognition) {
-        console.error('Speech recognition error:', event.error);
         setRecordingField('');
         setIsProcessing(false);
       }
@@ -100,11 +99,7 @@ function ConfirmationPage() {
 
   const stopRecording = () => {
     if (recognitionRef.current) {
-      try {
-        recognitionRef.current.stop();
-      } catch (error) {
-        console.error('Error stopping recognition:', error);
-      }
+      recognitionRef.current.stop();
       recognitionRef.current = null;
       setRecordingField('');
       setIsProcessing(false);
@@ -117,7 +112,10 @@ function ConfirmationPage() {
   };
 
   const validateFullName = (name) => {
-    return name.trim().split(' ').length >= 2;
+    const trimmedName = name.trim();
+    if (trimmedName.length < 2) return false;
+    if (trimmedName.length > 100) return false;
+    return trimmedName.split(' ').length >= 2;
   };
 
   const handleConfirm = async () => {
@@ -127,6 +125,7 @@ function ConfirmationPage() {
       name: false,
       email: false,
     });
+    setLoading(true);
 
     const isEmailValid = validateEmail(email);
     const isNameValid = validateFullName(name);
@@ -143,49 +142,52 @@ function ConfirmationPage() {
       return;
     }
 
-    setLoading(true);
-
     try {
-      const payload = {
-        user: {
-          email: email.trim(),
-          full_name: name.trim(),
-        },
-        timeslots: selectedSlots.map((slot) => ({
-          start_time: slot,
-        })),
-      };
+      const formattedSlots = selectedSlots.map((slot) => {
+        const [date, time] = slot.split('T');
+        return {
+          start_time: `${date}T${time.padStart(2, '0')}:00:00+00:00`,
+        };
+      });
 
       const response = await fetch(
         `${import.meta.env.VITE_API_URL}/create-booking`,
         {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(payload),
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            user: {
+              email: email.trim(),
+              full_name: name.trim(),
+            },
+            timeslots: formattedSlots,
+          }),
         }
       );
 
       const data = await response.json();
 
       if (!response.ok) {
-        if (response.status === 400) {
-          throw new Error(
-            'Missing or invalid data. Please double-check your details.'
-          );
-        } else if (response.status === 500) {
-          throw new Error('Server error. Please try again later.');
+        switch (data.code) {
+          case 'INVALID_REQUEST':
+            throw new Error('Missing booking data. Please fill in all fields.');
+          case 'INVALID_DATA':
+            throw new Error(data.message || 'Booking data is invalid.');
+          case 'EMAIL_ERROR':
+            throw new Error('Booking created but email confirmation failed.');
+          case 'SERVER_ERROR':
+            throw new Error('A server error occurred. Please try again later.');
+          default:
+            throw new Error(data.message || 'Failed to create booking.');
         }
-        throw new Error(data.message || 'Failed to create booking.');
       }
 
       // redirect to success page once implemented, for now redirect to schedule page
       navigate('/', {
-        state: {
-          bookingId: data.id,
-          email: email,
-        },
+        // state: {
+        //   bookingId: data.id,
+        //   email: email,
+        // },
       });
     } catch (err) {
       setApiError(err.message);
@@ -217,7 +219,7 @@ function ConfirmationPage() {
         <InputFieldWithMic
           id="name"
           label="Full Name"
-          placeholder="Enter your Full Name"
+          placeholder="Enter your full name"
           value={name}
           onChange={(e) => setName(e.target.value)}
           onMicClick={() =>
