@@ -221,6 +221,7 @@ function ConfirmationPage() {
           }
           recordingField={recordingField}
           isProcessing={isProcessing}
+          autoComplete="name"
         />
 
         <InputFieldWithMic
@@ -236,6 +237,7 @@ function ConfirmationPage() {
           }
           recordingField={recordingField}
           isProcessing={isProcessing}
+          autoComplete="email"
         />
       </div>
 

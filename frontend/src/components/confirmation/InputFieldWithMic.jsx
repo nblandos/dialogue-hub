@@ -7,6 +7,7 @@ const InputFieldWithMic = ({
   onMicClick,
   recordingField,
   isProcessing,
+  autoComplete,
 }) => {
   return (
     <div className="mb-4">
@@ -21,6 +22,7 @@ const InputFieldWithMic = ({
           className="w-full rounded-lg border border-gray-300 p-2"
           value={value}
           onChange={onChange}
+          autoComplete={autoComplete}
         />
         <button
           onClick={onMicClick}
