@@ -2,7 +2,7 @@ services:
   backend:
     build: ./backend
     ports:
-      - "5000:5000"
+      - "5001:5001"
     volumes:
       - ./backend:/app
       - sqlite_data:/app/instance
@@ -19,7 +19,7 @@ services:
       - ./frontend:/app
       - /app/node_modules
     environment:
-      - VITE_API_URL=http://localhost:5000
+      - BACKEND_API_URL=http://localhost:5001
     depends_on:
       - backend
 
