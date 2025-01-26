@@ -48,6 +48,25 @@
   background-color: #fef037;
 }
 
+.high-contrast .bg-blue-500 {
+  background-color: #fef037;
+}
+
+.high-contrast .bg-red-500 {
+  background-color: #2dfafa;
+}
+.high-contrast .hover\:bg-red-600:hover {
+  background-color: #5bfefe;
+}
+
+.high-contrast .bg-green-500 {
+  background-color: #fe89f2;
+}
+
+.high-contrast .hover\:bg-green-600:hover {
+  background-color: #febcf8;
+}
+
 /* Timeslot Colors */
 .high-contrast .bg-green-500\/80 {
   background-color: #f772e0;
