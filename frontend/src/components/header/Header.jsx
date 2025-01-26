@@ -1,36 +1,39 @@
-import { useState, useEffect } from "react";
-import { FaBars, FaTimes } from "react-icons/fa";
-import NavLinks from "./NavLinks";
-import HighContrastToggle from "./HighContrastToggle";
-import DyslexicFontToggle from "./DyslexicFontToggle";
-import FontSizeAdjuster from "./FontSizeAdjuster";
-import ScreenReader from "./ScreenReader";
+import { useState, useEffect } from 'react';
+import { FaBars, FaTimes } from 'react-icons/fa';
+import NavLinks from './NavLinks';
+import HighContrastToggle from './HighContrastToggle';
+import DyslexicFontToggle from './DyslexicFontToggle';
+import FontSizeAdjuster from './FontSizeAdjuster';
+import ScreenReader from './ScreenReader';
 
 const Header = () => {
   const [isHighContrast, setIsHighContrast] = useState(() => {
-    return localStorage.getItem("highContrast") === "true";
+    return localStorage.getItem('highContrast') === 'true';
   });
   const [isDyslexicFont, setIsDyslexicFont] = useState(() => {
-    return localStorage.getItem("dyslexicFont") === "true";
+    return localStorage.getItem('dyslexicFont') === 'true';
   });
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     // Apply high contrast mode
-    document.documentElement.classList.toggle("high-contrast", isHighContrast);
-    localStorage.setItem("highContrast", isHighContrast);
+    document.documentElement.classList.toggle('high-contrast', isHighContrast);
+    localStorage.setItem('highContrast', isHighContrast);
   }, [isHighContrast]);
 
   useEffect(() => {
     // Apply dyslexic font mode
-    document.documentElement.classList.toggle("dyslexic-font", isDyslexicFont);
-    localStorage.setItem("dyslexicFont", isDyslexicFont);
+    document.documentElement.classList.toggle('dyslexic-font', isDyslexicFont);
+    localStorage.setItem('dyslexicFont', isDyslexicFont);
   }, [isDyslexicFont]);
 
   return (
     <nav className="fixed inset-x-0 top-0 z-10 h-24 bg-orange-500 p-4 px-4 shadow-md md:px-16">
       <div className="flex h-full items-center justify-between">
-        <div className="text-2xl font-bold text-white md:text-4xl" data-screen-reader-text="Dialogue Cafe">
+        <div
+          className="text-2xl font-bold text-white md:text-4xl"
+          data-screen-reader-text="Dialogue Cafe"
+        >
           Dialogue Cafe
         </div>
 
@@ -49,14 +52,14 @@ const Header = () => {
             isDyslexicFont={isDyslexicFont}
             setIsDyslexicFont={setIsDyslexicFont}
           />
-          <FontSizeAdjuster />
           <ScreenReader />
+          <FontSizeAdjuster />
 
           {/* Mobile Menu Button */}
           <button
             className="text-white md:hidden"
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            aria-label={isMobileMenuOpen ? "Close menu" : "Open menu"}
+            aria-label={isMobileMenuOpen ? 'Close menu' : 'Open menu'}
             aria-expanded={isMobileMenuOpen}
           >
             {isMobileMenuOpen ? <FaTimes size={24} /> : <FaBars size={24} />}
@@ -68,7 +71,7 @@ const Header = () => {
       <div
         data-testid="mobile-menu"
         className={`${
-          isMobileMenuOpen ? "flex" : "hidden"
+          isMobileMenuOpen ? 'flex' : 'hidden'
         } absolute left-0 right-0 top-24 flex-col bg-orange-500 p-4 shadow-md md:hidden`}
       >
         <NavLinks isMobile />

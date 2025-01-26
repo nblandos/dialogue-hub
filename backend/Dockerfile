@@ -7,4 +7,6 @@ COPY . .
 
 RUN mkdir -p instance && chmod 777 instance
 
+EXPOSE 5001
+
 CMD ["python", "app.py"]

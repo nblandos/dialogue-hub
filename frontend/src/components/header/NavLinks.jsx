@@ -9,15 +9,15 @@ const NavLinks = ({ isMobile = false }) => {
     <>
       <Link
         to="/"
-              className={`${baseClasses} ${isMobile ? mobileClasses : ''}`}
-              data-screen-reader-text="Book"
+        className={`${baseClasses} ${isMobile ? mobileClasses : ''}`}
+        data-screen-reader-text="Book"
       >
         Book
       </Link>
       <Link
         to="/menu"
-              className={`${baseClasses} ${isMobile ? mobileClasses : ''}`}
-              data-screen-reader-text="Menu"
+        className={`${baseClasses} ${isMobile ? mobileClasses : ''}`}
+        data-screen-reader-text="Menu"
       >
         Menu
       </Link>

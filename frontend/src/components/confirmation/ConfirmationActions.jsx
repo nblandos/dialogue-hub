@@ -1,27 +1,57 @@
-import React from "react";
-
-const ConfirmationActions = ({ onCancel, onConfirm, showEmailError }) => {
-  return (
-    <div className="flex flex-col items-center gap-4 w-full max-w-md mt-6">
-      {showEmailError && (
-        <p className="text-red-500 text-sm">
+const ConfirmationActions = ({
+  onCancel,
+  onConfirm,
+  loading,
+  apiError,
+  errors,
+}) => {
+  // Show one error message at a time
+  const renderError = () => {
+    if (apiError) {
+      return <p className="mt-2 text-sm text-red-500">{apiError}</p>;
+    }
+    if (errors.name) {
+      return (
+        <p className="mt-2 text-sm text-red-500">
+          Please enter a valid full name.
+        </p>
+      );
+    }
+    if (errors.email) {
+      return (
+        <p className="mt-2 text-sm text-red-500">
           Please enter a valid email address.
         </p>
-      )}
-      <div className="flex justify-between w-full">
-        <button 
-        data-screen-reader-text="Cancel"
-          className="bg-red-500 text-white py-2 px-6 rounded-lg hover:bg-red-600"
+      );
+    }
+    return null;
+  };
+
+  return (
+    <div className="flex w-full max-w-md flex-col items-center gap-5">
+      <div className="flex h-6 items-center justify-center">
+        {renderError()}
+      </div>
+      <div className="flex w-full justify-between">
+        <button
+          data-screen-reader-text="Cancel"
+          className={`rounded-lg px-6 py-2 text-white ${
+            loading ? 'bg-red-300' : 'bg-red-500 hover:bg-red-600'
+          }`}
           onClick={onCancel}
+          disabled={loading}
         >
           Cancel
         </button>
         <button
-        data-screen-reader-text="Confirm"
-          className="bg-green-500 text-white py-2 px-6 rounded-lg hover:bg-green-600"
+          data-screen-reader-text="Confirm"
+          className={`rounded-lg px-6 py-2 text-white ${
+            loading ? 'bg-green-300' : 'bg-green-500 hover:bg-green-600'
+          }`}
           onClick={onConfirm}
+          disabled={loading}
         >
-          Confirm
+          {loading ? 'Processing...' : 'Confirm'}
         </button>
       </div>
     </div>

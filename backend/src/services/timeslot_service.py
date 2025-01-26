@@ -32,6 +32,8 @@ class TimeslotService:
             raise ValueError("No timeslots provided")
 
         start_times = self.get_start_times(timeslots)
+        start_times.sort()
+
         unique_times = set(start_times)
 
         # check for duplicate timeslots

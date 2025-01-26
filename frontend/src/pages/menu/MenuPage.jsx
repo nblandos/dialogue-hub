@@ -23,7 +23,7 @@ const MenuPage = () => {
     <div className="min-h-screen bg-gray-100 p-6 pt-32">
       <h1 className="mb-8 text-center text-3xl font-bold">Cafe Menu</h1>
       <div className="mb-6 flex items-center justify-between">
-        <label htmlFor="search" className="mb-1 text-sm">
+        <label htmlFor="search" className="sr-only">
           Search Menu
         </label>
         <input
@@ -33,8 +33,10 @@ const MenuPage = () => {
           className="w-1/3 rounded-lg border border-gray-300 p-2"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
+          aria-label="Search Menu"
         />
-        <label htmlFor="sort" className="mb-1 text-sm">
+
+        <label htmlFor="sort" className="sr-only">
           Sort By
         </label>
         <select
@@ -42,12 +44,12 @@ const MenuPage = () => {
           className="rounded-lg border border-gray-300 p-2"
           value={sortOption}
           onChange={(e) => setSortOption(e.target.value)}
+          aria-label="Sort By"
         >
           <option value="name">Sort by Name</option>
           <option value="price">Sort by Price</option>
         </select>
       </div>
-      {/* Render CoffeeMenu with filteredMenu passed as props */}
       <MenuDiv filteredMenu={filteredMenu} />
     </div>
   );
