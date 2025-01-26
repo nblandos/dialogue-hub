@@ -29,7 +29,12 @@ function ConfirmationPage() {
 
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
-  const [showEmailError, setShowEmailError] = useState(false);
+  const [apiError, setApiError] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [errors, setErrors] = useState({
+    name: false,
+    email: false,
+  });
 
   const [recordingField, setRecordingField] = useState('');
   const [isProcessing, setIsProcessing] = useState(false);
@@ -106,13 +111,70 @@ function ConfirmationPage() {
     return emailRegex.test(email);
   };
 
-  const handleConfirm = () => {
+  const validateFullName = (name) => {
+    return name.trim().split(' ').length >= 2;
+  };
+
+  const handleConfirm = async () => {
     stopRecording();
-    if (!validateEmail(email)) {
-      setShowEmailError(true);
-    } else {
-      setShowEmailError(false);
-      console.log('Confirm booking logic should be implemented.');
+    setApiError('');
+    setErrors({
+      name: false,
+      email: false,
+    });
+
+    const isEmailValid = validateEmail(email);
+    const isNameValid = validateFullName(name);
+
+    if (!isEmailValid || !isNameValid) {
+      setErrors({
+        email: !isEmailValid,
+        name: !isNameValid,
+      });
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      const payload = {
+        user: {
+          email: email.trim(),
+          full_name: name.trim(),
+        },
+        timeslots: selectedSlots.map((slot) => ({
+          start_time: slot,
+        })),
+      };
+
+      const response = await fetch(
+        `${import.meta.env.VITE_API_URL}/create-booking`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(payload),
+        }
+      );
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || 'Failed to create booking');
+      }
+
+      // redirect to success page once implemented, for now redirect to schedule page
+      navigate('/', {
+        state: {
+          bookingId: data.id,
+          email: email,
+        },
+      });
+    } catch (err) {
+      setApiError(err.message);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -132,12 +194,14 @@ function ConfirmationPage() {
       <h1 className="mb-8 text-center text-3xl font-bold">
         Confirm Your Booking
       </h1>
+
       <BookingDetails date={formattedDate} time={formattedTime} />
+
       <div className="w-full max-w-md">
         <InputFieldWithMic
           id="name"
-          label="Name and Surname"
-          placeholder="Enter your name and surname"
+          label="Full Name"
+          placeholder="Enter your Full Name"
           value={name}
           onChange={(e) => setName(e.target.value)}
           onMicClick={() =>
@@ -146,6 +210,7 @@ function ConfirmationPage() {
           recordingField={recordingField}
           isProcessing={isProcessing}
         />
+
         <InputFieldWithMic
           id="email"
           label="Email"
@@ -161,10 +226,18 @@ function ConfirmationPage() {
           isProcessing={isProcessing}
         />
       </div>
+
+      {apiError && (
+        <div className="mb-4 w-full max-w-md text-center text-red-500">
+          {apiError}
+        </div>
+      )}
+
       <ConfirmationActions
         onCancel={handleCancel}
         onConfirm={handleConfirm}
-        showEmailError={showEmailError}
+        loading={loading}
+        errors={errors}
       />
     </div>
   );

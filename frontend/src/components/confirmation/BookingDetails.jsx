@@ -1,5 +1,3 @@
-import React from 'react';
-
 const BookingDetails = ({ date, time }) => {
   return (
     <div className="mb-8 w-full max-w-md rounded-lg bg-white p-6 shadow-lg">
