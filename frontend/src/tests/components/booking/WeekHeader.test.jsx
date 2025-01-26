@@ -8,7 +8,7 @@ describe('WeekHeader', () => {
     weekStart: mockDate,
     onPrevWeek: vi.fn(),
     onNextWeek: vi.fn(),
-    onCurrentWeek: vi.fn()
+    onCurrentWeek: vi.fn(),
   };
 
   beforeEach(() => {
@@ -29,11 +29,13 @@ describe('WeekHeader', () => {
   it('displays different dates correctly', () => {
     const testDates = [
       { date: new Date(2024, 5, 15), expected: 'Week of 15 Jun 2024' },
-      { date: new Date(2024, 11, 25), expected: 'Week of 25 Dec 2024' }
+      { date: new Date(2024, 11, 25), expected: 'Week of 25 Dec 2024' },
     ];
 
     testDates.forEach(({ date, expected }) => {
-      const { rerender } = render(<WeekHeader {...mockProps} weekStart={date} />);
+      const { rerender } = render(
+        <WeekHeader {...mockProps} weekStart={date} />
+      );
       expect(screen.getByText(expected)).toBeInTheDocument();
       rerender(<WeekHeader {...mockProps} weekStart={mockDate} />);
     });

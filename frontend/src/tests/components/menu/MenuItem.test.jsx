@@ -4,7 +4,9 @@ import MenuItem from '../../../components/menu/MenuItem';
 
 describe('MenuItem', () => {
   it('renders the name and price', () => {
-    render(<MenuItem name="Test Coffee" price="£2.50" video="https://example.com" />);
+    render(
+      <MenuItem name="Test Coffee" price="£2.50" video="https://example.com" />
+    );
     expect(screen.getByText('Test Coffee')).toBeInTheDocument();
     expect(screen.getByText('(£2.50)')).toBeInTheDocument();
   });
@@ -24,7 +26,9 @@ describe('MenuItem', () => {
       value: { postMessage: postMessageMock },
     });
 
-    render(<MenuItem name="Hover Test" price="£2.00" video="https://example.com" />);
+    render(
+      <MenuItem name="Hover Test" price="£2.00" video="https://example.com" />
+    );
     const iframe = screen.getByTitle('Hover Test');
     fireEvent.mouseOver(iframe);
     expect(postMessageMock).toHaveBeenCalledWith(
@@ -40,7 +44,9 @@ describe('MenuItem', () => {
       value: { postMessage: postMessageMock },
     });
 
-    render(<MenuItem name="Hover Test" price="£2.00" video="https://example.com" />);
+    render(
+      <MenuItem name="Hover Test" price="£2.00" video="https://example.com" />
+    );
     const iframe = screen.getByTitle('Hover Test');
     fireEvent.mouseOut(iframe);
     expect(postMessageMock).toHaveBeenCalledWith(

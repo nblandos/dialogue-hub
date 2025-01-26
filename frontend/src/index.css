@@ -97,17 +97,16 @@
   border-color: #726a5d;
 }
 
-.high-contrast input[type="text"],
+.high-contrast input[type='text'],
 .high-contrast select {
   background-color: #000000;
   color: #fbfbfb;
   border-color: #726a5d;
 }
 
-.high-contrast input[type="text"]::placeholder {
+.high-contrast input[type='text']::placeholder {
   color: #bcb4a5;
 }
-
 
 /* Revert inversion for media elements
 .high-contrast img,
@@ -115,7 +114,6 @@
 .high-contrast iframe {
   filter: invert(1);
 } */
-
 
 .dyslexic-font {
   font-family: 'OpenDyslexic', 'Comic Sans MS', sans-serif;

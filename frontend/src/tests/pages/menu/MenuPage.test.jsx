@@ -48,8 +48,15 @@ describe('MenuPage', () => {
 
     // check that prices are in ascending order, remove parentheses and £ sign
     for (let i = 0; i < prices.length - 1; i++) {
-      const current = parseFloat(prices[i].textContent.replace('(', '').replace(')', '').replace('£', ''));
-      const next = parseFloat(prices[i + 1].textContent.replace('(', '').replace(')', '').replace('£', ''));
+      const current = parseFloat(
+        prices[i].textContent.replace('(', '').replace(')', '').replace('£', '')
+      );
+      const next = parseFloat(
+        prices[i + 1].textContent
+          .replace('(', '')
+          .replace(')', '')
+          .replace('£', '')
+      );
       expect(current).toBeLessThanOrEqual(next);
     }
   });

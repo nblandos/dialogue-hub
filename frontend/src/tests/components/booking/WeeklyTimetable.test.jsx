@@ -6,10 +6,18 @@ import WeeklyTimetable from '../../../components/booking/WeeklyTimetable';
 vi.mock('../../../components/booking/TimeSlotGrid', () => ({
   default: ({ onSlotClick }) => (
     <div data-testid="time-slot-grid">
-      <button onClick={() => onSlotClick('2024-03-18', 9)}>Select 9:00 (Mon)</button>
-      <button onClick={() => onSlotClick('2024-03-18', 10)}>Select 10:00 (Mon)</button>
-      <button onClick={() => onSlotClick('2024-03-18', 11)}>Select 11:00 (Mon)</button>
-      <button onClick={() => onSlotClick('2024-03-19', 9)}>Select 9:00 (Tue)</button>
+      <button onClick={() => onSlotClick('2024-03-18', 9)}>
+        Select 9:00 (Mon)
+      </button>
+      <button onClick={() => onSlotClick('2024-03-18', 10)}>
+        Select 10:00 (Mon)
+      </button>
+      <button onClick={() => onSlotClick('2024-03-18', 11)}>
+        Select 11:00 (Mon)
+      </button>
+      <button onClick={() => onSlotClick('2024-03-19', 9)}>
+        Select 9:00 (Tue)
+      </button>
     </div>
   ),
 }));
@@ -66,7 +74,9 @@ describe('WeeklyTimetable', () => {
     renderComponent();
     expect(screen.getByTestId('week-header')).toBeInTheDocument();
     expect(screen.getByTestId('time-slot-grid')).toBeInTheDocument();
-    expect(screen.queryByTestId('selected-time-display')).not.toBeInTheDocument();
+    expect(
+      screen.queryByTestId('selected-time-display')
+    ).not.toBeInTheDocument();
   });
 
   it('handles week navigation', () => {
@@ -87,24 +97,34 @@ describe('WeeklyTimetable', () => {
   it('removes a previously selected slot if clicked again', () => {
     renderComponent();
     fireEvent.click(screen.getByText('Select 9:00 (Mon)'));
-    expect(screen.getByTestId('selected-time-display')).toHaveTextContent('09:00 - 10:00');
+    expect(screen.getByTestId('selected-time-display')).toHaveTextContent(
+      '09:00 - 10:00'
+    );
     fireEvent.click(screen.getByText('Select 9:00 (Mon)'));
-    expect(screen.queryByTestId('selected-time-display')).not.toBeInTheDocument();
+    expect(
+      screen.queryByTestId('selected-time-display')
+    ).not.toBeInTheDocument();
   });
 
   it('allows selecting consecutive slots', () => {
     renderComponent();
     fireEvent.click(screen.getByText('Select 9:00 (Mon)'));
     fireEvent.click(screen.getByText('Select 10:00 (Mon)'));
-    expect(screen.getByTestId('selected-time-display')).toHaveTextContent('09:00 - 11:00');
+    expect(screen.getByTestId('selected-time-display')).toHaveTextContent(
+      '09:00 - 11:00'
+    );
   });
 
   it('resets selection if a slot is chosen for a different day', () => {
     renderComponent();
     fireEvent.click(screen.getByText('Select 9:00 (Mon)'));
     fireEvent.click(screen.getByText('Select 9:00 (Tue)'));
-    expect(screen.getByTestId('selected-time-display')).toHaveTextContent('09:00 - 10:00');
-    expect(screen.getByTestId('selected-time-display')).not.toHaveTextContent('Mon');
+    expect(screen.getByTestId('selected-time-display')).toHaveTextContent(
+      '09:00 - 10:00'
+    );
+    expect(screen.getByTestId('selected-time-display')).not.toHaveTextContent(
+      'Mon'
+    );
   });
 
   it('removes a middle slot if it is clicked again', () => {
@@ -123,7 +143,9 @@ describe('WeeklyTimetable', () => {
     renderComponent();
     fireEvent.click(screen.getByText('Select 9:00 (Mon)'));
     fireEvent.click(screen.getByText('Cancel'));
-    expect(screen.queryByTestId('selected-time-display')).not.toBeInTheDocument();
+    expect(
+      screen.queryByTestId('selected-time-display')
+    ).not.toBeInTheDocument();
   });
 
   it('navigates to confirmation page on booking', () => {
@@ -131,17 +153,18 @@ describe('WeeklyTimetable', () => {
     fireEvent.click(screen.getByText('Select 9:00 (Mon)'));
     fireEvent.click(screen.getByText('Book'));
     expect(mockNavigate).toHaveBeenCalledWith('/confirmation', {
-      state: { selectedSlots: ['2024-03-18T9'] }
+      state: { selectedSlots: ['2024-03-18T9'] },
     });
   });
 
   it('starts on the next week when current day is weekend', () => {
     vi.setSystemTime(new Date('2025-03-16')); // Saturday
     renderComponent();
-    
+
     // should show slots starting from next Monday (18th)
     fireEvent.click(screen.getByText('Select 9:00 (Mon)'));
-    expect(screen.getByTestId('selected-time-display'))
-      .toHaveTextContent('Monday, 18 Mar 2024');
+    expect(screen.getByTestId('selected-time-display')).toHaveTextContent(
+      'Monday, 18 Mar 2024'
+    );
   });
 });

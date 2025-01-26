@@ -1,37 +1,37 @@
-import React, { useState } from "react";
-import initialMenu from "./menuData";
-import MenuDiv from "../../components/menu/MenuDiv";
+import React, { useState } from 'react';
+import initialMenu from './menuData';
+import MenuDiv from '../../components/menu/MenuDiv';
 
 const MenuPage = () => {
-  const [searchTerm, setSearchTerm] = useState("");
-  const [sortOption, setSortOption] = useState("name");
+  const [searchTerm, setSearchTerm] = useState('');
+  const [sortOption, setSortOption] = useState('name');
 
   const filteredMenu = initialMenu
     .filter((item) =>
       item.name.toLowerCase().includes(searchTerm.toLowerCase())
     )
     .sort((a, b) => {
-      if (sortOption === "name") {
+      if (sortOption === 'name') {
         return a.name.localeCompare(b.name);
       }
-      if (sortOption === "price") {
+      if (sortOption === 'price') {
         return parseFloat(a.price.slice(1)) - parseFloat(b.price.slice(1));
       }
     });
 
   return (
-    <div className="min-h-screen bg-gray-100 pt-32 p-6">
-      <h1 className="text-3xl font-bold text-center mb-8">Cafe Menu</h1>
-      <div className="flex justify-between items-center mb-6">
+    <div className="min-h-screen bg-gray-100 p-6 pt-32">
+      <h1 className="mb-8 text-center text-3xl font-bold">Cafe Menu</h1>
+      <div className="mb-6 flex items-center justify-between">
         <input
           type="text"
           placeholder="Search..."
-          className="border border-gray-300 rounded-lg p-2 w-1/3"
+          className="w-1/3 rounded-lg border border-gray-300 p-2"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
         />
         <select
-          className="border border-gray-300 rounded-lg p-2"
+          className="rounded-lg border border-gray-300 p-2"
           value={sortOption}
           onChange={(e) => setSortOption(e.target.value)}
         >

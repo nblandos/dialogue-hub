@@ -52,7 +52,7 @@ const TimeSlotGrid = ({ days, hours, selectedSlots, onSlotClick }) => {
                       ? 'Selected timeslot'
                       : 'Bookable timeslot'
                     : undefined
-                }   
+                }
               >
                 {!day.isPast && (
                   <span className="absolute inset-0 flex items-center justify-center text-xs text-black/70 sm:text-sm">
@@ -71,4 +71,3 @@ const TimeSlotGrid = ({ days, hours, selectedSlots, onSlotClick }) => {
 };
 
 export default TimeSlotGrid;
-
