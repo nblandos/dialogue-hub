@@ -37,6 +37,12 @@ const TimeSlotGrid = ({ days, hours, selectedSlots, onSlotClick }) => {
           >
             {days.map((day) => (
               <div
+                tabindex="0"
+                data-screen-reader-text={
+                    selectedSlots.includes(`${day.date}T${hour}`)
+                    ? `Selected ${hour} o'clock on ${day.date}`
+                    : `Enter to select ${hour} o'clock on ${day.date}`
+                }
                 key={`${day.date}-${hour}`}
                 onClick={() => !day.isPast && onSlotClick(day.date, hour)}
                 className={`relative rounded-md border p-2 transition-colors ${
