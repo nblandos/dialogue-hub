@@ -1,6 +1,6 @@
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
-import SelectedTimeDisplay from '../../../components/booking/SelectedTimeDisplay';
+import SelectedTimeDisplay from '../../../../components/booking/schedule/SelectedTimeDisplay';
 
 describe('SelectedTimeDisplay', () => {
   const mockFormattedTime = '2:00 PM - 3:00 PM';

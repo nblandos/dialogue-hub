@@ -1,6 +1,6 @@
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen } from '@testing-library/react';
-import WeekHeader from '../../../components/booking/WeekHeader';
+import WeekHeader from '../../../../components/booking/schedule/WeekHeader';
 
 describe('WeekHeader', () => {
   const mockDate = new Date(2024, 0, 1);

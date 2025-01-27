@@ -1,9 +1,9 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
 import SchedulePage from '../../../pages/booking/SchedulePage';
 
-vi.mock('../../../components/booking/WeeklyTimetable', () => ({
+vi.mock('../../../components/booking/schedule/WeeklyTimetable', () => ({
   default: () => (
     <div data-testid="mock-weekly-timetable">Weekly Timetable</div>
   ),

@@ -1,6 +1,6 @@
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
-import TimeSlotGrid from '../../../components/booking/TimeSlotGrid';
+import TimeSlotGrid from '../../../../components/booking/schedule/TimeSlotGrid';
 
 describe('TimeSlotGrid', () => {
   const mockDays = [

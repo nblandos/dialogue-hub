@@ -1,9 +1,9 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
-import WeeklyTimetable from '../../../components/booking/WeeklyTimetable';
+import WeeklyTimetable from '../../../../components/booking/schedule/WeeklyTimetable';
 
-vi.mock('../../../components/booking/TimeSlotGrid', () => ({
+vi.mock('../../../../components/booking/schedule/TimeSlotGrid', () => ({
   default: ({ onSlotClick }) => (
     <div data-testid="time-slot-grid">
       <button onClick={() => onSlotClick('2024-03-18', 9)}>
@@ -22,7 +22,7 @@ vi.mock('../../../components/booking/TimeSlotGrid', () => ({
   ),
 }));
 
-vi.mock('../../../components/booking/WeekHeader', () => ({
+vi.mock('../../../../components/booking/schedule/WeekHeader', () => ({
   default: ({ onPrevWeek, onNextWeek, onCurrentWeek }) => (
     <div data-testid="week-header">
       <button onClick={onPrevWeek}>Previous Week</button>
@@ -32,7 +32,7 @@ vi.mock('../../../components/booking/WeekHeader', () => ({
   ),
 }));
 
-vi.mock('../../../components/booking/SelectedTimeDisplay', () => ({
+vi.mock('../../../../components/booking/schedule/SelectedTimeDisplay', () => ({
   default: ({ formattedTime, onCancel, onBook }) => (
     <div data-testid="selected-time-display">
       <span>{formattedTime}</span>

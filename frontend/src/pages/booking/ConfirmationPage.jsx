@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { format, parseISO } from 'date-fns';
-import BookingDetails from '../../components/confirmation/BookingDetails';
-import InputFieldWithMic from '../../components/confirmation/InputFieldWithMic';
-import ConfirmationActions from '../../components/confirmation/ConfirmationActions';
+import BookingDetails from '../../components/booking/confirmation/BookingDetails';
+import InputFieldWithMic from '../../components/booking/confirmation/InputFieldWithMic';
+import ConfirmationActions from '../../components/booking/confirmation/ConfirmationActions';
 
 function ConfirmationPage() {
   const location = useLocation();
