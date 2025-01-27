@@ -1,6 +1,17 @@
 import React from 'react';
 
 const TimeSlotGrid = ({ days, hours, selectedSlots, onSlotClick }) => {
+  const now = new Date();
+  const currentDate = now.toISOString().split('T')[0];
+  const currentHour = now.getHours();
+
+  const isSlotPast = (dayDate, hour) => {
+    // if day is in the past or today and hour has passed
+    return (
+      dayDate < currentDate || (dayDate === currentDate && hour <= currentHour)
+    );
+  };
+
   return (
     <div className="grid grid-cols-[100px_auto] gap-1">
       <div className="font-semibold">Time</div>
@@ -38,29 +49,33 @@ const TimeSlotGrid = ({ days, hours, selectedSlots, onSlotClick }) => {
             {days.map((day) => (
               <div
                 tabIndex="0"
-                data-screen-reader-text={
-                  selectedSlots.includes(`${day.date}T${hour}`)
-                    ? `Selected ${hour} o'clock on ${day.date}`
-                    : `Enter to select ${hour} o'clock on ${day.date}`
-                }
                 key={`${day.date}-${hour}`}
-                onClick={() => !day.isPast && onSlotClick(day.date, hour)}
+                data-screen-reader-text={
+                  isSlotPast(day.date, hour)
+                    ? `Unavailable timeslot, ${hour} o'clock on ${day.date}`
+                    : selectedSlots.includes(`${day.date}T${hour}`)
+                      ? `Selected ${hour} o'clock on ${day.date}`
+                      : `Enter to select ${hour} o'clock on ${day.date}`
+                }
+                onClick={() =>
+                  !isSlotPast(day.date, hour) && onSlotClick(day.date, hour)
+                }
                 className={`relative rounded-md border p-2 transition-colors ${
-                  selectedSlots.includes(`${day.date}T${hour}`)
-                    ? 'cursor-pointer bg-green-500/80 text-white'
-                    : day.isPast
-                      ? 'cursor-not-allowed bg-gray-100 opacity-50'
+                  isSlotPast(day.date, hour)
+                    ? 'cursor-not-allowed bg-gray-100 opacity-50'
+                    : selectedSlots.includes(`${day.date}T${hour}`)
+                      ? 'cursor-pointer bg-green-500/80 text-white'
                       : 'cursor-pointer bg-green-100/80 hover:bg-green-300/80'
                 }`}
                 aria-label={
-                  !day.isPast
+                  !isSlotPast(day.date, hour)
                     ? selectedSlots.includes(`${day.date}T${hour}`)
                       ? 'Selected timeslot'
                       : 'Bookable timeslot'
                     : undefined
                 }
               >
-                {!day.isPast && (
+                {!isSlotPast(day.date, hour) && (
                   <span className="absolute inset-0 flex items-center justify-center text-xs text-black/70 sm:text-sm">
                     {selectedSlots.includes(`${day.date}T${hour}`)
                       ? 'Selected'
