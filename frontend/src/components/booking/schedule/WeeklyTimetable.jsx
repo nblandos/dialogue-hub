@@ -43,13 +43,11 @@ const WeeklyTimetable = () => {
 
   const daysMap = Array.from({ length: 5 }, (_, index) => {
     const date = addDays(weekStart, index);
-    const isPast = date < startOfDay(new Date());
     return {
       full: format(date, 'EEEE'),
       short: format(date, 'EEE'),
       date: format(date, 'yyyy-MM-dd'),
       displayDate: format(date, 'dd/MM'),
-      isPast,
     };
   });
   const hours = Array.from({ length: 9 }, (_, i) => i + 8);
