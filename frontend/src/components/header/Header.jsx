@@ -16,6 +16,11 @@ const Header = () => {
   const [isScreenReaderOn, setIsScreenReaderOn] = useState(() => {
     return localStorage.getItem('screenReader') === 'true';
   });
+  const [fontSize, setFontSize] = useState(() => {
+    const storedSize = localStorage.getItem('fontSize');
+    return storedSize ? parseInt(storedSize, 10) : 16;
+  });
+
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   useEffect(() => {
@@ -27,6 +32,10 @@ const Header = () => {
     document.documentElement.classList.toggle('dyslexic-font', isDyslexicFont);
     localStorage.setItem('dyslexicFont', isDyslexicFont);
   }, [isDyslexicFont]);
+
+  useEffect(() => {
+    document.documentElement.style.fontSize = `${fontSize}px`;
+  }, [fontSize]);
 
   return (
     <nav className="fixed inset-x-0 top-0 z-10 bg-orange-500 px-2 shadow-xl sm:px-4 xl:px-16">
@@ -58,7 +67,7 @@ const Header = () => {
               isScreenReaderOn={isScreenReaderOn}
               setIsScreenReaderOn={setIsScreenReaderOn}
             />
-            <FontSizeAdjuster />
+            <FontSizeAdjuster fontSize={fontSize} setFontSize={setFontSize} />
           </div>
 
           {/* Mobile Menu Toggle Button */}
@@ -109,7 +118,7 @@ const Header = () => {
           />
         </div>
         <div className="mt-4 flex justify-center">
-          <FontSizeAdjuster />
+          <FontSizeAdjuster fontSize={fontSize} setFontSize={setFontSize} />
         </div>
       </div>
     </nav>
