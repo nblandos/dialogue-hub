@@ -3,6 +3,7 @@ import Header from './components/header/Header';
 import SchedulePage from './pages/booking/SchedulePage';
 import ConfirmationPage from './pages/booking/ConfirmationPage';
 import MenuPage from './pages/menu/MenuPage';
+import TrainingPage from './pages/training/trainingPage';
 
 function App() {
   return (
@@ -12,6 +13,7 @@ function App() {
         <Route path="/" element={<SchedulePage />} />
         <Route path="/menu" element={<MenuPage />} />
         <Route path="/confirmation" element={<ConfirmationPage />} />
+        <Route path="/training" element={<TrainingPage />} />
       </Routes>
     </div>
   );

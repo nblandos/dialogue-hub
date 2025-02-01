@@ -21,6 +21,13 @@ const NavLinks = ({ isMobile = false }) => {
       >
         Menu
       </Link>
+      <Link
+        to="/training"
+        className={`${baseClasses} ${isMobile ? mobileClasses : ''}`}
+        data-screen-reader-text="Training Videos"
+      >
+        Training Videos
+      </Link>
     </>
   );
 };
