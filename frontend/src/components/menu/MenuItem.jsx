@@ -6,7 +6,8 @@ const MenuItem = ({ name, price, video }) => {
         tabIndex="0"
         data-screen-reader-text={`${name}`}
       >
-        {name} <span className="text-sm text-gray-500">({price})</span>
+        {name}{' '}
+        {price && <span className="text-sm text-gray-500">({price})</span>}
       </h2>
       <div className="relative h-72 w-full">
         <iframe

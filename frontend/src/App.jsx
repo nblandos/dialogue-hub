@@ -3,7 +3,7 @@ import Header from './components/header/Header';
 import SchedulePage from './pages/booking/SchedulePage';
 import ConfirmationPage from './pages/booking/ConfirmationPage';
 import MenuPage from './pages/menu/MenuPage';
-import TrainingPage from './pages/training/trainingPage';
+import TrainingPage from './pages/training/TrainingPage';
 
 function App() {
   return (
