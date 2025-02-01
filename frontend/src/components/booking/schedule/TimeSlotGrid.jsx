@@ -23,14 +23,17 @@ const TimeSlotGrid = ({ days, hours, selectedSlots, onSlotClick }) => {
         className="gap-1"
       >
         {days.map((day) => (
-          <div key={day.full} className="text-center font-semibold">
+          <div
+            key={day.full}
+            className="text-center text-sm font-semibold md:text-base"
+          >
             <div className="hidden md:block">
               <div>{day.full}</div>
               <div className="text-sm text-gray-600">{day.displayDate}</div>
             </div>
             <div className="md:hidden">
               <div>{day.short}</div>
-              <div className="text-sm text-gray-600">{day.displayDate}</div>
+              <div className="text-xs text-gray-600">{day.displayDate}</div>
             </div>
           </div>
         ))}
@@ -76,7 +79,7 @@ const TimeSlotGrid = ({ days, hours, selectedSlots, onSlotClick }) => {
                 }
               >
                 {!isSlotPast(day.date, hour) && (
-                  <span className="absolute inset-0 flex items-center justify-center text-xs text-black/70 sm:text-sm">
+                  <span className="absolute inset-0 hidden items-center justify-center text-black/70 sm:flex sm:text-sm">
                     {selectedSlots.includes(`${day.date}T${hour}`)
                       ? 'Selected'
                       : 'Book?'}
