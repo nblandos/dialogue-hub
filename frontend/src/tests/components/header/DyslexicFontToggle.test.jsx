@@ -1,19 +1,19 @@
 import { describe, it, expect } from 'vitest';
 import { render, screen } from '@testing-library/react';
-import HighContrastToggle from '../../../components/header/HighContrastToggle';
+import DyslexicFontToggle from '../../../components/header/DyslexicFontToggle';
 
-describe('HighContrastToggle', () => {
+describe('DyslexicFontToggle', () => {
   const renderToggle = () => {
     return render(
-      <HighContrastToggle isHighContrast={false} setIsHighContrast={() => {}} />
+      <DyslexicFontToggle isDyslexicFont={false} setIsDyslexicFont={() => {}} />
     );
   };
 
   it('renders mobile and desktop icons', () => {
     renderToggle();
-    expect(screen.getByTestId('high-contrast-icon-mobile')).toBeInTheDocument();
+    expect(screen.getByTestId('dyslexic-font-icon-mobile')).toBeInTheDocument();
     expect(
-      screen.getByTestId('high-contrast-icon-desktop')
+      screen.getByTestId('dyslexic-font-icon-desktop')
     ).toBeInTheDocument();
   });
 
@@ -21,7 +21,7 @@ describe('HighContrastToggle', () => {
     renderToggle();
     expect(screen.getByRole('switch')).toHaveAttribute(
       'aria-label',
-      'Toggle high contrast mode'
+      'Toggle dyslexic font mode'
     );
   });
 });

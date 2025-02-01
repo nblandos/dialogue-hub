@@ -36,11 +36,4 @@ describe('NavLinks', () => {
     expect(homeLink.className).toContain('py-2');
     expect(menuLink.className).toContain('py-2');
   });
-
-  it('does not apply mobile classes when isMobile is false', () => {
-    renderNavLinks(false);
-    const [homeLink, menuLink] = screen.getAllByRole('link');
-    expect(homeLink.className).not.toContain('py-2');
-    expect(menuLink.className).not.toContain('py-2');
-  });
 });

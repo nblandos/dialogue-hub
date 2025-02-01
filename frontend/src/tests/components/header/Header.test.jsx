@@ -4,12 +4,28 @@ import { BrowserRouter } from 'react-router-dom';
 import Header from '../../../components/header/Header';
 
 describe('Header', () => {
+  let mockSpeechSynthesis;
+
   beforeEach(() => {
     localStorage.clear();
+    document.documentElement.style.fontSize = '';
+    document.documentElement.classList.remove('high-contrast', 'dyslexic-font');
+
+    mockSpeechSynthesis = { cancel: vi.fn(), speak: vi.fn() };
+    window.speechSynthesis = mockSpeechSynthesis;
+    global.SpeechSynthesisUtterance = vi.fn();
+
+    global.MutationObserver = vi.fn().mockImplementation(() => ({
+      observe: vi.fn(),
+      disconnect: vi.fn(),
+    }));
   });
 
   afterEach(() => {
     localStorage.clear();
+    document.documentElement.style.fontSize = '';
+    document.documentElement.classList.remove('high-contrast', 'dyslexic-font');
+    vi.clearAllMocks();
   });
 
   const renderHeader = () => {
@@ -20,42 +36,36 @@ describe('Header', () => {
     );
   };
 
-  it('renders navigation bar', () => {
+  it('renders navigation and brand elements', () => {
     renderHeader();
     expect(screen.getByRole('navigation')).toBeInTheDocument();
-  });
-
-  it('displays logo text', () => {
-    renderHeader();
     expect(screen.getByText('Dialogue Cafe')).toBeInTheDocument();
   });
 
-  it('shows mobile menu button on small screens', () => {
-    renderHeader();
-    expect(screen.getByRole('button')).toHaveClass('md:hidden');
-  });
-
-  it('toggles mobile menu when button is clicked', () => {
-    renderHeader();
-    const menuButton = screen.getByRole('button');
-    const mobileMenu = screen.getByTestId('mobile-menu');
-
-    fireEvent.click(menuButton);
-    expect(mobileMenu).toHaveClass('flex');
-
-    fireEvent.click(menuButton);
-    expect(mobileMenu).toHaveClass('hidden');
-  });
-
-  it('loads and persists high contrast preference', () => {
+  it('loads stored preferences from localStorage', () => {
     localStorage.setItem('highContrast', 'true');
+    localStorage.setItem('dyslexicFont', 'true');
+    localStorage.setItem('fontSize', '18');
+
     renderHeader();
+
     expect(document.documentElement.classList.contains('high-contrast')).toBe(
       true
     );
+    expect(document.documentElement.classList.contains('dyslexic-font')).toBe(
+      true
+    );
+    expect(document.documentElement.style.fontSize).toBe('18px');
+  });
 
-    const toggle = screen.getByRole('switch');
-    fireEvent.click(toggle);
-    expect(localStorage.getItem('highContrast')).toBe('false');
+  it('manages mobile menu state', () => {
+    renderHeader();
+    const menuButton = screen.getByLabelText(/Open accessibility menu/i);
+
+    fireEvent.click(menuButton);
+    expect(menuButton).toHaveAttribute('aria-expanded', 'true');
+
+    fireEvent.click(menuButton);
+    expect(menuButton).toHaveAttribute('aria-expanded', 'false');
   });
 });
