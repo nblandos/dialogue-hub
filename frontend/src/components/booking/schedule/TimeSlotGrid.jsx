@@ -69,6 +69,7 @@ const TimeSlotGrid = ({ days, hours, selectedSlots, onSlotClick }) => {
                 onClick={() =>
                   !isSlotPast(day.date, hour) && onSlotClick(day.date, hour)
                 }
+                data-testid={`slot-${day.date}-${hour}`}
                 className={`relative rounded-md border p-2 transition-colors ${
                   isSlotPast(day.date, hour)
                     ? 'cursor-not-allowed bg-gray-100 opacity-50'
@@ -81,10 +82,12 @@ const TimeSlotGrid = ({ days, hours, selectedSlots, onSlotClick }) => {
                     ? selectedSlots.includes(`${day.date}T${hour}`)
                       ? 'Selected timeslot'
                       : 'Bookable timeslot'
-                    : undefined
+                    : 'Past timeslot'
                 }
               >
-                {!isSlotPast(day.date, hour) && (
+                {isSlotPast(day.date, hour) ? (
+                  <span className="sr-only">Past</span>
+                ) : (
                   <span className="absolute inset-0 hidden items-center justify-center text-black/70 sm:flex sm:text-sm">
                     {selectedSlots.includes(`${day.date}T${hour}`)
                       ? 'Selected'

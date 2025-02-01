@@ -28,6 +28,7 @@ const InputFieldWithMic = ({
         <button
           data-screen-reader-text={`Voice input for ${label}`}
           onClick={onMicClick}
+          data-testid={`mic-button-${id}`}
           className={`${
             recordingField === id ? 'bg-red-500' : 'bg-blue-500'
           } flex items-center gap-2 rounded-lg px-4 py-2 text-white`}
