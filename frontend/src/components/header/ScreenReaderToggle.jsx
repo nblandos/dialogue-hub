@@ -1,15 +1,14 @@
 import { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
-import { FaAssistiveListeningSystems } from 'react-icons/fa'; // Import icon
-import { Switch } from '@headlessui/react'; // Import headless UI switch
+import { FaAssistiveListeningSystems } from 'react-icons/fa';
+import ToggleSwitch from '../common/ToggleSwitch';
 
 const ScreenReaderToggle = ({ isScreenReaderOn, setIsScreenReaderOn }) => {
   const readText = (text) => {
     if (!isScreenReaderOn || !text) return;
-
     const utterance = new SpeechSynthesisUtterance(text);
-    window.speechSynthesis.cancel(); // Stop ongoing speech
-    window.speechSynthesis.speak(utterance); // Start new speech
+    window.speechSynthesis.cancel();
+    window.speechSynthesis.speak(utterance);
   };
 
   const handleHover = (event) => {
@@ -26,42 +25,31 @@ const ScreenReaderToggle = ({ isScreenReaderOn, setIsScreenReaderOn }) => {
 
   useEffect(() => {
     if (isScreenReaderOn) {
-      const attachListeners = () => {
-        const elements = document.querySelectorAll('[data-screen-reader-text]');
+      const elements = document.querySelectorAll('[data-screen-reader-text]');
+      elements.forEach((element) => {
+        element.addEventListener('mouseover', handleHover);
+        element.addEventListener('focus', handleFocus);
+      });
 
-        // Attach hover and focus listeners
+      const observer = new MutationObserver(() => {
         elements.forEach((element) => {
+          element.removeEventListener('mouseover', handleHover);
+          element.removeEventListener('focus', handleFocus);
           element.addEventListener('mouseover', handleHover);
           element.addEventListener('focus', handleFocus);
         });
-      };
+      });
+      observer.observe(document.body, { childList: true, subtree: true });
 
-      const detachListeners = () => {
-        const elements = document.querySelectorAll('[data-screen-reader-text]');
-
-        // Cleanup listeners when screen reader is turned off
+      return () => {
+        observer.disconnect();
         elements.forEach((element) => {
           element.removeEventListener('mouseover', handleHover);
           element.removeEventListener('focus', handleFocus);
         });
       };
-
-      attachListeners();
-
-      // re-attach listeners upon DOM changes
-      const observer = new MutationObserver(() => {
-        detachListeners();
-        attachListeners();
-      });
-
-      observer.observe(document.body, { childList: true, subtree: true });
-
-      return () => {
-        observer.disconnect();
-        detachListeners();
-      };
     } else {
-      window.speechSynthesis.cancel(); // Stop any ongoing speech
+      window.speechSynthesis.cancel();
     }
   }, [isScreenReaderOn, location]);
 
@@ -72,33 +60,25 @@ const ScreenReaderToggle = ({ isScreenReaderOn, setIsScreenReaderOn }) => {
   };
 
   return (
-    <div className="flex items-center gap-2">
-      <FaAssistiveListeningSystems
-        size={24}
-        className="text-white md:hidden"
-        data-testid="screen-reader-icon-mobile"
-      />
-      <FaAssistiveListeningSystems
-        size={32}
-        className="hidden text-white md:block"
-        data-testid="screen-reader-icon-desktop"
-      />
-      <Switch
-        data-screen-reader-text="Toggle screen reader mode"
-        checked={isScreenReaderOn}
-        onChange={toggleScreenReader}
-        className={`${
-          isScreenReaderOn ? 'bg-blue-600' : 'bg-gray-200'
-        } relative inline-flex h-6 w-11 items-center rounded-full transition-colors`}
-      >
-        <span className="sr-only">Toggle screen reader mode</span>
-        <span
-          className={`${
-            isScreenReaderOn ? 'translate-x-6' : 'translate-x-1'
-          } inline-block h-4 w-4 transform rounded-full bg-white transition-transform`}
+    <ToggleSwitch
+      iconMobile={
+        <FaAssistiveListeningSystems
+          size={24}
+          className="text-white"
+          data-testid="screen-reader-icon-mobile"
         />
-      </Switch>
-    </div>
+      }
+      iconDesktop={
+        <FaAssistiveListeningSystems
+          size={32}
+          className="text-white"
+          data-testid="screen-reader-icon-desktop"
+        />
+      }
+      label="Toggle screen reader mode"
+      checked={isScreenReaderOn}
+      onChange={toggleScreenReader}
+    />
   );
 };
 
