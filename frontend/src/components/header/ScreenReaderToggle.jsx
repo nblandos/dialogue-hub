@@ -1,13 +1,9 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import { FaAssistiveListeningSystems } from 'react-icons/fa'; // Import icon
 import { Switch } from '@headlessui/react'; // Import headless UI switch
 
-const ScreenReaderToggle = () => {
-  const [isScreenReaderOn, setIsScreenReaderOn] = useState(() => {
-    return localStorage.getItem('screenReader') === 'true';
-  });
-
+const ScreenReaderToggle = ({ isScreenReaderOn, setIsScreenReaderOn }) => {
   const readText = (text) => {
     if (!isScreenReaderOn || !text) return;
 
