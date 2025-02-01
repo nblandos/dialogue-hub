@@ -29,23 +29,23 @@ const Header = () => {
   }, [isDyslexicFont]);
 
   return (
-    <nav className="fixed inset-x-0 top-0 z-10 bg-orange-500 px-4 shadow-xl xl:px-16">
-      <div className="flex h-24 items-center justify-between">
+    <nav className="fixed inset-x-0 top-0 z-10 bg-orange-500 px-2 shadow-xl sm:px-4 xl:px-16">
+      <div className="flex min-h-[96px] items-center justify-between">
         <div
-          className="mr-6 text-2xl font-bold text-white xl:text-4xl"
+          className="mr-2 text-xl font-bold text-white sm:mr-6 sm:text-2xl xl:text-4xl"
           data-screen-reader-text="Dialogue Cafe"
         >
           Dialogue Cafe
         </div>
 
-        <div className="flex items-center gap-4 xl:gap-6">
-          {/* Nav Links */}
-          <div className="flex items-center gap-6 xl:mr-16 xl:gap-12">
+        <div className="flex items-center justify-end gap-2 sm:gap-4 xl:gap-6">
+          {/* Nav Links - allow wrapping */}
+          <div className="flex flex-wrap items-center justify-end gap-2 sm:gap-6 xl:mr-16 xl:gap-12">
             <NavLinks />
           </div>
 
-          {/* Desktop Accessibility Toggles */}
-          <div className="hidden items-center gap-4 xl:flex">
+          {/* Desktop Accessibility Toggles - no wrapping */}
+          <div className="hidden shrink-0 items-center gap-2 xl:flex">
             <HighContrastToggle
               isHighContrast={isHighContrast}
               setIsHighContrast={setIsHighContrast}
@@ -63,7 +63,7 @@ const Header = () => {
 
           {/* Mobile Menu Toggle Button with Accessibility Icon */}
           <button
-            className="text-white xl:hidden"
+            className="shrink-0 text-white xl:hidden"
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             aria-label={
               isMobileMenuOpen
