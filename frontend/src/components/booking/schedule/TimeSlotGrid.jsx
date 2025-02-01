@@ -27,13 +27,19 @@ const TimeSlotGrid = ({ days, hours, selectedSlots, onSlotClick }) => {
             key={day.full}
             className="text-center text-sm font-semibold md:text-base"
           >
-            <div className="hidden xl:block">
-              <div>{day.full}</div>
-              <div className="text-sm text-gray-600">{day.displayDate}</div>
+            {/* XS layouts: show one-letter day, no date */}
+            <div className="block sm:hidden">
+              <div>{day.short.charAt(0)}</div>
             </div>
-            <div className="xl:hidden">
+            {/* S layouts: show short day and date */}
+            <div className="hidden flex-col sm:flex xl:hidden">
               <div>{day.short}</div>
               <div className="text-xs text-gray-600">{day.displayDate}</div>
+            </div>
+            {/* XL layouts: show full day and date */}
+            <div className="hidden flex-col xl:flex">
+              <div>{day.full}</div>
+              <div className="text-sm text-gray-600">{day.displayDate}</div>
             </div>
           </div>
         ))}

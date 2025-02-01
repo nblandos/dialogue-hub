@@ -39,12 +39,12 @@ const Header = () => {
         </div>
 
         <div className="flex items-center justify-end gap-2 sm:gap-4 xl:gap-6">
-          {/* Nav Links - allow wrapping */}
-          <div className="flex flex-wrap items-center justify-end gap-2 sm:gap-6 xl:mr-16 xl:gap-12">
+          {/* Nav Links*/}
+          <div className="flex items-center justify-end gap-2 sm:gap-6 xl:mr-16 xl:gap-12">
             <NavLinks />
           </div>
 
-          {/* Desktop Accessibility Toggles - no wrapping */}
+          {/* Desktop Accessibility Toggles*/}
           <div className="hidden shrink-0 items-center gap-2 xl:flex">
             <HighContrastToggle
               isHighContrast={isHighContrast}
@@ -61,9 +61,9 @@ const Header = () => {
             <FontSizeAdjuster />
           </div>
 
-          {/* Mobile Menu Toggle Button with Accessibility Icon */}
+          {/* Mobile Menu Toggle Button */}
           <button
-            className="shrink-0 text-white xl:hidden"
+            className="ml-4 shrink-0 text-white xl:hidden"
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             aria-label={
               isMobileMenuOpen
@@ -88,7 +88,11 @@ const Header = () => {
 
       {/* Mobile Dropdown: Accessibility Menu */}
       <div
-        className={`absolute left-0 right-0 top-24 flex flex-col bg-orange-500 p-4 shadow-xl transition-all duration-300 xl:hidden ${isMobileMenuOpen ? 'max-h-screen opacity-100' : 'max-h-0 overflow-hidden opacity-0'} `}
+        className={`absolute left-0 right-0 top-full flex flex-col border-t border-orange-400 bg-orange-500 p-4 transition-all duration-300 xl:hidden ${
+          isMobileMenuOpen
+            ? 'max-h-screen opacity-100'
+            : 'max-h-0 overflow-hidden opacity-0'
+        }`}
       >
         <div className="flex justify-center gap-6">
           <HighContrastToggle

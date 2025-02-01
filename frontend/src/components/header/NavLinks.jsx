@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 
 const NavLinks = ({ isMobile = false }) => {
   const baseClasses =
-    'text-xl font-medium text-white transition-colors hover:text-orange-200';
+    'md:text-xl text-base font-medium text-white transition-colors hover:text-orange-200';
   const mobileClasses = 'py-2';
 
   return (
