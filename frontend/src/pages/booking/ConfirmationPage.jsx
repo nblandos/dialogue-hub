@@ -9,6 +9,26 @@ const ADDRESS =
   'Royal Docks Center for Sustainability, \
                       University of East London, 4-6 University Way, London E16 2RD';
 
+export const preprocessEmail = (transcript) => {
+  return transcript
+    .replace(/\bat\b/gi, '@')
+    .replace(/\bdot\b/gi, '.')
+    .replace(/\s+/g, '')
+    .toLowerCase();
+};
+
+export const validateEmail = (email) => {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return emailRegex.test(email);
+};
+
+export const validateFullName = (name) => {
+  const trimmedName = name.trim();
+  if (trimmedName.length < 2) return false;
+  if (trimmedName.length > 100) return false;
+  return trimmedName.split(' ').length >= 2;
+};
+
 function ConfirmationPage() {
   const location = useLocation();
   const navigate = useNavigate();
@@ -43,13 +63,6 @@ function ConfirmationPage() {
   const [recordingField, setRecordingField] = useState('');
   const [isProcessing, setIsProcessing] = useState(false);
   const recognitionRef = React.useRef(null);
-
-  const preprocessEmail = (transcript) => {
-    return transcript
-      .replace(/\bat\b/gi, '@')
-      .replace(/\bdot\b/gi, '.')
-      .replace(/\s+/g, '');
-  };
 
   const startRecording = (field) => {
     stopRecording();
@@ -108,18 +121,6 @@ function ConfirmationPage() {
       setRecordingField('');
       setIsProcessing(false);
     }
-  };
-
-  const validateEmail = (email) => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
-  };
-
-  const validateFullName = (name) => {
-    const trimmedName = name.trim();
-    if (trimmedName.length < 2) return false;
-    if (trimmedName.length > 100) return false;
-    return trimmedName.split(' ').length >= 2;
   };
 
   const handleConfirm = async () => {
@@ -236,6 +237,7 @@ function ConfirmationPage() {
           recordingField={recordingField}
           isProcessing={isProcessing}
           autoComplete="name"
+          data-testid="mic-button-name"
         />
 
         <InputFieldWithMic
@@ -252,6 +254,7 @@ function ConfirmationPage() {
           recordingField={recordingField}
           isProcessing={isProcessing}
           autoComplete="email"
+          data-testid="mic-button-email"
         />
       </div>
 
