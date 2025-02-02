@@ -21,7 +21,12 @@ const BookingSuccessPage = () => {
 
   return (
     <div className="flex min-h-screen flex-col items-center bg-gray-100 p-6 pt-36">
-      <h1 className="mb-8 text-center text-3xl font-bold">Booking Confirmed</h1>
+      <h1
+        className="mb-8 text-center text-3xl font-bold"
+        data-screen-reader-text="Booking Confirmed"
+      >
+        Booking Confirmed
+      </h1>
       <BookingDetails details={details} />
       <p
         className="mb-4 w-full max-w-md text-center"
