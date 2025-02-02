@@ -176,7 +176,7 @@ function ConfirmationPage() {
         }
       }
       // redirect to success page
-      navigate('/booking/success');
+      navigate('/success');
     } catch (err) {
       setApiError(err.message);
     } finally {
@@ -201,7 +201,12 @@ function ConfirmationPage() {
         Confirm Your Booking
       </h1>
 
-      <BookingDetails date={formattedDate} time={formattedTime} />
+      <BookingDetails
+        details={[
+          { label: 'Date', value: formattedDate },
+          { label: 'Time', value: formattedTime },
+        ]}
+      />
 
       <div className="w-full max-w-md">
         <InputFieldWithMic
