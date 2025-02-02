@@ -48,8 +48,12 @@
   background-color: #fef037;
 }
 
-.high-contrast .bg-blue-500 {
+.high-contrast .hover\:bg-blue-600:hover {
   background-color: #fef037;
+}
+
+.high-contrast .bg-blue-500 {
+  background-color: #fbdd1a;
 }
 
 .high-contrast .bg-red-300 {

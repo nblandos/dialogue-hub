@@ -13,14 +13,25 @@ const TimeSlotGrid = ({ days, hours, selectedSlots, onSlotClick }) => {
   };
 
   return (
-    <div className="grid grid-cols-[100px_auto] gap-1">
-      <div className="font-semibold">Time</div>
+    <div
+      className="grid grid-cols-[100px_auto] gap-1"
+      role="grid"
+      aria-label="Weekly booking timetable"
+    >
+      <div
+        className="font-semibold"
+        role="columnheader"
+        data-screen-reader-text="Time Column"
+      >
+        Time
+      </div>
       <div
         style={{
           display: 'grid',
           gridTemplateColumns: `repeat(${days.length}, minmax(0, 1fr))`,
         }}
         className="gap-1"
+        role="row"
       >
         {days.map((day) => (
           <div

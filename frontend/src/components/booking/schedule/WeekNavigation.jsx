@@ -13,7 +13,7 @@ const WeekNavigation = ({ onPrevWeek, onNextWeek, onCurrentWeek }) => (
     <button
       data-screen-reader-text="Navigate to current week"
       onClick={onCurrentWeek}
-      className="rounded-md bg-orange-500 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-orange-600"
+      className="rounded-md bg-orange-500 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-orange-600"
     >
       Current Week
     </button>

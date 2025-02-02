@@ -21,7 +21,12 @@ const TrainingPage = () => {
 
   return (
     <div className="min-h-screen bg-gray-100 p-6 pt-32">
-      <h1 className="mb-8 text-center text-3xl font-bold">Training Videos</h1>
+      <h1
+        className="mb-8 text-center text-3xl font-bold"
+        data-screen-reader-text="Training Videos"
+      >
+        Training Videos
+      </h1>
       <div className="mb-6 flex items-center justify-between">
         <label htmlFor="search" className="sr-only">
           Search Training Videos
@@ -34,6 +39,7 @@ const TrainingPage = () => {
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
           aria-label="Search Training Menu"
+          data-screen-reader-text="Search Training Menu"
         />
 
         <label htmlFor="sort" className="sr-only">
@@ -45,6 +51,7 @@ const TrainingPage = () => {
           value={sortOption}
           onChange={(e) => setSortOption(e.target.value)}
           aria-label="Sort Alphabetically"
+          data-screen-reader-text="Sort Alphabetically"
         >
           <option value="asc">A - Z</option>
           <option value="desc">Z - A</option>

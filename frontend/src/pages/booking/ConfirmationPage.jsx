@@ -5,6 +5,10 @@ import BookingDetails from '../../components/booking/confirmation/BookingDetails
 import InputFieldWithMic from '../../components/booking/confirmation/InputFieldWithMic';
 import ConfirmationActions from '../../components/booking/confirmation/ConfirmationActions';
 
+const ADDRESS =
+  'Royal Docks Center for Sustainability, \
+                      University of East London, 4-6 University Way, London E16 2RD';
+
 function ConfirmationPage() {
   const location = useLocation();
   const navigate = useNavigate();
@@ -176,12 +180,17 @@ function ConfirmationPage() {
         }
       }
 
-      // redirect to success page once implemented, for now redirect to schedule page
-      navigate('/', {
-        // state: {
-        //   bookingId: data.id,
-        //   email: email,
-        // },
+      // redirect to success page
+      navigate('/success', {
+        state: {
+          booking: {
+            date: formattedDate,
+            time: formattedTime,
+            fullName: name.trim(),
+            email: email.trim(),
+            address: ADDRESS,
+          },
+        },
       });
     } catch (err) {
       setApiError(err.message);
@@ -207,7 +216,12 @@ function ConfirmationPage() {
         Confirm Your Booking
       </h1>
 
-      <BookingDetails date={formattedDate} time={formattedTime} />
+      <BookingDetails
+        details={[
+          { label: 'Date', value: formattedDate },
+          { label: 'Time', value: formattedTime },
+        ]}
+      />
 
       <div className="w-full max-w-md">
         <InputFieldWithMic

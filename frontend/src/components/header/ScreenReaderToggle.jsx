@@ -25,24 +25,26 @@ const ScreenReaderToggle = ({ isScreenReaderOn, setIsScreenReaderOn }) => {
 
   useEffect(() => {
     if (isScreenReaderOn) {
-      const elements = document.querySelectorAll('[data-screen-reader-text]');
-      elements.forEach((element) => {
-        element.addEventListener('mouseover', handleHover);
-        element.addEventListener('focus', handleFocus);
-      });
-
-      const observer = new MutationObserver(() => {
+      const attachListeners = () => {
+        const elements = document.querySelectorAll('[data-screen-reader-text]');
         elements.forEach((element) => {
           element.removeEventListener('mouseover', handleHover);
           element.removeEventListener('focus', handleFocus);
           element.addEventListener('mouseover', handleHover);
           element.addEventListener('focus', handleFocus);
         });
+      };
+
+      attachListeners();
+
+      const observer = new MutationObserver(() => {
+        attachListeners();
       });
       observer.observe(document.body, { childList: true, subtree: true });
 
       return () => {
         observer.disconnect();
+        const elements = document.querySelectorAll('[data-screen-reader-text]');
         elements.forEach((element) => {
           element.removeEventListener('mouseover', handleHover);
           element.removeEventListener('focus', handleFocus);

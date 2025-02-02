@@ -1,35 +1,25 @@
-const BookingDetails = ({ date, time }) => {
+const BookingDetails = ({ details = [] }) => {
   return (
-    <div className="mb-8 w-full max-w-md rounded-lg bg-white p-6 shadow-lg">
+    <div className="mb-8 w-full max-w-md space-y-2 rounded-lg bg-white p-6 shadow-lg">
       <h2
+        className="mb-4 text-xl font-bold"
         tabIndex="0"
-        className="mb-4 text-xl font-semibold"
         data-screen-reader-text="Booking Details"
       >
         Booking Details
       </h2>
-      <div className="space-y-2">
-        <p>
+      {details.map((item, index) => (
+        <p key={index}>
           <span
             className="font-bold"
             tabIndex="0"
-            data-screen-reader-text={`Date is ${date}`}
+            data-screen-reader-text={`${item.label} is ${item.value}`}
           >
-            Date:
+            {item.label}:
           </span>{' '}
-          {date}
+          {item.value}
         </p>
-        <p>
-          <span
-            className="font-bold"
-            tabIndex="0"
-            data-screen-reader-text={`Time is ${time}`}
-          >
-            Time:
-          </span>{' '}
-          {time}
-        </p>
-      </div>
+      ))}
     </div>
   );
 };
