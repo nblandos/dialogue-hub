@@ -23,12 +23,17 @@ const BookingSuccessPage = () => {
     <div className="flex min-h-screen flex-col items-center bg-gray-100 p-6 pt-36">
       <h1 className="mb-8 text-center text-3xl font-bold">Booking Confirmed</h1>
       <BookingDetails details={details} />
-      <p className="mb-4 text-center">
-        Thank you for booking a visit to the Dialogue Cafe! A confirmation email
-        has been sent to your inbox.
+      <p
+        className="mb-4 w-full max-w-md text-center"
+        data-screen-reader-text="Thank you for booking a visit to the Dialogue Cafe!
+                                 A confirmation email has been sent to your inbox."
+      >
+        Thank you for booking a visit to the Dialogue Cafe!
+        <br />A confirmation email has been sent to your inbox.
       </p>
       <button
         onClick={handleNewBooking}
+        data-screen-reader-text="Make Another Booking"
         className="rounded bg-blue-500 px-4 py-2 font-semibold text-white hover:bg-blue-600"
       >
         Make Another Booking

@@ -11,7 +11,7 @@ const InputFieldWithMic = ({
 }) => {
   return (
     <div className="mb-4">
-      <label htmlFor={id} className="text mb-1 block text-lg">
+      <label htmlFor={id} className="text mb-1 block text-lg font-medium">
         {label}
       </label>
       <div className="flex items-center gap-2">

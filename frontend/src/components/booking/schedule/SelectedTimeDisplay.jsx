@@ -17,7 +17,7 @@ const SelectedTimeDisplay = ({ formattedTime, onCancel, onBook }) => {
             tabIndex="0"
             data-screen-reader-text="Cancel Selection"
             onClick={onCancel}
-            className="rounded-md bg-gray-200 px-4 py-2 text-xs font-medium text-gray-700 transition-colors hover:bg-gray-300 md:text-sm"
+            className="rounded-md bg-gray-200 px-4 py-2 text-xs font-semibold text-gray-700 transition-colors hover:bg-gray-300 md:text-sm"
           >
             Cancel Selection
           </button>
@@ -25,7 +25,7 @@ const SelectedTimeDisplay = ({ formattedTime, onCancel, onBook }) => {
             tabIndex="0"
             data-screen-reader-text="Book Selected Slots"
             onClick={onBook}
-            className="rounded-md bg-orange-500 px-4 py-2 text-xs font-medium text-white transition-colors hover:bg-orange-600 md:text-sm"
+            className="rounded-md bg-orange-500 px-4 py-2 text-xs font-semibold text-white transition-colors hover:bg-orange-600 md:text-sm"
           >
             Book Selected Slots
           </button>
