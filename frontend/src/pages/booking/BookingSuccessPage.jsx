@@ -4,7 +4,6 @@ import BookingDetails from '../../components/booking/confirmation/BookingDetails
 const BookingSuccessPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  // Expecting booking details to be passed via location.state.booking
   const booking = location.state?.booking || {};
 
   const details = [
