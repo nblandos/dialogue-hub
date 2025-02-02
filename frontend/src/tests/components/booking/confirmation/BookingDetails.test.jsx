@@ -3,37 +3,45 @@ import { render, screen } from '@testing-library/react';
 import BookingDetails from '../../../../components/booking/confirmation/BookingDetails';
 
 describe('BookingDetails', () => {
-  const defaultProps = {
-    date: 'Monday, 18 Mar 2024',
-    time: '9:00 - 11:00',
-  };
+  const mockDetails = [
+    { label: 'Date', value: 'Monday, 18 Mar 2024' },
+    { label: 'Time', value: '9:00 - 11:00' },
+    { label: 'Email', value: 'test@example.com' },
+  ];
 
-  it('renders booking details', () => {
-    render(<BookingDetails {...defaultProps} />);
+  it('renders booking details from array', () => {
+    render(<BookingDetails details={mockDetails} />);
+
     expect(screen.getByText('Booking Details')).toBeInTheDocument();
-    expect(screen.getByText(defaultProps.date)).toBeInTheDocument();
-    expect(screen.getByText(defaultProps.time)).toBeInTheDocument();
+    expect(screen.getByText('Date:')).toBeInTheDocument();
+    expect(screen.getByText('Monday, 18 Mar 2024')).toBeInTheDocument();
+    expect(screen.getByText('Time:')).toBeInTheDocument();
+    expect(screen.getByText('9:00 - 11:00')).toBeInTheDocument();
+    expect(screen.getByText('Email:')).toBeInTheDocument();
+    expect(screen.getByText('test@example.com')).toBeInTheDocument();
   });
 
   it('has correct accessibility attributes', () => {
-    render(<BookingDetails {...defaultProps} />);
+    render(<BookingDetails details={mockDetails} />);
+
     expect(screen.getByText('Booking Details')).toHaveAttribute(
       'data-screen-reader-text',
       'Booking Details'
     );
-    expect(screen.getByText('Date:')).toHaveAttribute(
-      'data-screen-reader-text',
-      'Date is Monday, 18 Mar 2024'
-    );
-    expect(screen.getByText('Time:')).toHaveAttribute(
-      'data-screen-reader-text',
-      'Time is 9:00 - 11:00'
-    );
+
+    mockDetails.forEach((detail) => {
+      expect(screen.getByText(`${detail.label}:`)).toHaveAttribute(
+        'data-screen-reader-text',
+        `${detail.label} is ${detail.value}`
+      );
+    });
   });
 
-  it('renders with empty details', () => {
-    render(<BookingDetails date="" time="" />);
-    expect(screen.getByText('Date:')).toBeInTheDocument();
-    expect(screen.getByText('Time:')).toBeInTheDocument();
+  it('renders with empty details array', () => {
+    render(<BookingDetails details={[]} />);
+
+    expect(screen.getByText('Booking Details')).toBeInTheDocument();
+    expect(screen.queryByText('Date:')).not.toBeInTheDocument();
+    expect(screen.queryByText('Time:')).not.toBeInTheDocument();
   });
 });
