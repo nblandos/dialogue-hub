@@ -175,14 +175,8 @@ function ConfirmationPage() {
             throw new Error(data.message || 'Failed to create booking.');
         }
       }
-
-      // redirect to success page once implemented, for now redirect to schedule page
-      navigate('/', {
-        // state: {
-        //   bookingId: data.id,
-        //   email: email,
-        // },
-      });
+      // redirect to success page
+      navigate('/booking/success');
     } catch (err) {
       setApiError(err.message);
     } finally {
