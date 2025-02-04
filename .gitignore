@@ -1,0 +1,61 @@
+node_modules/
+.pnpm-store/
+yarn.lock
+package-lock.json
+
+# Build outputs
+dist/
+build/
+*.min.*
+
+# Environment and secrets
+.env
+.env.*
+*.pem
+*.key
+
+# IDE and editors
+.vscode/*
+!.vscode/extensions.json
+.idea/
+*.sublime-*
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# Logs and debugging
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Testing and coverage
+coverage/
+.nyc_output/
+junit.xml
+
+# Optional npm cache directory
+.npm
+
+# Optional eslint cache
+.eslintcache
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+*.temp
+
+# Python virtual environments
+venv/
+env/
+.env/
+.venv/
+ENV/
+.Python
+__pycache__/
+*.py[cod]
+.python-version
