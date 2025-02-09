@@ -51,15 +51,13 @@ const Header = () => {
               aria-label={
                 isChatbotOpen ? 'Close AI Assistant' : 'Open AI Assistant'
               }
-              data-screen-reader-text={
-                isChatbotOpen ? 'Close AI Assistant' : 'Open AI Assistant'
-              }
             >
               <FaRobot size={36} />
             </button>
 
             <div
               className="mr-2 text-xl font-bold text-white sm:mr-6 sm:text-2xl xl:text-4xl"
+              aria-label="Dialogue Cafe"
               data-screen-reader-text="Dialogue Cafe"
             >
               Dialogue Cafe

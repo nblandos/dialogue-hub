@@ -15,6 +15,7 @@ const ChatInput = ({ onSubmit }) => {
   return (
     <form onSubmit={handleSubmit} className="flex items-center gap-2 p-2">
       {/* Voice Input */}
+      {/* Here we should create a common component for InputFieldWithMic from confirmation that we can reuse*/}
       <button
         type="button"
         className="flex h-10 w-10 items-center justify-center rounded-full bg-gray-100 text-gray-600 hover:bg-gray-200"
@@ -26,6 +27,7 @@ const ChatInput = ({ onSubmit }) => {
 
       {/* Message Input */}
       <input
+        id="messageInput"
         type="text"
         value={message}
         onChange={(e) => setMessage(e.target.value)}

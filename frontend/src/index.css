@@ -107,6 +107,9 @@
 .high-contrast .text-gray-900 {
   color: #fefefe;
 }
+.high-contrast .text-gray-800 {
+  color: #fcfaf7;
+}
 .high-contrast .text-gray-700 {
   color: #faf8f4;
 }

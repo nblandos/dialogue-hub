@@ -1,10 +1,17 @@
 import { useState } from 'react';
 import ChatInput from './ChatInput';
+import MessageList from './MessageList';
 
 const Sidebar = ({ isOpen }) => {
-  const MIN_WIDTH = 250;
-  const MAX_WIDTH = 1000;
+  const MIN_WIDTH = 200;
+  const MAX_WIDTH = 1200;
   const [width, setWidth] = useState(300); // Default width in px
+  const [messages, setMessages] = useState([
+    {
+      content: 'Hello! How can I help you today?',
+      isUser: false,
+    },
+  ]);
 
   // Resizing logic
   const handleMouseDown = (e) => {
@@ -31,8 +38,20 @@ const Sidebar = ({ isOpen }) => {
   };
 
   const handleSubmit = (message) => {
-    console.log('Submitted message:', message);
-    // handle message submission here
+    // Add user message to chat
+    setMessages((prev) => [...prev, { content: message, isUser: true }]);
+
+    // Simulate AI response (replace with API route later)
+    setTimeout(() => {
+      setMessages((prev) => [
+        ...prev,
+        {
+          content: 'Placeholder response.',
+          isUser: false,
+        },
+      ]);
+    }, 1000);
+    // ^ artificial delay to simulate AI response time, remove this
   };
 
   return (
@@ -44,9 +63,11 @@ const Sidebar = ({ isOpen }) => {
     >
       <div className="relative h-full">
         <div className="flex h-full flex-col">
+          {/* Chat Message */}
           <div className="flex-1 overflow-y-auto p-4">
-            {/* Chat messages here */}
+            <MessageList messages={messages} />
           </div>
+          {/* Chat Input */}
           <div className="border-t">
             <ChatInput onSubmit={handleSubmit} />
           </div>
