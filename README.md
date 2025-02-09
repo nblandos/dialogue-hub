@@ -73,6 +73,43 @@ To improve your workflow, I recommend installing the following VSCode extensions
 
 In VSCode settings you can enable format on save so that the formatters take effect on save
 
+## Add Environment Variables
+
+### Frontend Environment Variables
+
+Add the following environment variables to the `.env` file in the frontend directory:
+
+```bash
+VITE_API_URL=http://localhost:5001
+
+```
+
+### Backend Environment Variables
+
+Add the following environment variables to the `.env` file in the backend directory:
+
+```bash
+SENDER_EMAIL=""
+SENDER_PASSWORD=""
+
+KEY_VAULT_NAME=
+OPENAI_ENDPOINT_URL=
+OPENAI_API_SECRET_NAME=
+DEPLOYMENT_NAME=
+
+AZURE_CLIENT_ID=
+AZURE_CLIENT_SECRET=
+AZURE_TENANT_ID=
+```
+
+### Azure Authentication
+
+You may also need to authenticate with Azure to access the key vault. To do this, you can run the following command in the backend directory:
+
+```bash
+az login
+```
+
 ## Running the Project
 
 These are instructions on how to run the project after you have completed setup shown above
