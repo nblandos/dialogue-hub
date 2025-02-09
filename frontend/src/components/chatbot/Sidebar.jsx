@@ -37,21 +37,35 @@ const Sidebar = ({ isOpen }) => {
     document.addEventListener('mouseup', onMouseUp);
   };
 
-  const handleSubmit = (message) => {
+  const handleSubmit = async (message) => {
     // Add user message to chat
     setMessages((prev) => [...prev, { content: message, isUser: true }]);
 
-    // Simulate AI response (replace with API route later)
-    setTimeout(() => {
+    // Fetch AI response
+    try {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/chat`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message }),
+      });
+      const data = await response.json();
+      if (data.success) {
+        setMessages((prev) => [
+          ...prev,
+          { content: data.response, isUser: false },
+        ]);
+      } else {
+        setMessages((prev) => [
+          ...prev,
+          { content: `Error: ${data.error}`, isUser: false },
+        ]);
+      }
+    } catch (err) {
       setMessages((prev) => [
         ...prev,
-        {
-          content: 'Placeholder response.',
-          isUser: false,
-        },
+        { content: 'Error fetching AI response', isUser: false },
       ]);
-    }, 1000);
-    // ^ artificial delay to simulate AI response time, remove this
+    }
   };
 
   return (
