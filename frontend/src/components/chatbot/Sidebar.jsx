@@ -1,8 +1,9 @@
 import { useState } from 'react';
+import ChatInput from './ChatInput';
 
 const Sidebar = ({ isOpen }) => {
-  const MIN_WIDTH = 200;
-  const MAX_WIDTH = 500;
+  const MIN_WIDTH = 250;
+  const MAX_WIDTH = 1000;
   const [width, setWidth] = useState(300); // Default width in px
 
   // Resizing logic
@@ -29,6 +30,11 @@ const Sidebar = ({ isOpen }) => {
     document.addEventListener('mouseup', onMouseUp);
   };
 
+  const handleSubmit = (message) => {
+    console.log('Submitted message:', message);
+    // handle message submission here
+  };
+
   return (
     <div
       style={{ width: `${width}px`, top: '96px' }}
@@ -41,7 +47,9 @@ const Sidebar = ({ isOpen }) => {
           <div className="flex-1 overflow-y-auto p-4">
             {/* Chat messages here */}
           </div>
-          <div className="border-t p-4">{/* Input area here */}</div>
+          <div className="border-t">
+            <ChatInput onSubmit={handleSubmit} />
+          </div>
         </div>
 
         {/* Resizer */}
