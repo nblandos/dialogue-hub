@@ -6,6 +6,8 @@ const Sidebar = ({ isOpen }) => {
   const MIN_WIDTH = 200;
   const MAX_WIDTH = 1200;
   const [width, setWidth] = useState(300); // Default width in px
+  const [isLoading, setIsLoading] = useState(false);
+
   const [messages, setMessages] = useState([
     {
       content: 'Hello! How can I help you today?',
@@ -38,10 +40,16 @@ const Sidebar = ({ isOpen }) => {
   };
 
   const handleSubmit = async (message) => {
-    // Add user message to chat
+    // Add user message
     setMessages((prev) => [...prev, { content: message, isUser: true }]);
 
-    // Fetch AI response
+    // Add loading message
+    setIsLoading(true);
+    setMessages((prev) => [
+      ...prev,
+      { content: '...', isUser: false, isLoading: true },
+    ]);
+
     try {
       const response = await fetch(`${import.meta.env.VITE_API_URL}/chat`, {
         method: 'POST',
@@ -49,25 +57,29 @@ const Sidebar = ({ isOpen }) => {
         body: JSON.stringify({ message }),
       });
       const data = await response.json();
-      if (data.success) {
-        setMessages((prev) => [
-          ...prev,
-          { content: data.response, isUser: false },
-        ]);
-      } else {
-        setMessages((prev) => [
-          ...prev,
-          { content: `Error: ${data.error}`, isUser: false },
-        ]);
-      }
+
+      setMessages((prev) => {
+        const filteredMessages = prev.filter((msg) => !msg.isLoading);
+        return [
+          ...filteredMessages,
+          {
+            content: data.success ? data.response : `Error: ${data.error}`,
+            isUser: false,
+          },
+        ];
+      });
     } catch (err) {
-      setMessages((prev) => [
-        ...prev,
-        { content: 'Error fetching AI response', isUser: false },
-      ]);
+      setMessages((prev) => {
+        const filteredMessages = prev.filter((msg) => !msg.isLoading);
+        return [
+          ...filteredMessages,
+          { content: 'Error fetching AI response', isUser: false },
+        ];
+      });
+    } finally {
+      setIsLoading(false);
     }
   };
-
   return (
     <div
       style={{ width: `${width}px`, top: '96px' }}
