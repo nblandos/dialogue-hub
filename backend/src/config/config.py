@@ -15,3 +15,9 @@ class Config:
     MAIL_USE_TLS = True
     MAIL_USERNAME = os.getenv('SENDER_EMAIL')
     MAIL_PASSWORD = os.getenv('SENDER_PASSWORD')
+
+    # Azure OpenAI configuration
+    KEY_VAULT_NAME = os.getenv('KEY_VAULT_NAME')
+    OPENAI_API_SECRET_NAME = os.getenv('OPENAI_API_SECRET_NAME')
+    OPENAI_ENDPOINT_URL = os.getenv('OPENAI_ENDPOINT_URL')
+    DEPLOYMENT_NAME = os.getenv('DEPLOYMENT_NAME')

@@ -46,14 +46,6 @@ To activate a virtual environment in VSCode:
 - Run `flask db upgrade` to apply migrations to the database (This will create the local database file)
 - If you make changes to the models, you will need to generate a new migration file by running `flask db migrate -m "migration message"`
 
-#### Adding Environment Variables
-
-- These are variables that are used in the backend but stored separately for security reasons so that they are not exposed on GitHub
-- Create a `.env` file in the backend directory
-- Add the following environment variables to the `.env` file:
-  - SENDER_EMAIL="sender_email"
-  - SENDER_PASSWORD="app_password"
-
 ### Frontend Setup
 
 Navigate to the frontend directory `cd frontend`
@@ -72,6 +64,44 @@ To improve your workflow, I recommend installing the following VSCode extensions
 - Tailwind CSS Intellisense (autocompletion for TailwindCSS - frontend CSS library)
 
 In VSCode settings you can enable format on save so that the formatters take effect on save
+
+## Add Environment Variables
+
+Environment variables are used to store sensitive information such as API keys, passwords, etc. These are stored in a `.env` file in the root of the respective directories.
+
+### Frontend Environment Variables
+
+Add the following environment variables to a `.env` file in the frontend directory:
+
+```bash
+VITE_API_URL=http://localhost:5001
+```
+
+### Backend Environment Variables
+
+Add the following environment variables to a `.env` file in the backend directory:
+
+```bash
+SENDER_EMAIL=""
+SENDER_PASSWORD=""
+
+KEY_VAULT_NAME=
+OPENAI_ENDPOINT_URL=
+OPENAI_API_SECRET_NAME=
+DEPLOYMENT_NAME=
+
+AZURE_CLIENT_ID=
+AZURE_CLIENT_SECRET=
+AZURE_TENANT_ID=
+```
+
+### Azure Authentication
+
+You may also need to authenticate with Azure to access the key vault. To do this, you can run the following command in the backend directory:
+
+```bash
+az login
+```
 
 ## Running the Project
 
