@@ -1,6 +1,7 @@
 services:
   backend:
     build: ./backend
+    image: team26.azurecr.io/backend:latest
     ports:
       - "5001:5001"
     volumes:
@@ -16,13 +17,14 @@ services:
 
   frontend:
     build: ./frontend
+    image: team26.azurecr.io/frontend:latest
     ports:
       - "3000:3000"
     volumes:
       - ./frontend:/app
       - /app/node_modules/
     environment:
-      - VITE_API_URL=http://localhost:5001
+      - VITE_API_URL=http://backend:5001
       - NODE_ENV=development
     depends_on:
       - backend
