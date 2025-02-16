@@ -11,8 +11,20 @@
 
 /*  Main colors */
 
+.high-contrast .bg-orange-300 {
+  background-color: #059ce6;
+}
+
+.high-contrast .hover\:bg-orange-200:hover {
+  background-color: #0266b3;
+}
+
 .high-contrast .bg-orange-500 {
   background-color: #11e7fe;
+}
+
+.high-contrast .focus\:border-orange-500:focus {
+  border-color: #11e7fe;
 }
 
 .high-contrast .hover\:bg-orange-600:hover {
@@ -27,7 +39,8 @@
   background-color: #221f1a;
 }
 
-.high-contrast .bg-gray-200 {
+.high-contrast .bg-gray-200,
+.high-contrast .hover\:bg-gray-200:hover {
   background-color: #464137;
 }
 
@@ -56,8 +69,8 @@
   background-color: #fbdd1a;
 }
 
-.high-contrast .bg-red-300 {
-  background-color: #08b9b9;
+.high-contrast .bg-red-100 {
+  background-color: #023e3e;
 }
 
 .high-contrast .bg-red-500 {
@@ -83,8 +96,24 @@
 }
 
 /* Timeslot Colors */
+.high-contrast .bg-red-300 {
+  background-color: #08b9b9;
+}
+
 .high-contrast .bg-green-500\/80 {
   background-color: #f772e0;
+}
+
+.high-contrast .hover\:bg-green-600\/80:hover {
+  background-color: #f9a3ea;
+}
+
+.high-contrast .bg-yellow-100\/80 {
+  background-color: #020e76;
+}
+
+.high-contrast .hover\:bg-yellow-200\/80:hover {
+  background-color: #0222be;
 }
 
 .high-contrast .hover\:bg-green-300\/80:hover {
