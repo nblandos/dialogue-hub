@@ -5,7 +5,7 @@ services:
       - "5001:5001"
     volumes:
       - ./backend:/app
-      - sqlite_data:/app/instance
+      - backend_data:/app/instance
       - /app/__pycache__
     env_file:
       - ./backend/.env
@@ -28,4 +28,4 @@ services:
       - backend
 
 volumes:
-  sqlite_data:
+  backend_data:
