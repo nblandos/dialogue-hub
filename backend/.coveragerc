@@ -1,7 +1,6 @@
 [run]
 source =
     src
-    tests
 branch = True
 omit =
     */venv/*
