@@ -31,7 +31,7 @@ describe('TimeSlotGrid', () => {
     },
   ];
 
-  // Mark the first day as selected
+  // Mark the first day, hour 9 as selected
   const mockSelectedSlots = [`${mockDays[0].date}T9`];
   const mockHours = [9, 10];
   const mockOnSlotClick = vi.fn();
@@ -68,47 +68,45 @@ describe('TimeSlotGrid', () => {
     expect(screen.getByText('10:00')).toBeInTheDocument();
   });
 
-  it('displays selected slots and available slots', () => {
+  it('displays correct accessibility labels for selected and past slots', () => {
     renderComponent();
-    expect(screen.getByText('Selected')).toBeInTheDocument();
-    expect(screen.getAllByText('Book?').length).toBeGreaterThan(0);
+
+    // For the selected slot on tomorrow at 9:00,
+    // expected count is 0 from availability plus 1 for selection: "1 of 3"
+    const selectedSlot = screen.getByTestId(`slot-${mockDays[0].date}-9`);
+    expect(selectedSlot).toHaveAttribute(
+      'aria-label',
+      `Selected timeslot, 9 o'clock on ${mockDays[0].date}, 1 of 3 bookings`
+    );
+
+    // For the past slot (yesterday) the accessibility label shows it as unavailable
+    const pastSlot = screen.getByTestId(`slot-${mockDays[1].date}-9`);
+    expect(pastSlot).toHaveAttribute(
+      'aria-label',
+      `Unavailable timeslot, 9 o'clock on ${mockDays[1].date}`
+    );
   });
 
   it('calls onSlotClick handler for an available slot', () => {
     renderComponent();
-    const bookableSlots = screen.getAllByText('Book?');
-    fireEvent.click(bookableSlots[0]);
+    // Pick an available slot: tomorrow at 10 is not selected and not past.
+    const availableSlot = screen.getByTestId(`slot-${mockDays[0].date}-10`);
+    fireEvent.click(availableSlot);
     expect(mockOnSlotClick).toHaveBeenCalledTimes(1);
   });
 
   it('does not allow clicking past slots', () => {
+    // Create a custom day in the far past for testing
     const oldDate = new Date(today);
     oldDate.setDate(today.getDate() - 30);
-
     const customDays = [
       { ...mockDays[0] },
       { ...mockDays[1], date: oldDate.toISOString().split('T')[0] },
     ];
     renderComponent({ days: customDays });
-    const slotTestId = `slot-${customDays[1].date}-9`;
-    const pastSlot = screen.getByTestId(slotTestId);
+    const pastSlot = screen.getByTestId(`slot-${customDays[1].date}-9`);
     fireEvent.click(pastSlot);
     expect(mockOnSlotClick).not.toHaveBeenCalled();
-  });
-
-  it('has correct accessibility attributes', () => {
-    renderComponent();
-    expect(screen.getByLabelText('Selected timeslot')).toBeInTheDocument();
-    expect(screen.getByLabelText('Bookable timeslot')).toBeInTheDocument();
-  });
-
-  it('correctly renders screen-reader text for a slot', () => {
-    renderComponent();
-    const slot = screen.getByTestId(`slot-${mockDays[0].date}-9`);
-    expect(slot).toHaveAttribute(
-      'data-screen-reader-text',
-      `Selected 9 o'clock on ${mockDays[0].date}`
-    );
   });
 
   it('marks the slot as past if it is the current hour on the current day', () => {
@@ -127,8 +125,14 @@ describe('TimeSlotGrid', () => {
       selectedSlots: [],
     });
 
-    const slotTestId = `slot-${customDay.date}-${currentHour}`;
-    const slotElement = screen.getByTestId(slotTestId);
-    expect(slotElement).toHaveTextContent('Past');
+    const slotElement = screen.getByTestId(
+      `slot-${customDay.date}-${currentHour}`
+    );
+    expect(slotElement).toHaveAttribute(
+      'aria-label',
+      `Unavailable timeslot, ${currentHour} o'clock on ${customDay.date}`
+    );
+    fireEvent.click(slotElement);
+    expect(mockOnSlotClick).not.toHaveBeenCalled();
   });
 });
