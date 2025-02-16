@@ -6,9 +6,9 @@ const NavLinks = ({ isMobile = false }) => {
   const mobileClasses = 'py-2';
 
   return (
-    <>
+      <>
       <Link
-        to="/"
+        to="/book"
         className={`${baseClasses} ${isMobile ? mobileClasses : ''}`}
         data-screen-reader-text="Book"
       >
