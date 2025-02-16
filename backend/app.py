@@ -3,6 +3,7 @@ from flask_cors import CORS
 from src.config.config import Config
 from src import db, migrate, mail, ai_service
 from src.routes.booking_routes import booking_bp
+from src.routes.timeslot_routes import timeslot_bp
 from src.routes.ai_routes import ai_bp
 
 
@@ -17,6 +18,7 @@ def create_app(config_class=Config):
     ai_service.init_app(app)
 
     app.register_blueprint(booking_bp)
+    app.register_blueprint(timeslot_bp)
     app.register_blueprint(ai_bp)
 
     @app.route("/")

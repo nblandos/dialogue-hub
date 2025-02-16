@@ -1,15 +1,96 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 
 const TimeSlotGrid = ({ days, hours, selectedSlots, onSlotClick }) => {
   const now = new Date();
   const currentDate = now.toISOString().split('T')[0];
   const currentHour = now.getHours();
+  const [availability, setAvailability] = useState({});
+  const MAX_BOOKINGS = 3;
+  const BUSY_THRESHOLD = 0.3; // the percentage of bookings relative to MAX_BOOKINGS to be considered 'busy'
+
+  useEffect(() => {
+    const fetchAvailability = async () => {
+      try {
+        const startDate = days[0].date;
+        const endDate = days[days.length - 1].date;
+
+        const response = await fetch(
+          `${import.meta.env.VITE_API_URL}/availability?` +
+            `start_date=${startDate}T00:00:00Z&end_date=${endDate}T23:59:59Z`
+        );
+
+        const data = await response.json();
+        if (data.status === 'success') {
+          setAvailability(data.data);
+        }
+      } catch (error) {
+        alert('Failed to fetch availability. Please try again later.');
+      }
+    };
+
+    fetchAvailability();
+  }, [days]);
+
+  const getSlotDisplay = (date, hour) => {
+    const timeStr = `${date}T${hour.toString().padStart(2, '0')}:00:00`;
+    const count = availability[timeStr] || 0;
+    // Add 1 to count if slot is selected
+    const displayCount = selectedSlots.includes(`${date}T${hour}`)
+      ? count + 1
+      : count;
+    return `${displayCount}/${MAX_BOOKINGS}`;
+  };
+
+  const getSlotClass = (date, hour) => {
+    const timeStr = `${date}T${hour.toString().padStart(2, '0')}:00:00`;
+    const count = availability[timeStr] || 0;
+    const isSelected = selectedSlots.includes(`${date}T${hour}`);
+
+    if (isSlotPast(date, hour)) {
+      return 'cursor-not-allowed bg-gray-100 opacity-70';
+    }
+    if (isSelected) {
+      return 'cursor-pointer bg-green-500/80 text-white hover:bg-green-600/80';
+    }
+    if (count >= MAX_BOOKINGS) {
+      return 'cursor-not-allowed bg-red-100 opacity-80';
+    }
+    if (count > MAX_BOOKINGS * BUSY_THRESHOLD) {
+      return 'cursor-pointer bg-yellow-100/80 hover:bg-yellow-200/80';
+    }
+    return 'cursor-pointer bg-green-100/80 hover:bg-green-300/80';
+  };
 
   const isSlotPast = (dayDate, hour) => {
     // if day is in the past or today and hour has passed
     return (
       dayDate < currentDate || (dayDate === currentDate && hour <= currentHour)
     );
+  };
+
+  const isSlotFull = (date, hour) => {
+    const timeStr = `${date}T${hour.toString().padStart(2, '0')}:00:00`;
+    const count = availability[timeStr] || 0;
+    return count >= MAX_BOOKINGS;
+  };
+
+  const getAccessibilityText = (date, hour) => {
+    const timeStr = `${date}T${hour.toString().padStart(2, '0')}:00:00`;
+    const count = availability[timeStr] || 0;
+
+    if (isSlotPast(date, hour)) {
+      return `Unavailable timeslot, ${hour} o'clock on ${date}`;
+    }
+
+    if (isSlotFull(date, hour)) {
+      return `Fully booked timeslot, ${hour} o'clock on ${date}, ${MAX_BOOKINGS} of ${MAX_BOOKINGS} bookings`;
+    }
+
+    if (selectedSlots.includes(`${date}T${hour}`)) {
+      return `Selected timeslot, ${hour} o'clock on ${date}, ${count + 1} of ${MAX_BOOKINGS} bookings`;
+    }
+
+    return `Available timeslot, ${hour} o'clock on ${date}, ${count} of ${MAX_BOOKINGS} bookings`;
   };
 
   return (
@@ -71,40 +152,25 @@ const TimeSlotGrid = ({ days, hours, selectedSlots, onSlotClick }) => {
                 tabIndex="0"
                 key={`${day.date}-${hour}`}
                 data-screen-reader-text={
-                  isSlotPast(day.date, hour)
-                    ? `Unavailable timeslot, ${hour} o'clock on ${day.date}`
-                    : selectedSlots.includes(`${day.date}T${hour}`)
-                      ? `Selected ${hour} o'clock on ${day.date}`
-                      : `Enter to select ${hour} o'clock on ${day.date}`
+                  getAccessibilityText(day.date, hour) +
+                  (!isSlotPast(day.date, hour) && !isSlotFull(day.date, hour)
+                    ? '. Enter to select'
+                    : '')
                 }
                 onClick={() =>
-                  !isSlotPast(day.date, hour) && onSlotClick(day.date, hour)
+                  !isSlotPast(day.date, hour) &&
+                  !isSlotFull(day.date, hour) &&
+                  onSlotClick(day.date, hour)
                 }
                 data-testid={`slot-${day.date}-${hour}`}
-                className={`relative rounded-md border p-2 transition-colors ${
-                  isSlotPast(day.date, hour)
-                    ? 'cursor-not-allowed bg-gray-100 opacity-50'
-                    : selectedSlots.includes(`${day.date}T${hour}`)
-                      ? 'cursor-pointer bg-green-500/80 text-white'
-                      : 'cursor-pointer bg-green-100/80 hover:bg-green-300/80'
-                }`}
-                aria-label={
-                  !isSlotPast(day.date, hour)
-                    ? selectedSlots.includes(`${day.date}T${hour}`)
-                      ? 'Selected timeslot'
-                      : 'Bookable timeslot'
-                    : 'Past timeslot'
-                }
+                className={`relative rounded-md border p-2 transition-colors ${getSlotClass(day.date, hour)}`}
+                aria-label={getAccessibilityText(day.date, hour)}
               >
-                {isSlotPast(day.date, hour) ? (
-                  <span className="sr-only">Past</span>
-                ) : (
-                  <span className="absolute inset-0 hidden items-center justify-center text-black/70 sm:flex sm:text-sm">
-                    {selectedSlots.includes(`${day.date}T${hour}`)
-                      ? 'Selected'
-                      : 'Book?'}
-                  </span>
-                )}
+                <span className="absolute inset-0 hidden items-center justify-center text-black/70 sm:flex sm:text-sm">
+                  {isSlotPast(day.date, hour)
+                    ? ''
+                    : getSlotDisplay(day.date, hour)}
+                </span>
               </div>
             ))}
           </div>

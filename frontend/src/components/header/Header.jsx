@@ -6,6 +6,7 @@ import DyslexicFontToggle from './DyslexicFontToggle';
 import FontSizeAdjuster from './FontSizeAdjuster';
 import ScreenReaderToggle from './ScreenReaderToggle';
 import Sidebar from '../chatbot/Sidebar';
+import { Link } from "react-router-dom";
 
 const Header = () => {
   const [isHighContrast, setIsHighContrast] = useState(() => {
@@ -55,13 +56,10 @@ const Header = () => {
               <FaRobot size={36} />
             </button>
 
-            <div
-              className="mr-2 text-xl font-bold text-white sm:mr-6 sm:text-2xl xl:text-4xl"
-              aria-label="Dialogue Cafe"
-              data-screen-reader-text="Dialogue Cafe"
-            >
-              Dialogue Cafe
-            </div>
+            <Link to="/" className="mr-2 text-xl font-bold text-white sm:mr-6 sm:text-2xl xl:text-4xl"
+      aria-label="Dialogue Cafe" data-screen-reader-text="Dialogue Cafe">
+  Dialogue Cafe
+</Link>
           </div>
 
           <div className="flex items-center justify-end gap-2 sm:gap-4 xl:gap-6">
