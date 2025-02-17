@@ -11,7 +11,7 @@ function App() {
   return (
     <div className="container mx-auto flex grow flex-col">
       <Header />
-        <Routes>
+      <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/book" element={<SchedulePage />} />
         <Route path="/menu" element={<MenuPage />} />

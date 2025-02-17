@@ -1,64 +1,84 @@
+// frontend/src/tests/components/booking/confirmation/InputFieldWithMic.test.jsx
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { render, screen, cleanup, fireEvent } from '@testing-library/react';
+import { render, screen, fireEvent } from '@testing-library/react';
 import InputFieldWithMic from '../../../../components/booking/confirmation/InputFieldWithMic';
+
+vi.mock('../../../../components/common/VoiceInputButton', () => {
+  return {
+    default: ({ onTranscript, preprocessor, buttonStyle }) => {
+      return (
+        <button
+          data-testid="voice-button"
+          onClick={() =>
+            onTranscript(
+              preprocessor ? preprocessor('test transcript') : 'test transcript'
+            )
+          }
+        >
+          Mic Button {buttonStyle} {preprocessor && 'with preprocessor'}
+        </button>
+      );
+    },
+  };
+});
 
 describe('InputFieldWithMic', () => {
   const defaultProps = {
-    id: 'test-input',
-    label: 'Test Label',
-    placeholder: 'Test Placeholder',
+    id: 'name',
+    label: 'Full Name',
+    placeholder: 'Enter your name',
     value: '',
     onChange: vi.fn(),
-    onMicClick: vi.fn(),
-    recordingField: '',
-    isProcessing: false,
-    autoComplete: 'off',
+    preprocessor: (text) => text.toUpperCase(),
+    autoComplete: 'on',
   };
 
   beforeEach(() => {
-    cleanup();
+    vi.clearAllMocks();
   });
 
-  it('renders email input type when id is email', () => {
-    render(<InputFieldWithMic {...defaultProps} id="email" />);
-    expect(screen.getByLabelText('Test Label')).toHaveAttribute(
-      'type',
-      'email'
-    );
-  });
-
-  it('renders text input type when id is not email', () => {
-    render(<InputFieldWithMic {...defaultProps} id="name" />);
-    expect(screen.getByLabelText('Test Label')).toHaveAttribute('type', 'text');
-  });
-
-  it('renders input field with label', () => {
+  it('renders label, input and voice button correctly', () => {
     render(<InputFieldWithMic {...defaultProps} />);
-    expect(screen.getByLabelText('Test Label')).toBeInTheDocument();
-    expect(screen.getByPlaceholderText('Test Placeholder')).toBeInTheDocument();
+    const label = screen.getByText('Full Name');
+    expect(label).toBeInTheDocument();
+
+    const input = screen.getByPlaceholderText('Enter your name');
+    expect(input).toBeInTheDocument();
+    expect(input).toHaveAttribute('id', 'name');
+    expect(input).toHaveAttribute('data-screen-reader-text', 'Enter your name');
+    expect(input).toHaveAttribute('autoComplete', 'on');
+    expect(input).toHaveClass('w-full');
+
+    const voiceButton = screen.getByTestId('voice-button');
+    expect(voiceButton).toBeInTheDocument();
+    expect(voiceButton).toHaveTextContent('Mic Button form with preprocessor');
   });
 
-  it('handles input changes', () => {
-    render(<InputFieldWithMic {...defaultProps} />);
-    fireEvent.change(screen.getByLabelText('Test Label'), {
-      target: { value: 'test' },
-    });
-    expect(defaultProps.onChange).toHaveBeenCalled();
-  });
-
-  it('shows recording state', () => {
-    render(<InputFieldWithMic {...defaultProps} recordingField="test-input" />);
-    expect(screen.getByText('Stop')).toBeInTheDocument();
-  });
-
-  it('shows processing indicator', () => {
+  it('sets input type to "email" when id is "email"', () => {
     render(
       <InputFieldWithMic
         {...defaultProps}
-        recordingField="test-input"
-        isProcessing={true}
+        id="email"
+        label="Email Address"
+        placeholder="Enter your email"
       />
     );
-    expect(screen.getByText('⏳')).toBeInTheDocument();
+    const input = screen.getByPlaceholderText('Enter your email');
+    expect(input).toHaveAttribute('type', 'email');
+  });
+
+  it('sets input type to "text" when id is not "email"', () => {
+    render(<InputFieldWithMic {...defaultProps} id="name" />);
+    const input = screen.getByPlaceholderText('Enter your name');
+    expect(input).toHaveAttribute('type', 'text');
+  });
+
+  it('calls onChange with processed transcript when voice button is clicked', () => {
+    render(<InputFieldWithMic {...defaultProps} />);
+    const voiceButton = screen.getByTestId('voice-button');
+    fireEvent.click(voiceButton);
+    expect(defaultProps.onChange).toHaveBeenCalledWith({
+      target: { value: 'TEST TRANSCRIPT' },
+    });
   });
 });

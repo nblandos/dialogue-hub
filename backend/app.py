@@ -17,9 +17,9 @@ def create_app(config_class=Config):
     mail.init_app(app)
     ai_service.init_app(app)
 
-    app.register_blueprint(booking_bp)
-    app.register_blueprint(timeslot_bp)
-    app.register_blueprint(ai_bp)
+    app.register_blueprint(booking_bp, url_prefix='/api/bookings')
+    app.register_blueprint(timeslot_bp, url_prefix='/api/timeslots')
+    app.register_blueprint(ai_bp, url_prefix='/api/ai')
 
     @app.route("/")
     def home():

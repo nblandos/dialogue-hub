@@ -21,7 +21,7 @@ def valid_booking_data():
 def test_create_booking_success(client, valid_booking_data):
     with patch('src.routes.booking_routes.email_service.send_confirmation'):
         response = client.post(
-            '/create-booking',
+            'api/bookings/create-booking',
             json=valid_booking_data,
             headers={'Content-Type': 'application/json'}
         )
@@ -39,7 +39,7 @@ def test_create_booking_server_error(client, valid_booking_data):
         mock_create.side_effect = Exception('Server error')
 
         response = client.post(
-            '/create-booking',
+            'api/bookings/create-booking',
             json=valid_booking_data,
             headers={'Content-Type': 'application/json'}
         )
@@ -60,7 +60,7 @@ def test_create_booking_invalid_data(client):
     }
 
     response = client.post(
-        '/create-booking',
+        'api/bookings/create-booking',
         json=invalid_data,
         headers={'Content-Type': 'application/json'}
     )
@@ -77,7 +77,7 @@ def test_create_booking_email_failure(client, valid_booking_data):
         side_effect=Exception('Email service failed')
     ):
         response = client.post(
-            '/create-booking',
+            'api/bookings/create-booking',
             json=valid_booking_data,
             headers={'Content-Type': 'application/json'}
         )
@@ -91,7 +91,7 @@ def test_create_booking_email_failure(client, valid_booking_data):
 
 def test_create_booking_missing_body(client):
     response = client.post(
-        '/create-booking',
+        'api/bookings/create-booking',
         json={},  # empty body
         headers={'Content-Type': 'application/json'}
     )

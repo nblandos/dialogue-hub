@@ -68,13 +68,13 @@ describe('BookingSuccessPage', () => {
     ).toBeInTheDocument();
   });
 
-  it('navigates to home page when "Make Another Booking" button is clicked', () => {
+  it('navigates to booking page when "Make Another Booking" button is clicked', () => {
     const { history } = renderWithRouter(booking);
 
     const button = screen.getByRole('button', { name: 'Make Another Booking' });
     fireEvent.click(button);
 
-    expect(history.location.pathname).toBe('/');
+    expect(history.location.pathname).toBe('/book');
   });
 
   it('renders fallback values when booking state is missing', () => {

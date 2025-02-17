@@ -167,4 +167,13 @@ describe('WeeklyTimetable', () => {
       'Monday, 18 Mar 2024'
     );
   });
+
+  it('does not render selected time display when no slots are selected', () => {
+    renderComponent();
+    // Since by default, no slots are selected,
+    // SelectedTimeDisplay should not be in the document.
+    expect(
+      screen.queryByTestId('selected-time-display')
+    ).not.toBeInTheDocument();
+  });
 });

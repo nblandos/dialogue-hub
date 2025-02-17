@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { format, parseISO } from 'date-fns';
 import BookingDetails from '../../components/booking/confirmation/BookingDetails';
@@ -6,8 +6,7 @@ import InputFieldWithMic from '../../components/booking/confirmation/InputFieldW
 import ConfirmationActions from '../../components/booking/confirmation/ConfirmationActions';
 
 const ADDRESS =
-  'Royal Docks Center for Sustainability, \
-                      University of East London, 4-6 University Way, London E16 2RD';
+  'Royal Docks Center for Sustainability, University of East London, 4-6 University Way, London E16 2RD';
 
 export const preprocessEmail = (transcript) => {
   return transcript
@@ -32,8 +31,7 @@ export const validateFullName = (name) => {
 function ConfirmationPage() {
   const location = useLocation();
   const navigate = useNavigate();
-  const { selectedSlots } = location.state || { selectedSlots: [] };
-
+  const { selectedSlots = [] } = location.state || {};
   // Format booking details
   let formattedDate = 'No date selected';
   let formattedTime = 'No time selected';
@@ -60,71 +58,7 @@ function ConfirmationPage() {
     email: false,
   });
 
-  const [recordingField, setRecordingField] = useState('');
-  const [isProcessing, setIsProcessing] = useState(false);
-  const recognitionRef = React.useRef(null);
-
-  const startRecording = (field) => {
-    stopRecording();
-
-    if (
-      !('webkitSpeechRecognition' in window || 'SpeechRecognition' in window)
-    ) {
-      alert('Speech recognition is not supported in this browser.');
-      return;
-    }
-
-    const SpeechRecognition =
-      window.SpeechRecognition || window.webkitSpeechRecognition;
-    const recognition = new SpeechRecognition();
-
-    recognition.lang = navigator.language || 'en-GB';
-    recognition.interimResults = false;
-    recognition.maxAlternatives = 1;
-
-    recognitionRef.current = recognition;
-    recognition.start();
-    setRecordingField(field);
-    setIsProcessing(true);
-
-    recognition.onresult = (event) => {
-      if (recognitionRef.current === recognition) {
-        let transcript = event.results[0][0].transcript.trim();
-        if (field === 'email') transcript = preprocessEmail(transcript);
-        if (field === 'name') setName(transcript);
-        if (field === 'email') setEmail(transcript);
-        setRecordingField('');
-        setIsProcessing(false);
-      }
-    };
-
-    recognition.onerror = () => {
-      if (recognitionRef.current === recognition) {
-        setRecordingField('');
-        setIsProcessing(false);
-      }
-    };
-
-    recognition.onend = () => {
-      if (recognitionRef.current === recognition) {
-        setRecordingField('');
-        setIsProcessing(false);
-        recognitionRef.current = null;
-      }
-    };
-  };
-
-  const stopRecording = () => {
-    if (recordingField && recognitionRef.current) {
-      recognitionRef.current.stop();
-      recognitionRef.current = null;
-      setRecordingField('');
-      setIsProcessing(false);
-    }
-  };
-
   const handleConfirm = async () => {
-    stopRecording();
     setApiError('');
     setErrors({ name: false, email: false });
 
@@ -150,7 +84,7 @@ function ConfirmationPage() {
       });
 
       const response = await fetch(
-        `${import.meta.env.VITE_API_URL}/create-booking`,
+        `${import.meta.env.VITE_API_URL}/api/bookings/create-booking`,
         {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -181,7 +115,6 @@ function ConfirmationPage() {
         }
       }
 
-      // redirect to success page
       navigate('/success', {
         state: {
           booking: {
@@ -201,15 +134,8 @@ function ConfirmationPage() {
   };
 
   const handleCancel = () => {
-    stopRecording();
-    navigate('/booking');
+    navigate('/book');
   };
-
-  useEffect(() => {
-    return () => {
-      stopRecording();
-    };
-  }, []);
 
   return (
     <div className="flex min-h-screen flex-col items-center bg-gray-100 p-6 pt-36">
@@ -231,13 +157,7 @@ function ConfirmationPage() {
           placeholder="Enter your full name"
           value={name}
           onChange={(e) => setName(e.target.value)}
-          onMicClick={() =>
-            recordingField === 'name' ? stopRecording() : startRecording('name')
-          }
-          recordingField={recordingField}
-          isProcessing={isProcessing}
           autoComplete="name"
-          data-testid="mic-button-name"
         />
 
         <InputFieldWithMic
@@ -246,15 +166,8 @@ function ConfirmationPage() {
           placeholder="Enter your email address"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          onMicClick={() =>
-            recordingField === 'email'
-              ? stopRecording()
-              : startRecording('email')
-          }
-          recordingField={recordingField}
-          isProcessing={isProcessing}
+          preprocessor={preprocessEmail}
           autoComplete="email"
-          data-testid="mic-button-email"
         />
       </div>
 

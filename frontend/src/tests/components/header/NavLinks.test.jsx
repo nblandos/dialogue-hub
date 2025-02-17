@@ -26,16 +26,16 @@ describe('NavLinks', () => {
 
   it('uses correct routing paths', () => {
     renderNavLinks();
-    const [homeLink, menuLink, trainingLink] = screen.getAllByRole('link');
-    expect(homeLink).toHaveAttribute('href', '/');
+    const [bookLink, menuLink, trainingLink] = screen.getAllByRole('link');
+    expect(bookLink).toHaveAttribute('href', '/book');
     expect(menuLink).toHaveAttribute('href', '/menu');
     expect(trainingLink).toHaveAttribute('href', '/training');
   });
 
   it('applies mobile classes when isMobile is true', () => {
     renderNavLinks(true);
-    const [homeLink, menuLink, trainingLink] = screen.getAllByRole('link');
-    expect(homeLink.className).toContain('py-2');
+    const [bookLink, menuLink, trainingLink] = screen.getAllByRole('link');
+    expect(bookLink.className).toContain('py-2');
     expect(menuLink.className).toContain('py-2');
     expect(trainingLink.className).toContain('py-2');
   });

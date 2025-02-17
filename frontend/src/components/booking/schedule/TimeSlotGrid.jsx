@@ -1,24 +1,27 @@
 import React, { useState, useEffect } from 'react';
 
-const TimeSlotGrid = ({ days, hours, selectedSlots, onSlotClick }) => {
+const TimeSlotGrid = ({
+  days,
+  hours,
+  selectedSlots,
+  onSlotClick,
+  maxBookings = 3,
+  busyThreshold = 0.3,
+}) => {
   const now = new Date();
   const currentDate = now.toISOString().split('T')[0];
   const currentHour = now.getHours();
   const [availability, setAvailability] = useState({});
-  const MAX_BOOKINGS = 3;
-  const BUSY_THRESHOLD = 0.3; // the percentage of bookings relative to MAX_BOOKINGS to be considered 'busy'
 
   useEffect(() => {
     const fetchAvailability = async () => {
       try {
         const startDate = days[0].date;
         const endDate = days[days.length - 1].date;
-
         const response = await fetch(
-          `${import.meta.env.VITE_API_URL}/availability?` +
+          `${import.meta.env.VITE_API_URL}/api/timeslots/availability?` +
             `start_date=${startDate}T00:00:00Z&end_date=${endDate}T23:59:59Z`
         );
-
         const data = await response.json();
         if (data.status === 'success') {
           setAvailability(data.data);
@@ -34,11 +37,10 @@ const TimeSlotGrid = ({ days, hours, selectedSlots, onSlotClick }) => {
   const getSlotDisplay = (date, hour) => {
     const timeStr = `${date}T${hour.toString().padStart(2, '0')}:00:00`;
     const count = availability[timeStr] || 0;
-    // Add 1 to count if slot is selected
     const displayCount = selectedSlots.includes(`${date}T${hour}`)
       ? count + 1
       : count;
-    return `${displayCount}/${MAX_BOOKINGS}`;
+    return `${displayCount}/${maxBookings}`;
   };
 
   const getSlotClass = (date, hour) => {
@@ -52,17 +54,16 @@ const TimeSlotGrid = ({ days, hours, selectedSlots, onSlotClick }) => {
     if (isSelected) {
       return 'cursor-pointer bg-green-500/80 text-white hover:bg-green-600/80';
     }
-    if (count >= MAX_BOOKINGS) {
+    if (count >= maxBookings) {
       return 'cursor-not-allowed bg-red-100 opacity-80';
     }
-    if (count > MAX_BOOKINGS * BUSY_THRESHOLD) {
+    if (count > maxBookings * busyThreshold) {
       return 'cursor-pointer bg-yellow-100/80 hover:bg-yellow-200/80';
     }
     return 'cursor-pointer bg-green-100/80 hover:bg-green-300/80';
   };
 
   const isSlotPast = (dayDate, hour) => {
-    // if day is in the past or today and hour has passed
     return (
       dayDate < currentDate || (dayDate === currentDate && hour <= currentHour)
     );
@@ -71,7 +72,7 @@ const TimeSlotGrid = ({ days, hours, selectedSlots, onSlotClick }) => {
   const isSlotFull = (date, hour) => {
     const timeStr = `${date}T${hour.toString().padStart(2, '0')}:00:00`;
     const count = availability[timeStr] || 0;
-    return count >= MAX_BOOKINGS;
+    return count >= maxBookings;
   };
 
   const getAccessibilityText = (date, hour) => {
@@ -83,14 +84,14 @@ const TimeSlotGrid = ({ days, hours, selectedSlots, onSlotClick }) => {
     }
 
     if (isSlotFull(date, hour)) {
-      return `Fully booked timeslot, ${hour} o'clock on ${date}, ${MAX_BOOKINGS} of ${MAX_BOOKINGS} bookings`;
+      return `Fully booked timeslot, ${hour} o'clock on ${date}, ${maxBookings} of ${maxBookings} bookings`;
     }
 
     if (selectedSlots.includes(`${date}T${hour}`)) {
-      return `Selected timeslot, ${hour} o'clock on ${date}, ${count + 1} of ${MAX_BOOKINGS} bookings`;
+      return `Selected timeslot, ${hour} o'clock on ${date}, ${count + 1} of ${maxBookings} bookings`;
     }
 
-    return `Available timeslot, ${hour} o'clock on ${date}, ${count} of ${MAX_BOOKINGS} bookings`;
+    return `Available timeslot, ${hour} o'clock on ${date}, ${count} of ${maxBookings} bookings`;
   };
 
   return (
@@ -119,16 +120,13 @@ const TimeSlotGrid = ({ days, hours, selectedSlots, onSlotClick }) => {
             key={day.full}
             className="text-center text-sm font-semibold md:text-base"
           >
-            {/* XS layouts: show one-letter day, no date */}
             <div className="block sm:hidden">
               <div>{day.short.charAt(0)}</div>
             </div>
-            {/* S layouts: show short day and date */}
             <div className="hidden flex-col sm:flex xl:hidden">
               <div>{day.short}</div>
               <div className="text-xs text-gray-600">{day.displayDate}</div>
             </div>
-            {/* XL layouts: show full day and date */}
             <div className="hidden flex-col xl:flex">
               <div>{day.full}</div>
               <div className="text-sm text-gray-600">{day.displayDate}</div>
@@ -163,7 +161,10 @@ const TimeSlotGrid = ({ days, hours, selectedSlots, onSlotClick }) => {
                   onSlotClick(day.date, hour)
                 }
                 data-testid={`slot-${day.date}-${hour}`}
-                className={`relative rounded-md border p-2 transition-colors ${getSlotClass(day.date, hour)}`}
+                className={`relative rounded-md border p-2 transition-colors ${getSlotClass(
+                  day.date,
+                  hour
+                )}`}
                 aria-label={getAccessibilityText(day.date, hour)}
               >
                 <span className="absolute inset-0 hidden items-center justify-center text-black/70 sm:flex sm:text-sm">

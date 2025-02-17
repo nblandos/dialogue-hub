@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { FaMicrophone, FaPaperPlane } from 'react-icons/fa';
+import { FaPaperPlane } from 'react-icons/fa';
+import VoiceInputButton from '../common/VoiceInputButton';
 
 const ChatInput = ({ onSubmit }) => {
   const [message, setMessage] = useState('');
@@ -7,37 +8,32 @@ const ChatInput = ({ onSubmit }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!message.trim()) return;
-
     onSubmit(message);
     setMessage('');
   };
 
+  const handleVoiceTranscript = (transcript) => {
+    setMessage(transcript);
+  };
+
   return (
     <form onSubmit={handleSubmit} className="flex items-center gap-2 p-2">
-      {/* Voice Input */}
-      {/* Here we should create a common component for InputFieldWithMic from confirmation that we can reuse*/}
-      <button
-        type="button"
-        className="flex h-10 w-10 items-center justify-center rounded-full bg-gray-100 text-gray-600 hover:bg-gray-200"
-        aria-label="Voice input"
-        data-screen-reader-text="Voice input"
-      >
-        <FaMicrophone />
-      </button>
+      <VoiceInputButton
+        onTranscript={handleVoiceTranscript}
+        buttonStyle="chat"
+      />
 
-      {/* Message Input */}
       <input
         id="messageInput"
         type="text"
         value={message}
         onChange={(e) => setMessage(e.target.value)}
-        placeholder="Message..."
+        placeholder="Ask DialogueBot"
         className="min-w-0 flex-1 truncate rounded-full border border-gray-300 px-4 py-2 focus:border-orange-500 focus:outline-none"
         aria-label="Message input"
         data-screen-reader-text="Message input"
       />
 
-      {/* Submit Button */}
       <button
         type="submit"
         disabled={!message.trim()}
