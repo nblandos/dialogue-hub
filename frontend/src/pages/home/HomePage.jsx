@@ -66,7 +66,7 @@ const HomePage = () => {
         </div>
 
         {/* Links */}
-        <div className="mt-4 flex w-full justify-center gap-6">
+        <div className="mb-6 mt-4 flex w-full justify-center gap-6">
           <a
             href="/book"
             className="flex items-center space-x-2 rounded-lg bg-blue-600 px-6 py-3 text-white shadow-md transition-all duration-200 hover:scale-105 hover:bg-blue-700"
@@ -82,7 +82,7 @@ const HomePage = () => {
             <span>View Menu</span>
           </a>
           <a
-            href="/learn"
+            href="/training"
             className="flex items-center space-x-2 rounded-lg bg-purple-600 px-6 py-3 text-white shadow-md transition-all duration-200 hover:scale-105 hover:bg-purple-700"
           >
             <FaGraduationCap className="text-xl" />
@@ -94,7 +94,7 @@ const HomePage = () => {
         <div className="my-8 w-full border-b border-gray-300"></div>
 
         {/* Tube Map Image*/}
-        <div className="mt-6 flex w-full flex-col items-center space-y-2">
+        <div className="mt-4 flex w-full flex-col items-center space-y-2">
           <h2 className="text-3xl font-bold">Getting Here</h2>
           <div className="flex w-full items-start justify-between gap-8 px-4">
             <div className="w-2/3">
@@ -136,8 +136,8 @@ const HomePage = () => {
       </div>
 
       {/* Order Example Column */}
-      <div className="w-1/4 rounded-r-lg border-l border-gray-300 bg-white p-8 pr-8 text-center">
-        <h1 className="mb-6 text-3xl font-bold">How to give an Order</h1>
+      <div className="w-1/4 rounded-r-lg border-l border-gray-300 bg-white p-4 pr-2 text-center">
+        <h1 className="mb-6 text-3xl font-bold">How to Order</h1>
         <div className="flex flex-col items-center space-y-6">
           {[
             { name: 'Hello-Please-Thank You' },
@@ -146,24 +146,31 @@ const HomePage = () => {
           ].map((item, index) => (
             <React.Fragment key={item.name}>
               <div
-                className="text-center"
+                className="w-full text-center"
                 onMouseEnter={() => handleMouseEnter(item.name)}
                 onMouseLeave={() => handleMouseLeave(item.name)}
               >
                 <p className="mb-4 text-xl font-semibold">{item.name}</p>
-                <iframe
-                  width="200"
-                  height="300"
-                  ref={(el) => (videoRefs.current[item.name] = el)}
-                  src={
-                    initialMenu.find((menuItem) => menuItem.name === item.name)
-                      ?.video
-                  }
-                  title={item.name}
-                  className={`rounded-lg transition-transform ${hoveredVideo === item.name ? 'scale-110' : 'scale-100'}`}
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                  allowFullScreen
-                ></iframe>
+                <div className="flex justify-center">
+                  {' '}
+                  {/* Added wrapper div */}
+                  <iframe
+                    width="230"
+                    height="408"
+                    ref={(el) => (videoRefs.current[item.name] = el)}
+                    src={
+                      initialMenu.find(
+                        (menuItem) => menuItem.name === item.name
+                      )?.video
+                    }
+                    title={item.name}
+                    className={`rounded-lg transition-transform ${
+                      hoveredVideo === item.name ? 'scale-110' : 'scale-100'
+                    }`}
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                  ></iframe>
+                </div>
               </div>
               {index < 2 && (
                 <FaArrowDown className="inline-flex fill-black stroke-black text-6xl text-black" />
