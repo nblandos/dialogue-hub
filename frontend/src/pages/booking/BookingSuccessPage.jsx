@@ -15,7 +15,7 @@ const BookingSuccessPage = () => {
   ];
 
   const handleNewBooking = () => {
-    navigate('/');
+    navigate('/booking');
   };
 
   return (

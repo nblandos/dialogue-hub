@@ -202,7 +202,7 @@ function ConfirmationPage() {
 
   const handleCancel = () => {
     stopRecording();
-    navigate('/');
+    navigate('/booking');
   };
 
   useEffect(() => {
