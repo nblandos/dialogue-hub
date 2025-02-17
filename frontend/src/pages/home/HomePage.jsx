@@ -64,6 +64,7 @@ const HomePage = () => {
             >
               <p className="mb-2 text-xl font-semibold">{order.name}</p>
               <iframe
+                loading="lazy"
                 className="w-full rounded-lg shadow-md transition-transform duration-300"
                 width="315"
                 height="533"
@@ -169,6 +170,7 @@ const HomePage = () => {
                 <p className="mb-4 text-xl font-semibold">{item.name}</p>
                 <div className="flex justify-center">
                   <iframe
+                    loading="lazy"
                     width="230"
                     height="408"
                     ref={(el) => (videoRefs.current[item.name] = el)}

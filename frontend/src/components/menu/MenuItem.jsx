@@ -11,6 +11,7 @@ const MenuItem = ({ name, price, video }) => {
       </h2>
       <div className="relative h-72 w-full">
         <iframe
+          loading="lazy"
           src={video}
           title={name}
           className="h-full w-full rounded-lg"
