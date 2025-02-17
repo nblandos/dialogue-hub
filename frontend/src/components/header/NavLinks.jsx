@@ -6,7 +6,7 @@ const NavLinks = ({ isMobile = false }) => {
   const mobileClasses = 'py-2';
 
   return (
-      <>
+    <>
       <Link
         to="/book"
         className={`${baseClasses} ${isMobile ? mobileClasses : ''}`}
