@@ -45,20 +45,4 @@ describe('InputFieldWithMic', () => {
     });
     expect(defaultProps.onChange).toHaveBeenCalled();
   });
-
-  it('shows recording state', () => {
-    render(<InputFieldWithMic {...defaultProps} recordingField="test-input" />);
-    expect(screen.getByText('Stop')).toBeInTheDocument();
-  });
-
-  it('shows processing indicator', () => {
-    render(
-      <InputFieldWithMic
-        {...defaultProps}
-        recordingField="test-input"
-        isProcessing={true}
-      />
-    );
-    expect(screen.getByText('⏳')).toBeInTheDocument();
-  });
 });

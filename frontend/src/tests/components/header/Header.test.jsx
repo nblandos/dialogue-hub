@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach, afterEach } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
 import Header from '../../../components/header/Header';
@@ -7,18 +7,24 @@ describe('Header', () => {
   let mockSpeechSynthesis;
 
   beforeEach(() => {
+    // Existing setup
     localStorage.clear();
     document.documentElement.style.fontSize = '';
     document.documentElement.classList.remove('high-contrast', 'dyslexic-font');
 
+    // Mock speech synthesis
     mockSpeechSynthesis = { cancel: vi.fn(), speak: vi.fn() };
     window.speechSynthesis = mockSpeechSynthesis;
     global.SpeechSynthesisUtterance = vi.fn();
 
+    // Mock MutationObserver
     global.MutationObserver = vi.fn().mockImplementation(() => ({
       observe: vi.fn(),
       disconnect: vi.fn(),
     }));
+
+    // Add scrollIntoView mock
+    Element.prototype.scrollIntoView = vi.fn();
   });
 
   afterEach(() => {
