@@ -224,11 +224,11 @@ describe('ConfirmationPage', () => {
     });
   });
 
-  it('navigates to schedule page when cancel button is clicked', () => {
+  it('navigates to booking page when cancel button is clicked', () => {
     const { history } = renderWithRouter({ selectedSlots });
     const cancelButton = screen.getByRole('button', { name: /cancel/i });
     fireEvent.click(cancelButton);
-    expect(history.location.pathname).toBe('/');
+    expect(history.location.pathname).toBe('/book');
   });
 
   it('displays default booking details when no slots selected', () => {

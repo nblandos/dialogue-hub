@@ -135,7 +135,7 @@ function ConfirmationPage() {
   };
 
   const handleCancel = () => {
-    navigate('/');
+    navigate('/book');
   };
 
   return (
