@@ -7,7 +7,7 @@ def test_chat_success(client):
     ) as mock_response:
         mock_response.return_value = "Hello! How can I help you?"
 
-        response = client.post('/chat', json={
+        response = client.post('/api/ai/chat', json={
             'message': 'Hi there'
         })
 
@@ -19,7 +19,7 @@ def test_chat_success(client):
 
 
 def test_chat_missing_message(client):
-    response = client.post('/chat', json={})
+    response = client.post('/api/ai/chat', json={})
 
     assert response.status_code == 400
     data = response.get_json()
@@ -33,7 +33,7 @@ def test_chat_service_error(client):
     ) as mock_response:
         mock_response.side_effect = Exception('AI service error')
 
-        response = client.post('/chat', json={
+        response = client.post('/api/ai/chat', json={
             'message': 'Hi there'
         })
 
@@ -44,7 +44,7 @@ def test_chat_service_error(client):
 
 
 def test_chat_invalid_request(client):
-    response = client.post('/chat', data='invalid json')
+    response = client.post('/api/ai/chat', data='invalid json')
 
     assert response.status_code == 500
     data = response.get_json()

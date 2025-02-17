@@ -103,11 +103,14 @@ const Sidebar = ({ isOpen }) => {
     ]);
 
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/chat`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message }),
-      });
+      const response = await fetch(
+        `${import.meta.env.VITE_API_URL}/api/ai/chat`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ message }),
+        }
+      );
       const data = await response.json();
 
       setMessages((prev) => {

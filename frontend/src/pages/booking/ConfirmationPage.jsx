@@ -85,7 +85,7 @@ function ConfirmationPage() {
       });
 
       const response = await fetch(
-        `${import.meta.env.VITE_API_URL}/create-booking`,
+        `${import.meta.env.VITE_API_URL}/api/bookings/create-booking`,
         {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
