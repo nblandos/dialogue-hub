@@ -35,6 +35,22 @@ const HomePage = () => {
   return (
     <div className="flex bg-gray-100 p-6 pt-32">
       <div className="flex w-3/4 flex-col items-center rounded-l-lg border-r border-gray-300 bg-white p-4 text-center">
+        {/* Introduction */}
+        <div className="mb-4 mt-2 w-4/5 text-center">
+          <h1 className="mb-2 text-4xl font-bold text-gray-900">
+            Dialogue Cafe
+          </h1>
+          <p className="mb-6 text-xl text-gray-700">
+            Dialogue Cafe has a very strong commitment to social inclusion and
+            change. We encourage our customers to order in British Sign Language
+            to spark a conversation between visitors and our deaf or hard of
+            hearing baristas.
+          </p>
+        </div>
+
+        {/* Divider */}
+        <div className="mb-8 w-full border-b border-gray-300"></div>
+
         <header className="mb-4 text-3xl font-bold">Popular Orders</header>
 
         {/* Popular Orders Videos Grid */}
@@ -137,7 +153,7 @@ const HomePage = () => {
 
       {/* Order Example Column */}
       <div className="w-1/4 rounded-r-lg border-l border-gray-300 bg-white p-4 pr-2 text-center">
-        <h1 className="mb-6 text-3xl font-bold">How to Order</h1>
+        <h1 className="mb-6 mt-2 text-3xl font-bold">How to Order</h1>
         <div className="flex flex-col items-center space-y-6">
           {[
             { name: 'Hello-Please-Thank You' },
@@ -152,8 +168,6 @@ const HomePage = () => {
               >
                 <p className="mb-4 text-xl font-semibold">{item.name}</p>
                 <div className="flex justify-center">
-                  {' '}
-                  {/* Added wrapper div */}
                   <iframe
                     width="230"
                     height="408"
