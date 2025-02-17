@@ -7,24 +7,18 @@ describe('Header', () => {
   let mockSpeechSynthesis;
 
   beforeEach(() => {
-    // Existing setup
     localStorage.clear();
     document.documentElement.style.fontSize = '';
     document.documentElement.classList.remove('high-contrast', 'dyslexic-font');
 
-    // Mock speech synthesis
     mockSpeechSynthesis = { cancel: vi.fn(), speak: vi.fn() };
     window.speechSynthesis = mockSpeechSynthesis;
     global.SpeechSynthesisUtterance = vi.fn();
 
-    // Mock MutationObserver
     global.MutationObserver = vi.fn().mockImplementation(() => ({
       observe: vi.fn(),
       disconnect: vi.fn(),
     }));
-
-    // Add scrollIntoView mock
-    Element.prototype.scrollIntoView = vi.fn();
   });
 
   afterEach(() => {
@@ -64,14 +58,37 @@ describe('Header', () => {
     expect(document.documentElement.style.fontSize).toBe('18px');
   });
 
-  it('manages mobile menu state', () => {
+  it('toggles mobile accessibility menu state', () => {
     renderHeader();
     const menuButton = screen.getByLabelText(/Open accessibility menu/i);
 
     fireEvent.click(menuButton);
     expect(menuButton).toHaveAttribute('aria-expanded', 'true');
+    expect(menuButton).toHaveAttribute(
+      'data-screen-reader-text',
+      'Close accessibility menu'
+    );
 
     fireEvent.click(menuButton);
     expect(menuButton).toHaveAttribute('aria-expanded', 'false');
+    expect(menuButton).toHaveAttribute(
+      'data-screen-reader-text',
+      'Open accessibility menu'
+    );
+  });
+
+  it('toggles chatbot open state when chatbot button is clicked', () => {
+    renderHeader();
+    const chatbotButton = screen.getByRole('button', {
+      name: /open ai assistant/i,
+    });
+
+    expect(chatbotButton).toHaveAttribute('aria-label', 'Open AI Assistant');
+
+    fireEvent.click(chatbotButton);
+    expect(chatbotButton).toHaveAttribute('aria-label', 'Close AI Assistant');
+
+    fireEvent.click(chatbotButton);
+    expect(chatbotButton).toHaveAttribute('aria-label', 'Open AI Assistant');
   });
 });

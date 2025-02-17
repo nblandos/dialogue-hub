@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import TimeSlotGrid from '../../../../components/booking/schedule/TimeSlotGrid';
 
 function formatDisplayDate(dateObj) {
@@ -12,7 +12,6 @@ describe('TimeSlotGrid', () => {
   const today = new Date();
   const tomorrow = new Date(today);
   tomorrow.setDate(today.getDate() + 1);
-
   const yesterday = new Date(today);
   yesterday.setDate(today.getDate() - 1);
 
@@ -31,55 +30,75 @@ describe('TimeSlotGrid', () => {
     },
   ];
 
-  // Mark the first day, hour 9 as selected
   const mockSelectedSlots = [`${mockDays[0].date}T9`];
   const mockHours = [9, 10];
   const mockOnSlotClick = vi.fn();
 
-  const renderComponent = (props = {}) =>
-    render(
-      <TimeSlotGrid
-        days={mockDays}
-        hours={mockHours}
-        selectedSlots={mockSelectedSlots}
-        onSlotClick={mockOnSlotClick}
-        {...props}
-      />
-    );
+  // Default config for production is maxBookings=3, busyThreshold=0.3.
+  // In tests we can pass alternative values for flexibility.
+  const defaultConfig = { maxBookings: 3, busyThreshold: 0.3 };
 
   beforeEach(() => {
     vi.clearAllMocks();
+    global.fetch = vi.fn(() =>
+      Promise.resolve({
+        json: () =>
+          Promise.resolve({
+            status: 'success',
+            data: {}, // default: no bookings
+          }),
+      })
+    );
   });
 
   afterEach(() => {
     vi.useRealTimers();
   });
 
-  it('renders time column and correct day headers', () => {
+  const renderComponent = (config = {}, props = {}) =>
+    render(
+      <TimeSlotGrid
+        days={mockDays}
+        hours={mockHours}
+        selectedSlots={mockSelectedSlots}
+        onSlotClick={mockOnSlotClick}
+        {...defaultConfig}
+        {...config}
+        {...props}
+      />
+    );
+
+  it('renders time column and correct day headers', async () => {
     renderComponent();
+    await waitFor(() => expect(global.fetch).toHaveBeenCalled());
     expect(screen.getByText('Time')).toBeInTheDocument();
     expect(screen.getByText('Monday')).toBeInTheDocument();
     expect(screen.getByText('Tuesday')).toBeInTheDocument();
   });
 
-  it('renders all provided hours', () => {
+  it('renders all provided hours', async () => {
     renderComponent();
+    await waitFor(() => expect(global.fetch).toHaveBeenCalled());
     expect(screen.getByText('9:00')).toBeInTheDocument();
     expect(screen.getByText('10:00')).toBeInTheDocument();
   });
 
-  it('displays correct accessibility labels for selected and past slots', () => {
+  it('displays correct accessibility labels reflecting availability (default config)', async () => {
     renderComponent();
+    await waitFor(() => expect(global.fetch).toHaveBeenCalled());
 
-    // For the selected slot on tomorrow at 9:00,
-    // expected count is 0 from availability plus 1 for selection: "1 of 3"
     const selectedSlot = screen.getByTestId(`slot-${mockDays[0].date}-9`);
     expect(selectedSlot).toHaveAttribute(
       'aria-label',
-      `Selected timeslot, 9 o'clock on ${mockDays[0].date}, 1 of 3 bookings`
+      `Selected timeslot, 9 o'clock on ${mockDays[0].date}, ${1} of ${defaultConfig.maxBookings} bookings`
     );
 
-    // For the past slot (yesterday) the accessibility label shows it as unavailable
+    const availableSlot = screen.getByTestId(`slot-${mockDays[0].date}-10`);
+    expect(availableSlot).toHaveAttribute(
+      'aria-label',
+      `Available timeslot, 10 o'clock on ${mockDays[0].date}, ${0} of ${defaultConfig.maxBookings} bookings`
+    );
+
     const pastSlot = screen.getByTestId(`slot-${mockDays[1].date}-9`);
     expect(pastSlot).toHaveAttribute(
       'aria-label',
@@ -87,29 +106,30 @@ describe('TimeSlotGrid', () => {
     );
   });
 
-  it('calls onSlotClick handler for an available slot', () => {
+  it('calls onSlotClick handler for an available slot', async () => {
     renderComponent();
-    // Pick an available slot: tomorrow at 10 is not selected and not past.
+    await waitFor(() => expect(global.fetch).toHaveBeenCalled());
     const availableSlot = screen.getByTestId(`slot-${mockDays[0].date}-10`);
     fireEvent.click(availableSlot);
     expect(mockOnSlotClick).toHaveBeenCalledTimes(1);
   });
 
-  it('does not allow clicking past slots', () => {
-    // Create a custom day in the far past for testing
+  it('does not allow clicking past slots', async () => {
+    // Set a day 30 days in the past
     const oldDate = new Date(today);
     oldDate.setDate(today.getDate() - 30);
     const customDays = [
       { ...mockDays[0] },
       { ...mockDays[1], date: oldDate.toISOString().split('T')[0] },
     ];
-    renderComponent({ days: customDays });
+    renderComponent({}, { days: customDays });
+    await waitFor(() => expect(global.fetch).toHaveBeenCalled());
     const pastSlot = screen.getByTestId(`slot-${customDays[1].date}-9`);
     fireEvent.click(pastSlot);
     expect(mockOnSlotClick).not.toHaveBeenCalled();
   });
 
-  it('marks the slot as past if it is the current hour on the current day', () => {
+  it('marks the slot as past if it is the current hour on the current day', async () => {
     const now = new Date();
     const customDay = {
       full: 'Today',
@@ -118,13 +138,11 @@ describe('TimeSlotGrid', () => {
       displayDate: 'Today',
     };
     const currentHour = now.getHours();
-
-    renderComponent({
-      days: [customDay],
-      hours: [currentHour],
-      selectedSlots: [],
-    });
-
+    renderComponent(
+      {},
+      { days: [customDay], hours: [currentHour], selectedSlots: [] }
+    );
+    await waitFor(() => expect(global.fetch).toHaveBeenCalled());
     const slotElement = screen.getByTestId(
       `slot-${customDay.date}-${currentHour}`
     );
@@ -134,5 +152,63 @@ describe('TimeSlotGrid', () => {
     );
     fireEvent.click(slotElement);
     expect(mockOnSlotClick).not.toHaveBeenCalled();
+  });
+
+  it('displays fully booked slot and does not allow clicking', async () => {
+    global.fetch = vi.fn(() =>
+      Promise.resolve({
+        json: () =>
+          Promise.resolve({
+            status: 'success',
+            data: {
+              [`${mockDays[0].date}T10:00:00`]: defaultConfig.maxBookings,
+            },
+          }),
+      })
+    );
+    renderComponent();
+    await waitFor(() => expect(global.fetch).toHaveBeenCalled());
+    const fullSlot = screen.getByTestId(`slot-${mockDays[0].date}-10`);
+    expect(fullSlot).toHaveAttribute(
+      'aria-label',
+      `Fully booked timeslot, 10 o'clock on ${mockDays[0].date}, ${defaultConfig.maxBookings} of ${defaultConfig.maxBookings} bookings`
+    );
+    fireEvent.click(fullSlot);
+    expect(mockOnSlotClick).not.toHaveBeenCalled();
+  });
+
+  it('applies busy style when availability count is above busy threshold (custom config)', async () => {
+    // Use custom config: maxBookings = 5 and busyThreshold = 0.5
+    const customConfig = { maxBookings: 5, busyThreshold: 0.5 };
+    // Simulate that tomorrow at 10:00 has a count that is above busy threshold
+    const busyCount = 3; // For maxBookings 5, busy if count > 2.5
+    global.fetch = vi.fn(() =>
+      Promise.resolve({
+        json: () =>
+          Promise.resolve({
+            status: 'success',
+            data: {
+              [`${mockDays[0].date}T10:00:00`]: busyCount,
+            },
+          }),
+      })
+    );
+    renderComponent(customConfig);
+    await waitFor(() => expect(global.fetch).toHaveBeenCalled());
+    const busySlot = screen.getByTestId(`slot-${mockDays[0].date}-10`);
+    expect(busySlot.className).toContain('bg-yellow-100/80');
+    fireEvent.click(busySlot);
+    expect(mockOnSlotClick).toHaveBeenCalledTimes(1);
+  });
+
+  it('alerts when fetching availability fails', async () => {
+    const alertMock = vi.spyOn(window, 'alert').mockImplementation(() => {});
+    global.fetch = vi.fn(() => Promise.reject(new Error('Network error')));
+    renderComponent();
+    await waitFor(() => expect(global.fetch).toHaveBeenCalled());
+    expect(alertMock).toHaveBeenCalledWith(
+      'Failed to fetch availability. Please try again later.'
+    );
+    alertMock.mockRestore();
   });
 });
