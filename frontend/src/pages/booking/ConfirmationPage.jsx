@@ -31,8 +31,7 @@ export const validateFullName = (name) => {
 function ConfirmationPage() {
   const location = useLocation();
   const navigate = useNavigate();
-  const { selectedSlots } = location.state || { selectedSlots: [] };
-
+  const { selectedSlots = [] } = location.state || {};
   // Format booking details
   let formattedDate = 'No date selected';
   let formattedTime = 'No time selected';
