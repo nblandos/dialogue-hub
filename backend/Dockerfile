@@ -10,7 +10,8 @@ ENV FLASK_DEBUG=1
 COPY . .
 
 RUN mkdir -p instance && chmod 755 instance
+RUN chmod +x entrypoint.sh
 
 EXPOSE 5001
 
-CMD ["flask", "run", "--host=0.0.0.0", "--port=5001"]
+ENTRYPOINT ["./entrypoint.sh"]
