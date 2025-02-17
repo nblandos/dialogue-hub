@@ -45,11 +45,17 @@
 }
 
 .high-contrast .bg-gray-300,
-.high-contrast .hover\:bg-gray-300:hover {
+.high-contrast .hover\:bg-gray-300:hover,
+.high-contrast .disabled\:bg-gray-300:disabled {
   background-color: #726a5d;
 }
 
-.high-contrast .bg-gray-500 {
+.high-contrast .bg-gray-400 {
+  background-color: #c4bcac;
+}
+
+.high-contrast .bg-gray-500,
+.high-contrast .hover\:bg-gray-500:hover {
   background-color: #ece8de;
 }
 
