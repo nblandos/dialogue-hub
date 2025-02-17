@@ -64,8 +64,13 @@ const TimeSlotGrid = ({
   };
 
   const isSlotPast = (dayDate, hour) => {
+    const date = new Date(dayDate);
+    const isFriday = date.getDay() === 5;
+
     return (
-      dayDate < currentDate || (dayDate === currentDate && hour <= currentHour)
+      dayDate < currentDate ||
+      (dayDate === currentDate && hour <= currentHour) ||
+      (isFriday && hour >= 13) // Cafe closes at 1pm on Fridays
     );
   };
 
