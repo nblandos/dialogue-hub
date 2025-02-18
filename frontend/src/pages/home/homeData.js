@@ -1,3 +1,5 @@
+// Note: we should add the origin domain to the video links like so '&origin=https://yourdomain.com' once we deploy
+
 export const popularOrders = [
   {
     name: 'Croissant',

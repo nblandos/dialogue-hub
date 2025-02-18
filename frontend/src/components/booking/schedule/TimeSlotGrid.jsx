@@ -52,7 +52,7 @@ const TimeSlotGrid = ({
       return 'cursor-not-allowed bg-gray-100 opacity-70';
     }
     if (isSelected) {
-      return 'cursor-pointer bg-green-500/80 text-white hover:bg-green-600/80';
+      return 'cursor-pointer bg-green-400/80 text-white hover:bg-green-500/80';
     }
     if (count >= maxBookings) {
       return 'cursor-not-allowed bg-red-100 opacity-80';
