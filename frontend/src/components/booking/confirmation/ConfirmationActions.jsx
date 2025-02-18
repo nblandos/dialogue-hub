@@ -27,12 +27,14 @@ const ConfirmationActions = ({
     return null;
   };
 
+  const hasError = apiError || errors.name || errors.email;
+
   return (
-    <div className="flex w-full max-w-md flex-col items-center gap-5">
+    <div className="flex w-full max-w-md flex-col items-center gap-2">
       <div className="flex h-6 items-center justify-center">
         {renderError()}
       </div>
-      <div className="flex w-full justify-between">
+      <div className={`flex w-full justify-between ${hasError ? 'mt-4' : ''}`}>
         <button
           data-screen-reader-text="Cancel"
           className={`rounded-lg px-6 py-2 font-semibold text-white ${
