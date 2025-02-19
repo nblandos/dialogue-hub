@@ -145,7 +145,7 @@ const initialMenu = [
     video: 'https://www.youtube.com/embed/y5fKVS0ngEg?enablejsapi=1',
   },
   {
-    name: 'Almond Croissant',
+    name: 'Croissant',
     price: '£2.90',
     video: 'https://www.youtube.com/embed/y5fKVS0ngEg?enablejsapi=1',
   },
@@ -173,6 +173,96 @@ const initialMenu = [
     name: 'Muffin',
     price: '£2.90',
     video: 'https://www.youtube.com/embed/tQauT1Ch7-Y?enablejsapi=1',
+    },
+  {
+    "name": "Karaca Turkish Coffee",
+    "price": "£X.XX",
+    "video": "https://www.youtube.com/embed/wG1rrosRvuw?enablejsapi=1"
+  },
+  {
+    "name": "Pistachio Donughnut",
+    "price": "£X.XX",
+    "video": "https://www.youtube.com/embed/v3QpR4b2zwk?enablejsapi=1"
+  },
+  {
+    "name": "Skimmed Milk",
+    "price": "£X.XX",
+    "video": "https://www.youtube.com/embed/MZDTpMX_YSQ?enablejsapi=1"
+  },
+  {
+    "name": "Cafe Latte",
+    "price": "£X.XX",
+    "video": "https://www.youtube.com/embed/jAFvsngFVKA?enablejsapi=1"
+  },
+  {
+    "name": "Almond Croisant",
+    "price": "£X.XX",
+    "video": "https://www.youtube.com/embed/VKSP4gTohAI?enablejsapi=1"
+  },
+  {
+    "name": "Nutella Doughnut",
+    "price": "£X.XX",
+    "video": "https://www.youtube.com/embed/rY6-SZD_N2k?enablejsapi=1"
+  },
+  {
+    "name": "Lemon & Poppyseed Cake Vegan",
+    "price": "£X.XX",
+    "video": "https://www.youtube.com/embed/65xAIvkYa78?enablejsapi=1"
+  },
+  {
+    "name": "Peanut Butter Blondie Vegan",
+    "price": "£X.XX",
+    "video": "https://www.youtube.com/embed/Y88PjRDitwk?enablejsapi=1"
+  },
+  {
+    "name": "Earl Grey",
+    "price": "£X.XX",
+    "video": "https://www.youtube.com/embed/Q9pLCXIapjU?enablejsapi=1"
+  },
+  {
+    "name": "Pepper Mint",
+    "price": "£X.XX",
+    "video": "https://www.youtube.com/embed/4E-GXOYgoNE?enablejsapi=1"
+  },
+  {
+    "name": "Cappucino",
+    "price": "£X.XX",
+    "video": "https://www.youtube.com/embed/QCcnsE5Orkw?enablejsapi=1"
+  },
+  {
+    "name": "Lemonaid - Passion Fruit",
+    "price": "£X.XX",
+    "video": "https://www.youtube.com/embed/j78KP8YF_b8?enablejsapi=1"
+  },
+  {
+    "name": "Macchiato",
+    "price": "£X.XX",
+    "video": "https://www.youtube.com/embed/doGliOg9KZo?enablejsapi=1"
+  },
+  {
+    "name": "Plain Nata",
+    "price": "£X.XX",
+    "video": "https://www.youtube.com/embed/5VKBVTCsyi8?enablejsapi=1"
+  },
+  {
+    "name": "Normal Milk",
+    "price": "£X.XX",
+    "video": "https://www.youtube.com/embed/N9pjyODuW6g?enablejsapi=1"
+  },
+  {
+    "name": "Orange Juice",
+    "price": "£X.XX",
+    "video": "https://www.youtube.com/embed/OpjsXjP2H2k?enablejsapi=1"
+  },
+  {
+    "name": "Chai Latte",
+    "price": "£X.XX",
+    "video": "https://www.youtube.com/embed/QeAtUyAjjZE?enablejsapi=1"
+  },
+  {
+    "name": "Banana",
+    "price": "£X.XX",
+    "video": "https://www.youtube.com/embed/-hlEOOWtLd4?enablejsapi=1"
   },
 ];
 
