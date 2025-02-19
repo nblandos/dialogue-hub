@@ -5,9 +5,14 @@ load_dotenv()
 
 
 class Config:
-    # only use azure if the environment variable is set
-    SQLALCHEMY_DATABASE_URI = os.getenv(
-        'AZURE_DATABASE_URL', 'sqlite:///local.db')
+    SQLALCHEMY_DATABASE_URI = (
+        'postgresql+psycopg2://{dbuser}:{dbpass}@{dbhost}/{dbname}'.format(
+            dbuser=os.getenv('AZURE_POSTGRESQL_USER'),
+            dbpass=os.getenv('AZURE_POSTGRESQL_PASSWORD'),
+            dbhost=os.getenv('AZURE_POSTGRESQL_HOST'),
+            dbname=os.getenv('AZURE_POSTGRESQL_NAME')
+        )
+    )
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
     MAIL_SERVER = 'smtp.gmail.com'

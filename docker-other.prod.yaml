@@ -1,0 +1,33 @@
+version: "3.8"
+
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    environment:
+      - FLASK_APP=app.py
+      - FLASK_ENV=production
+      - AZURE_DATABASE_URL=${AZURE_DATABASE_URL}
+      - KEY_VAULT_NAME=${KEY_VAULT_NAME}
+      - OPENAI_ENDPOINT_URL=${OPENAI_ENDPOINT_URL}
+      - AZURE_CLIENT_ID=${AZURE_CLIENT_ID}
+      - AZURE_CLIENT_SECRET=${AZURE_CLIENT_SECRET}
+      - AZURE_TENANT_ID=${AZURE_TENANT_ID}
+      # other vars
+    ports:
+      - "5001:5001"
+    restart: always
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    restart: always
+
+volumes:
+  backend_data:
