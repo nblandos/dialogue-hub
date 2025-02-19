@@ -71,6 +71,10 @@
   background-color: #fef037;
 }
 
+.high-contrast .hover\:bg-blue-700:hover {
+  background-color: #fef764;
+}
+
 .high-contrast .bg-blue-500 {
   background-color: #fbdd1a;
 }
@@ -97,15 +101,33 @@
   background-color: #fe89f2;
 }
 
+.high-contrast .bg-green-600,
 .high-contrast .hover\:bg-green-600:hover {
   background-color: #febcf8;
 }
 
+.high-contrast .hover\:bg-green-700:hover {
+  background-color: #fedefb;
+}
+
+.high-contrast .bg-purple-600 {
+  background-color: #cefc39;
+}
+
+.high-contrast .hover\:bg-purple-700:hover {
+  background-color: #e0fe78;
+}
+
 /* Timeslot Colors */
+.high-contrast .bg-green-400\/80 {
+  background-color: #ea46c7;
+}
+
 .high-contrast .bg-red-300 {
   background-color: #08b9b9;
 }
 
+.high-contrast .hover\:bg-green-500\/80:hover,
 .high-contrast .bg-green-500\/80 {
   background-color: #f772e0;
 }

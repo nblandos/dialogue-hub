@@ -118,8 +118,8 @@ const Header = () => {
         <div
           className={`absolute left-0 right-0 top-full flex flex-col border-t border-orange-400 bg-orange-500 p-4 transition-all duration-300 xl:hidden ${
             isMobileMenuOpen
-              ? 'max-h-screen opacity-100'
-              : 'max-h-0 overflow-hidden opacity-0'
+              ? 'pointer-events-auto max-h-screen opacity-100'
+              : 'pointer-events-none max-h-0 overflow-hidden opacity-0'
           }`}
         >
           <div className="flex justify-center gap-6">
