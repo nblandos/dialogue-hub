@@ -2,8 +2,8 @@ import React, { useState, useRef } from 'react';
 import { initialMenu, popularOrders } from './homeData';
 import {
   FaArrowDown,
-  FaCalendarAlt,
   FaBook,
+  FaCalendarAlt,
   FaGraduationCap,
 } from 'react-icons/fa';
 import tubeMap from './images/tube_map.png';
@@ -33,9 +33,8 @@ const HomePage = () => {
   };
 
   return (
-    <div className="flex bg-gray-100 p-6 pt-32">
-      <div className="flex w-3/4 flex-col items-center rounded-l-lg border-r border-gray-300 bg-white p-4 text-center">
-        {/* Introduction */}
+    <div className="flex flex-col items-center bg-gray-100 p-6 pt-32 lg:flex-row lg:items-start">
+      <div className="flex w-full flex-col items-center rounded-lg border-gray-300 bg-white p-4 text-center lg:w-3/4">
         <div className="mb-4 mt-2 w-4/5 text-center">
           <h1 className="mb-2 text-4xl font-bold text-gray-900">
             Dialogue Cafe
@@ -54,18 +53,18 @@ const HomePage = () => {
         <header className="mb-4 text-3xl font-bold">Popular Orders</header>
 
         {/* Popular Orders Videos Grid */}
-        <div className="mb-8 grid grid-cols-3 gap-4">
+        <div className="mb-8 grid w-full grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {popularOrders.map((order) => (
             <div
               key={order.name}
-              className="text-center"
+              className="flex flex-col items-center text-center"
               onMouseEnter={() => handleMouseEnter(order.name)}
               onMouseLeave={() => handleMouseLeave(order.name)}
             >
               <p className="mb-2 text-xl font-semibold">{order.name}</p>
               <iframe
                 loading="lazy"
-                className="w-full rounded-lg shadow-md transition-transform duration-300"
+                className="w-full max-w-xs rounded-lg shadow-md transition-transform duration-300"
                 width="315"
                 height="533"
                 ref={(el) => (videoRefs.current[order.name] = el)}
@@ -153,8 +152,8 @@ const HomePage = () => {
       </div>
 
       {/* Order Example Column */}
-      <div className="w-1/4 rounded-r-lg border-l border-gray-300 bg-white p-4 pr-2 text-center">
-        <h1 className="mb-6 mt-2 text-3xl font-bold">How to Order</h1>
+      <div className="mt-6 flex w-full flex-col items-center lg:mt-0 lg:w-1/4">
+        <h1 className="mb-6 text-3xl font-bold">How to Order</h1>
         <div className="flex flex-col items-center space-y-6">
           {[
             { name: 'Hello-Please-Thank You' },
@@ -163,33 +162,28 @@ const HomePage = () => {
           ].map((item, index) => (
             <React.Fragment key={item.name}>
               <div
-                className="w-full text-center"
+                className="flex flex-col items-center text-center"
                 onMouseEnter={() => handleMouseEnter(item.name)}
                 onMouseLeave={() => handleMouseLeave(item.name)}
               >
                 <p className="mb-4 text-xl font-semibold">{item.name}</p>
-                <div className="flex justify-center">
-                  <iframe
-                    loading="lazy"
-                    width="230"
-                    height="408"
-                    ref={(el) => (videoRefs.current[item.name] = el)}
-                    src={
-                      initialMenu.find(
-                        (menuItem) => menuItem.name === item.name
-                      )?.video
-                    }
-                    title={item.name}
-                    className={`rounded-lg transition-transform ${
-                      hoveredVideo === item.name ? 'scale-110' : 'scale-100'
-                    }`}
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowFullScreen
-                  ></iframe>
-                </div>
+                <iframe
+                  loading="lazy"
+                  width="230"
+                  height="408"
+                  ref={(el) => (videoRefs.current[item.name] = el)}
+                  src={
+                    initialMenu.find((menuItem) => menuItem.name === item.name)
+                      ?.video
+                  }
+                  title={item.name}
+                  className="scale-100 rounded-lg transition-transform hover:scale-110"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                ></iframe>
               </div>
               {index < 2 && (
-                <FaArrowDown className="inline-flex fill-black stroke-black text-6xl text-black" />
+                <FaArrowDown className="my-4 text-4xl text-black" />
               )}
             </React.Fragment>
           ))}
