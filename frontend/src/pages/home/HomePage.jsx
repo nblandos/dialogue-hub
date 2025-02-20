@@ -184,7 +184,7 @@ const HomePage = () => {
               </div>
               {index < 2 && (
                 <FaArrowDown className="my-4 text-4xl text-black" />
-              )}``
+              )}
             </React.Fragment>
           ))}
         </div>
