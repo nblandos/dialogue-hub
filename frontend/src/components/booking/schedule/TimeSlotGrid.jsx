@@ -27,7 +27,7 @@ const TimeSlotGrid = ({
           setAvailability(data.data);
         }
       } catch (error) {
-        alert('Failed to fetch availability. Please try again later.');
+        // alert('Failed to fetch availability. Please try again later.');
       }
     };
 
