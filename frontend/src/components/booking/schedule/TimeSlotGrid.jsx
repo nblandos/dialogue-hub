@@ -16,8 +16,6 @@ const TimeSlotGrid = ({
   useEffect(() => {
     const fetchAvailability = async () => {
       try {
-        console.log(import.meta.env.VITE_API_URL);
-        console.log(import.meta.env.MODE);
         const startDate = days[0].date;
         const endDate = days[days.length - 1].date;
         const response = await fetch(
