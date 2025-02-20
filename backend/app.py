@@ -1,16 +1,20 @@
 import os
 from flask import Flask, jsonify
 from flask_cors import CORS
-from src.config.config import Config
+from src.config.config import DevelopmentConfig, ProductionConfig
 from src import db, migrate, mail, ai_service
 from src.routes.booking_routes import booking_bp
 from src.routes.timeslot_routes import timeslot_bp
 from src.routes.ai_routes import ai_bp
 
 
-def create_app(config_class=Config):
+def create_app():
     app = Flask(__name__)
-    app.config.from_object(config_class)
+
+    if os.environ.get('FLASK_ENV') == 'production':
+        app.config.from_object(ProductionConfig)
+    else:
+        app.config.from_object(DevelopmentConfig)
 
     CORS(app, origins=[os.getenv('FRONTEND_URL'), 'http://localhost:3000'])
     db.init_app(app)
@@ -25,12 +29,10 @@ def create_app(config_class=Config):
     @app.route("/")
     def home():
         return jsonify({"message": "Welcome to the Timeslot Scheduling Tool"})
-
     return app
 
 
 app = create_app()
 
-
 if __name__ == "__main__":
-    app.run()
+    app.run(port=app.config['PORT'])
