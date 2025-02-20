@@ -11,7 +11,10 @@ def create_app(config_class=Config):
     app = Flask(__name__)
     app.config.from_object(config_class)
 
-    CORS(app)
+    CORS(app, origins=[
+        'FRONTEND_URL',  # Production frontend URL
+        "http://localhost:3000"  # Local development
+    ])
     db.init_app(app)
     migrate.init_app(app, db)
     mail.init_app(app)
