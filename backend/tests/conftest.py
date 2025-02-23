@@ -7,14 +7,18 @@ from src.config.config import Config
 class TestConfig(Config):
     TESTING = True
     SQLALCHEMY_DATABASE_URI = 'sqlite:///:memory:'
+    # Remove Azure-related configs since they're not needed for these tests
+    DEBUG = True
+    MAIL_SUPPRESS_SEND = True
 
 
 @pytest.fixture(scope="function")
 def app():
-    app = create_app(TestConfig)
-    with app.app_context():
+    test_app = create_app(TestConfig)
+
+    with test_app.app_context():
         db.create_all()
-        yield app
+        yield test_app
         db.session.remove()
         db.drop_all()
 

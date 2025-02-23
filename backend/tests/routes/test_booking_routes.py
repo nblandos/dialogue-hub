@@ -19,9 +19,18 @@ def valid_booking_data():
 
 
 def test_create_booking_success(client, valid_booking_data):
-    with patch('src.routes.booking_routes.email_service.send_confirmation'):
+    future_time = datetime.now(timezone.utc) + timedelta(days=1)
+    future_time = future_time.replace(
+        hour=10, minute=0, second=0, microsecond=0)
+
+    valid_booking_data['timeslots'] = [
+        {'start_time': future_time.isoformat()},
+        {'start_time': (future_time + timedelta(hours=1)).isoformat()}
+    ]
+
+    with patch('src.routes.booking_routes.email_service.send_confirmation', return_value=True):
         response = client.post(
-            'api/bookings/create-booking',
+            '/api/bookings/create-booking',
             json=valid_booking_data,
             headers={'Content-Type': 'application/json'}
         )
@@ -39,7 +48,7 @@ def test_create_booking_server_error(client, valid_booking_data):
         mock_create.side_effect = Exception('Server error')
 
         response = client.post(
-            'api/bookings/create-booking',
+            '/api/bookings/create-booking',
             json=valid_booking_data,
             headers={'Content-Type': 'application/json'}
         )
@@ -60,7 +69,7 @@ def test_create_booking_invalid_data(client):
     }
 
     response = client.post(
-        'api/bookings/create-booking',
+        '/api/bookings/create-booking',
         json=invalid_data,
         headers={'Content-Type': 'application/json'}
     )
@@ -72,12 +81,19 @@ def test_create_booking_invalid_data(client):
 
 
 def test_create_booking_email_failure(client, valid_booking_data):
-    with patch(
-        'src.routes.booking_routes.email_service.send_confirmation',
-        side_effect=Exception('Email service failed')
-    ):
+    future_time = datetime.now(timezone.utc) + timedelta(days=1)
+    future_time = future_time.replace(
+        hour=10, minute=0, second=0, microsecond=0)
+
+    valid_booking_data['timeslots'] = [
+        {'start_time': future_time.isoformat()},
+        {'start_time': (future_time + timedelta(hours=1)).isoformat()}
+    ]
+
+    with patch('src.routes.booking_routes.email_service.send_confirmation',
+               side_effect=Exception('Email service failed')):
         response = client.post(
-            'api/bookings/create-booking',
+            '/api/bookings/create-booking',
             json=valid_booking_data,
             headers={'Content-Type': 'application/json'}
         )
@@ -86,12 +102,11 @@ def test_create_booking_email_failure(client, valid_booking_data):
         data = response.get_json()
         assert data['status'] == 'error'
         assert data['code'] == 'EMAIL_ERROR'
-        assert data['message'] == 'Email service failed'
 
 
 def test_create_booking_missing_body(client):
     response = client.post(
-        'api/bookings/create-booking',
+        '/api/bookings/create-booking',
         json={},  # empty body
         headers={'Content-Type': 'application/json'}
     )

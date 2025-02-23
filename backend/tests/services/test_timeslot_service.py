@@ -86,6 +86,8 @@ def test_check_timeslots_valid_past_time(app, timeslot_service, user):
 
 def test_check_timeslots_valid_non_consecutive(app, timeslot_service, user):
     future = datetime.now(timezone.utc) + timedelta(days=1)
+    future = future.replace(hour=10, minute=0, second=0,
+                            microsecond=0)
     future_plus_2 = future + timedelta(hours=2)
     timeslots = [
         {"start_time": future.isoformat()},
@@ -97,20 +99,23 @@ def test_check_timeslots_valid_non_consecutive(app, timeslot_service, user):
 
 
 def test_check_timeslots_valid_consecutive(app, timeslot_service, user):
-    now = datetime.now(timezone.utc) + timedelta(hours=1)
-    next_hour = now + timedelta(hours=1)
+    future = datetime.now(timezone.utc) + timedelta(days=1)
+    future = future.replace(hour=10, minute=0, second=0,
+                            microsecond=0)
+    next_hour = future + timedelta(hours=1)
     timeslots = [
-        {"start_time": now.isoformat()},
+        {"start_time": future.isoformat()},
         {"start_time": next_hour.isoformat()}
     ]
-    print(timeslots)
 
-    # no exception should be raised
+    # should not raise any exception
     timeslot_service.check_timeslots_valid(user, timeslots)
 
 
 def test_overlapping_with_active_booking(app, timeslot_service, user):
-    start_time = datetime.now(timezone.utc) + timedelta(hours=1)
+    start_time = datetime.now(timezone.utc) + timedelta(days=1)
+    start_time = start_time.replace(hour=10, minute=0, second=0, microsecond=0)
+
     timeslot = Timeslot(start_time=start_time)
     booking = Booking(user=user)
     booking.timeslots.append(timeslot)
@@ -128,17 +133,15 @@ def test_overlapping_with_active_booking(app, timeslot_service, user):
 
 def test_overlapping_with_cancelled_booking(app, timeslot_service, user):
     # create cancelled booking
-    start_time = datetime.now(timezone.utc) + timedelta(hours=1)
+    start_time = datetime.now(timezone.utc) + timedelta(days=1)
+    start_time = start_time.replace(hour=10, minute=0, second=0, microsecond=0)
     timeslot = Timeslot(start_time=start_time)
     booking = Booking(user=user, status=BookingStatus.CANCELLED)
     booking.timeslots.append(timeslot)
     db.session.add_all([timeslot, booking])
     db.session.commit()
 
-    # should allow rebooking on the same timeslot
     new_timeslots = [{"start_time": start_time.isoformat()}]
-
-    # no exception should be raised
     timeslot_service.check_timeslots_valid(user, new_timeslots)
 
 
@@ -169,3 +172,49 @@ def test_has_overlapping_timeslots_multiple_bookings(
     # should not raise exception
     assert timeslot_service._has_overlapping_timeslots(
         user, [start_time2]) is False
+
+
+def test_check_timeslots_valid_outside_hours(app, timeslot_service, user):
+    # Try to book for 7 AM (before opening)
+    future = datetime.now(timezone.utc) + timedelta(days=1)
+    future = future.replace(hour=7, minute=0, second=0, microsecond=0)
+    timeslots = [{"start_time": future.isoformat()}]
+
+    with pytest.raises(ValueError, match="Selected time is outside opening hours"):
+        timeslot_service.check_timeslots_valid(user, timeslots)
+
+
+def test_check_timeslots_valid_outside_hours(app, timeslot_service, user):
+    # Try to book for 7 AM (before opening)
+    future = datetime.now(timezone.utc) + timedelta(days=1)
+    future = future.replace(hour=7, minute=0, second=0, microsecond=0)
+    timeslots = [{"start_time": future.isoformat()}]
+
+    with pytest.raises(ValueError, match="Selected time is outside opening hours"):
+        timeslot_service.check_timeslots_valid(user, timeslots)
+
+
+def test_check_timeslots_valid_weekend(app, timeslot_service, user):
+    # Find next Saturday
+    future = datetime.now(timezone.utc) + timedelta(days=1)
+    while future.weekday() != 5:  # 5 = Saturday
+        future += timedelta(days=1)
+
+    future = future.replace(hour=10, minute=0, second=0, microsecond=0)
+    timeslots = [{"start_time": future.isoformat()}]
+
+    with pytest.raises(ValueError, match="Selected time is outside opening hours"):
+        timeslot_service.check_timeslots_valid(user, timeslots)
+
+
+def test_check_timeslots_valid_friday_afternoon(app, timeslot_service, user):
+    # Find next Friday
+    future = datetime.now(timezone.utc) + timedelta(days=1)
+    while future.weekday() != 4:
+        future += timedelta(days=1)
+
+    future = future.replace(hour=14, minute=0, second=0, microsecond=0)
+    timeslots = [{"start_time": future.isoformat()}]
+
+    with pytest.raises(ValueError, match="Selected time is outside opening hours"):
+        timeslot_service.check_timeslots_valid(user, timeslots)

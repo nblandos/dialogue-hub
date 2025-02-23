@@ -32,6 +32,14 @@ const Sidebar = ({ isOpen }) => {
     },
   ]);
 
+  const [userId] = useState(() => {
+    const stored = localStorage.getItem('userId');
+    if (stored) return stored;
+    const newId = crypto.randomUUID();
+    localStorage.setItem('userId', newId);
+    return newId;
+  });
+
   useEffect(() => {
     const handleResize = () => {
       const vertical = window.innerWidth < BREAKPOINT;
@@ -108,7 +116,10 @@ const Sidebar = ({ isOpen }) => {
         {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ message }),
+          body: JSON.stringify({
+            message,
+            user_id: userId,
+          }),
         }
       );
       const data = await response.json();
