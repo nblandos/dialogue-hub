@@ -172,3 +172,49 @@ def test_has_overlapping_timeslots_multiple_bookings(
     # should not raise exception
     assert timeslot_service._has_overlapping_timeslots(
         user, [start_time2]) is False
+
+
+def test_check_timeslots_valid_outside_hours(app, timeslot_service, user):
+    # Try to book for 7 AM (before opening)
+    future = datetime.now(timezone.utc) + timedelta(days=1)
+    future = future.replace(hour=7, minute=0, second=0, microsecond=0)
+    timeslots = [{"start_time": future.isoformat()}]
+
+    with pytest.raises(ValueError, match="Selected time is outside opening hours"):
+        timeslot_service.check_timeslots_valid(user, timeslots)
+
+
+def test_check_timeslots_valid_outside_hours(app, timeslot_service, user):
+    # Try to book for 7 AM (before opening)
+    future = datetime.now(timezone.utc) + timedelta(days=1)
+    future = future.replace(hour=7, minute=0, second=0, microsecond=0)
+    timeslots = [{"start_time": future.isoformat()}]
+
+    with pytest.raises(ValueError, match="Selected time is outside opening hours"):
+        timeslot_service.check_timeslots_valid(user, timeslots)
+
+
+def test_check_timeslots_valid_weekend(app, timeslot_service, user):
+    # Find next Saturday
+    future = datetime.now(timezone.utc) + timedelta(days=1)
+    while future.weekday() != 5:  # 5 = Saturday
+        future += timedelta(days=1)
+
+    future = future.replace(hour=10, minute=0, second=0, microsecond=0)
+    timeslots = [{"start_time": future.isoformat()}]
+
+    with pytest.raises(ValueError, match="Selected time is outside opening hours"):
+        timeslot_service.check_timeslots_valid(user, timeslots)
+
+
+def test_check_timeslots_valid_friday_afternoon(app, timeslot_service, user):
+    # Find next Friday
+    future = datetime.now(timezone.utc) + timedelta(days=1)
+    while future.weekday() != 4:
+        future += timedelta(days=1)
+
+    future = future.replace(hour=14, minute=0, second=0, microsecond=0)
+    timeslots = [{"start_time": future.isoformat()}]
+
+    with pytest.raises(ValueError, match="Selected time is outside opening hours"):
+        timeslot_service.check_timeslots_valid(user, timeslots)
