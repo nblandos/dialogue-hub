@@ -81,7 +81,7 @@ VITE_API_URL=http://localhost:5001
 
 Add the following environment variables to a `.env` file in the backend directory:
 
-````bash
+```bash
 SENDER_EMAIL=""
 SENDER_PASSWORD=""
 
@@ -93,7 +93,7 @@ DEPLOYMENT_NAME=
 AZURE_CLIENT_ID=
 AZURE_CLIENT_SECRET=
 AZURE_TENANT_ID=
-
+```
 
 ### Azure Authentication
 
@@ -101,7 +101,7 @@ You may also need to authenticate with Azure to access the key vault. To do this
 
 ```bash
 az login
-````
+```
 
 ## Running the Project
 
