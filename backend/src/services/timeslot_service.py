@@ -45,6 +45,10 @@ class TimeslotService:
         if any(start_time < now for start_time in start_times):
             raise ValueError("Cannot book timeslots in the past")
 
+        for start_time in start_times:
+            if not self._is_within_opening_hours(start_time):
+                raise ValueError("Selected time is outside opening hours")
+
         # check for overlapping timeslots
         if self._has_overlapping_timeslots(user, start_times):
             raise ValueError(
@@ -54,6 +58,20 @@ class TimeslotService:
         for i in range(1, len(start_times)):
             if start_times[i] - start_times[i-1] != timedelta(hours=1):
                 raise ValueError('Timeslots must be consecutive')
+
+    def _is_within_opening_hours(self, time):
+        """check if time is within opening hours"""
+        weekday = time.weekday()
+        hour = time.hour
+
+        if weekday >= 5:  # Weekend
+            return False
+
+        if weekday == 4:  # Friday
+            return 8 <= hour < 13
+
+        # Monday to Thursday
+        return 8 <= hour < 17
 
     def _has_overlapping_timeslots(self, user, new_times):
         """check if user has overlapping timeslots"""

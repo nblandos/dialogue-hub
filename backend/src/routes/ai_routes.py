@@ -9,11 +9,12 @@ def chat():
     try:
         data = request.get_json()
         user_message = data.get('message')
+        user_id = data.get('user_id')
 
         if not user_message:
             return jsonify({'error': 'No message provided'}), 400
 
-        ai_response = ai_service.get_ai_response(user_message)
+        ai_response = ai_service.get_ai_response(user_message, user_id)
 
         return jsonify({
             'response': ai_response,
