@@ -46,7 +46,7 @@ class AIService:
     def _create_assistant(self):
         """Create or get the assistant"""
 
-        current_date = time.strftime("%Y-%m-%d")
+        current_date = time.strftime("%A, %B %d, %Y")
 
         # Define booking function
         booking_function = {
@@ -103,12 +103,13 @@ class AIService:
                 "- Friday: 8:00 AM - 1:00 PM (08:00-13:00)\n"
                 "- Weekend: Closed\n"
                 "When helping with bookings:\n"
+
                 "- Only accept bookings during opening hours\n"
                 "- Reject and explain if requested time is outside opening hours\n"
-                "- For Friday bookings, no slots after 13:00 should be created\n"
                 "- Collect all required information: full name, email, and desired time\n"
+                "- Always require the date before creating a booking\n"
                 "- For bookings longer than 1 hour, create multiple consecutive hourly timeslots\n"
-                "- For example, if a user requests 1-3pm, create two timeslots: 1-2pm and 2-3pm\n"
+                "- For example, if a user requests 1-3pm, create two timeslots: 1-2pm and 2-3pm, but these should still be part of the same booking\n"
                 "- Format dates and times in ISO format (YYYY-MM-DDTHH:MM:SS+00:00)\n"
                 "- Once you have all information, ALWAYS attempt to create the booking\n"
                 "- Keep track of information provided across messages\n"
@@ -204,21 +205,25 @@ class AIService:
                             })
                         })
 
-            if tool_outputs:
-                # Submit the outputs back to the assistant
-                run = self.client.beta.threads.runs.submit_tool_outputs(
-                    thread_id=thread.id,
-                    run_id=run.id,
-                    tool_outputs=tool_outputs
-                )
+            if not tool_outputs:
+                raise RuntimeError(
+                    "No tool outputs generated for function calls")
 
-                # Wait for final response
-                while run.status in ['queued', 'in_progress']:
-                    time.sleep(1)
-                    run = self.client.beta.threads.runs.retrieve(
-                        thread_id=thread.id,
-                        run_id=run.id
-                    )
+            run = self.client.beta.threads.runs.submit_tool_outputs(
+                thread_id=thread.id,
+                run_id=run.id,
+                tool_outputs=tool_outputs
+            )
+
+            # Wait for final response
+            while run.status in ['queued', 'in_progress']:
+                time.sleep(1)
+                run = self.client.beta.threads.runs.retrieve(
+                    thread_id=thread.id,
+                    run_id=run.id
+                )
+                if run.status == 'failed':
+                    raise RuntimeError(f"Run failed: {run.last_error}")
 
         if run.status == 'completed':
             messages = self.client.beta.threads.messages.list(
