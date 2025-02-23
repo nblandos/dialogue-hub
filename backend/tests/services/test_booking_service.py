@@ -27,6 +27,15 @@ def booking_data():
 
 
 def test_create_booking_success(app, booking_service, booking_data):
+    future_time = datetime.now(timezone.utc) + timedelta(days=1)
+    future_time = future_time.replace(
+        hour=10, minute=0, second=0, microsecond=0)
+
+    booking_data['timeslots'] = [
+        {'start_time': future_time.isoformat()},
+        {'start_time': (future_time + timedelta(hours=1)).isoformat()}
+    ]
+
     booking = booking_service.create_booking(booking_data)
 
     assert isinstance(booking, Booking)
@@ -55,6 +64,15 @@ def test_create_booking_missing_timeslots(app, booking_service, booking_data):
 
 
 def test_create_booking_with_existing_user(app, booking_service, booking_data):
+    future_time = datetime.now(timezone.utc) + timedelta(days=1)
+    future_time = future_time.replace(
+        hour=10, minute=0, second=0, microsecond=0)
+
+    booking_data['timeslots'] = [
+        {'start_time': future_time.isoformat()},
+        {'start_time': (future_time + timedelta(hours=1)).isoformat()}
+    ]
+
     existing_user = User(
         email='test@example.com',
         full_name='Existing User'

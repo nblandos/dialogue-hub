@@ -49,13 +49,19 @@ def test_get_ai_response_not_initialized():
 def test_get_ai_response_success(mock_app, mock_azure_clients):
     service = AIService(mock_app)
 
-    mock_choice = Mock()
-    mock_choice.message.content = "Test response"
-    mock_completion = Mock()
-    mock_completion.choices = [mock_choice]
-    service.client.chat.completions.create.return_value = mock_completion
+    # Setup mock responses for thread and assistant
+    mock_thread = Mock()
+    mock_thread.id = "thread-123"
+    service.client.beta.threads.create.return_value = mock_thread
+
+    mock_run = Mock()
+    mock_run.status = "completed"
+    service.client.beta.threads.runs.create.return_value = mock_run
+
+    mock_messages = Mock()
+    mock_messages.data = [
+        Mock(content=[Mock(text=Mock(value="Test response"))])]
+    service.client.beta.threads.messages.list.return_value = mock_messages
 
     response = service.get_ai_response("test message")
-
     assert response == "Test response"
-    service.client.chat.completions.create.assert_called_once()

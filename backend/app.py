@@ -8,13 +8,16 @@ from src.routes.timeslot_routes import timeslot_bp
 from src.routes.ai_routes import ai_bp
 
 
-def create_app():
+def create_app(config_class=None):
     app = Flask(__name__)
 
-    if os.environ.get('FLASK_ENV') == 'production':
-        app.config.from_object(ProductionConfig)
+    if config_class:
+        app.config.from_object(config_class)
     else:
-        app.config.from_object(DevelopmentConfig)
+        if os.environ.get('FLASK_ENV') == 'production':
+            app.config.from_object(ProductionConfig)
+        else:
+            app.config.from_object(DevelopmentConfig)
 
     CORS(app, origins=[os.getenv('FRONTEND_URL'), 'http://localhost:3000'])
     db.init_app(app)
