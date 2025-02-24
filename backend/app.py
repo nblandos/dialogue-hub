@@ -19,7 +19,8 @@ def create_app(config_class=None):
         else:
             app.config.from_object(DevelopmentConfig)
 
-    CORS(app, origins=[os.getenv('FRONTEND_URL'), 'http://localhost:3000'])
+    FRONTEND_URL = os.getenv('FRONTEND_URL', 'http://localhost:3000')
+    CORS(app, origins=[FRONTEND_URL])
     db.init_app(app)
     migrate.init_app(app, db)
     mail.init_app(app)
