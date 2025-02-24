@@ -13,6 +13,7 @@ class AIService:
         self.deployment = None
         self.assistant = None
         self.active_threads = {}
+        self.assistant_id = None
         if app is not None:
             self.init_app(app)
 
@@ -41,15 +42,51 @@ class AIService:
             api_version="2024-05-01-preview",
         )
 
-        self.assistant = self._create_assistant()
+        self.assistant_id = app.config.get('AZURE_ASSISTANT_ID')
 
-    def _create_assistant(self):
-        """Create or get the assistant"""
+        if self.assistant_id:
+            try:
+                self.assistant = self.client.beta.assistants.retrieve(
+                    assistant_id=self.assistant_id
+                )
+                self.assistant = self._update_assistant(self.assistant)
+            except Exception:
+                self.assistant = self._create_assistant()
+                app.config['AZURE_ASSISTANT_ID'] = self.assistant.id
+        else:
+            self.assistant = self._create_assistant()
+            app.config['AZURE_ASSISTANT_ID'] = self.assistant.id
 
+    def _get_instructions(self):
+        """Return the assistant instructions with current date"""
         current_date = time.strftime("%A, %B %d, %Y")
+        return (
+            f"You are an AI Assistant for Dialogue Hub's British Sign Language Cafe. "
+            f"Today's date is {current_date}. "
+            "Help users with information about the Cafe, BSL queries, accessibility needs, "
+            "and booking assistance. Create bookings when users request them.\n"
+            "Opening Hours:\n"
+            "- Monday to Thursday: 8:00 AM - 5:00 PM (08:00-17:00)\n"
+            "- Friday: 8:00 AM - 1:00 PM (08:00-13:00)\n"
+            "- Weekend: Closed\n"
+            "When helping with bookings:\n"
+            "- Only accept bookings during opening hours\n"
+            "- Reject and explain if requested time is outside opening hours\n"
+            "- Collect all required information: full name, email, and desired time\n"
+            "- Always require the date before creating a booking\n"
+            "- For bookings longer than 1 hour, create multiple consecutive hourly timeslots\n"
+            "- For example, if a user requests 1-3pm, create two timeslots: 1-2pm and 2-3pm, but these should still be part of the same booking\n"
+            "- Format dates and times in ISO format (YYYY-MM-DDTHH:MM:SS+00:00)\n"
+            "- Once you have all information, ALWAYS attempt to create the booking\n"
+            "- Keep track of information provided across messages\n"
+            "- If a booking fails, explain why and help fix the issue\n"
+            "- Confirm successful bookings with a summary\n"
+            "- Never forget previously provided information"
+        )
 
-        # Define booking function
-        booking_function = {
+    def _get_booking_function(self):
+        """Return the booking function configuration"""
+        return {
             "type": "function",
             "function": {
                 "name": "create_booking",
@@ -89,35 +126,27 @@ class AIService:
                 }
             }
         }
-        # Create the assistant
+
+    def _update_assistant(self, assistant):
+        """Update existing assistant with current configuration"""
+        return self.client.beta.assistants.update(
+            assistant_id=assistant.id,
+            name="DialogueBot",
+            model=self.deployment,
+            instructions=self._get_instructions(),
+            tools=[self._get_booking_function()],
+            tool_resources={},
+            temperature=0.7,
+            top_p=1
+        )
+
+    def _create_assistant(self):
+        """Create a new assistant"""
         return self.client.beta.assistants.create(
             name="DialogueBot",
             model=self.deployment,
-            instructions=(
-                f"You are an AI Assistant for Dialogue Hub's British Sign Language Cafe. "
-                f"Today's date is {current_date}. "
-                "Help users with information about the Cafe, BSL queries, accessibility needs, "
-                "and booking assistance. Create bookings when users request them.\n"
-                "Opening Hours:\n"
-                "- Monday to Thursday: 8:00 AM - 5:00 PM (08:00-17:00)\n"
-                "- Friday: 8:00 AM - 1:00 PM (08:00-13:00)\n"
-                "- Weekend: Closed\n"
-                "When helping with bookings:\n"
-
-                "- Only accept bookings during opening hours\n"
-                "- Reject and explain if requested time is outside opening hours\n"
-                "- Collect all required information: full name, email, and desired time\n"
-                "- Always require the date before creating a booking\n"
-                "- For bookings longer than 1 hour, create multiple consecutive hourly timeslots\n"
-                "- For example, if a user requests 1-3pm, create two timeslots: 1-2pm and 2-3pm, but these should still be part of the same booking\n"
-                "- Format dates and times in ISO format (YYYY-MM-DDTHH:MM:SS+00:00)\n"
-                "- Once you have all information, ALWAYS attempt to create the booking\n"
-                "- Keep track of information provided across messages\n"
-                "- If a booking fails, explain why and help fix the issue\n"
-                "- Confirm successful bookings with a summary\n"
-                "- Never forget previously provided information"
-            ),
-            tools=[booking_function],
+            instructions=self._get_instructions(),
+            tools=[self._get_booking_function()],
             tool_resources={},
             temperature=0.7,
             top_p=1
