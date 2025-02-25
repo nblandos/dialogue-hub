@@ -77,6 +77,7 @@ class AIService:
             "- For bookings longer than 1 hour, create multiple consecutive hourly timeslots\n"
             "- For example, if a user requests 1-3pm, create two timeslots: 1-2pm and 2-3pm, but these should still be part of the same booking\n"
             "- Format dates and times in ISO format (YYYY-MM-DDTHH:MM:SS+00:00)\n"
+            "- Don't ask users to format times, you should format it yourself\n"
             "- Once you have all valid information, ALWAYS ask the user to confirm the details and THEN attempt to create the booking\n"
             "- Keep track of information provided across messages\n"
             "- If a booking fails, explain why and help fix the issue\n"
@@ -154,106 +155,114 @@ class AIService:
 
     def get_ai_response(self, user_message, user_id=None):
         """Get response using Azure OpenAI Assistant"""
-        try:
-            if not self.client or not self.assistant:
-                raise RuntimeError("AIService is not initialized")
+        if not self.client or not self.assistant:
+            raise RuntimeError("AIService is not initialized")
 
-            # Use existing thread or create new one
-            thread = None
-            if user_id and user_id in self.active_threads:
-                thread = self.active_threads[user_id]
-            else:
-                thread = self.client.beta.threads.create()
-                if user_id:
-                    self.active_threads[user_id] = thread
+        # Use existing thread or create new one
+        thread = None
+        if user_id and user_id in self.active_threads:
+            thread = self.active_threads[user_id]
+        else:
+            thread = self.client.beta.threads.create()
+            if user_id:
+                self.active_threads[user_id] = thread
 
-            # Add the user's message to the thread
-            self.client.beta.threads.messages.create(
+        # Add the user's message to the thread
+        self.client.beta.threads.messages.create(
+            thread_id=thread.id,
+            role="user",
+            content=user_message
+        )
+
+        # Run the assistant
+        run = self.client.beta.threads.runs.create(
+            thread_id=thread.id,
+            assistant_id=self.assistant.id
+        )
+
+        # Wait for the response
+        while run.status in ['queued', 'in_progress']:
+            time.sleep(1)
+            run = self.client.beta.threads.runs.retrieve(
                 thread_id=thread.id,
-                role="user",
-                content=user_message
+                run_id=run.id
             )
 
-            # Run the assistant
-            run = self.client.beta.threads.runs.create(
+        if run.status == 'requires_action':
+            # Handle function calls
+            tool_calls = run.required_action.submit_tool_outputs.tool_calls
+            tool_outputs = []
+
+            for tool_call in tool_calls:
+                if tool_call.function.name == "create_booking":
+                    try:
+                        # Parse the function arguments
+                        booking_args = json.loads(tool_call.function.arguments)
+
+                        # Make the API call to the booking route
+                        response = requests.post(
+                            f'{app.config["API_URL"]}/api/bookings/create-booking',
+                            json=booking_args,
+                            headers={'Content-Type': 'application/json'},
+                            timeout=10
+                        )
+
+                        if response.status_code == 201:
+                            result = response.json()
+                            tool_outputs.append({
+                                "tool_call_id": tool_call.id,
+                                "output": json.dumps({
+                                    "status": "success",
+                                    "message": "Booking created successfully",
+                                    "data": result.get('data', {})
+                                })
+                            })
+                        else:
+                            error_data = response.json()
+                            tool_outputs.append({
+                                "tool_call_id": tool_call.id,
+                                "output": json.dumps({
+                                    "status": "error",
+                                    "message": error_data.get('message', 'Booking failed'),
+                                    "code": error_data.get('code', 'UNKNOWN_ERROR')
+                                })
+                            })
+                    except Exception as e:
+                        tool_outputs.append({
+                            "tool_call_id": tool_call.id,
+                            "output": json.dumps({
+                                "status": "error",
+                                "message": str(e)
+                            })
+                        })
+
+            if not tool_outputs:
+                raise RuntimeError(
+                    "No tool outputs generated for function calls")
+
+            run = self.client.beta.threads.runs.submit_tool_outputs(
                 thread_id=thread.id,
-                assistant_id=self.assistant.id
+                run_id=run.id,
+                tool_outputs=tool_outputs
             )
 
-            # Wait for the response with timeout
-            timeout = 30  # 30 seconds timeout
-            start_time = time.time()
-
-            while run.status in ['queued', 'in_progress', 'requires_action']:
-                if time.time() - start_time > timeout:
-                    raise RuntimeError("Request timed out")
-
+            # Wait for final response
+            while run.status in ['queued', 'in_progress']:
                 time.sleep(1)
                 run = self.client.beta.threads.runs.retrieve(
                     thread_id=thread.id,
                     run_id=run.id
                 )
+                if run.status == 'failed':
+                    raise RuntimeError(f"Run failed: {run.last_error}")
 
-                if run.status == 'requires_action':
-                    tool_calls = run.required_action.submit_tool_outputs.tool_calls
-                    tool_outputs = []
-
-                    for tool_call in tool_calls:
-                        if tool_call.function.name == "create_booking":
-                            try:
-                                booking_args = json.loads(
-                                    tool_call.function.arguments)
-
-                                response = requests.post(
-                                    f'{app.config["API_URL"]}/api/bookings/create-booking',
-                                    json=booking_args,
-                                    headers={
-                                        'Content-Type': 'application/json'}
-                                )
-
-                                output_data = {
-                                    "tool_call_id": tool_call.id,
-                                    "output": json.dumps({
-                                        "status": "success" if response.status_code == 201 else "error",
-                                        "message": "Booking created successfully" if response.status_code == 201
-                                        else response.json().get('message', 'Booking failed'),
-                                        "data": response.json().get('data', {}) if response.status_code == 201
-                                        else {"error": response.json().get('code', 'UNKNOWN_ERROR')}
-                                    })
-                                }
-                                tool_outputs.append(output_data)
-                            except Exception as e:
-                                tool_outputs.append({
-                                    "tool_call_id": tool_call.id,
-                                    "output": json.dumps({
-                                        "status": "error",
-                                        "message": str(e)
-                                    })
-                                })
-
-                    if tool_outputs:
-                        run = self.client.beta.threads.runs.submit_tool_outputs(
-                            thread_id=thread.id,
-                            run_id=run.id,
-                            tool_outputs=tool_outputs
-                        )
-                    else:
-                        raise RuntimeError(
-                            "No tool outputs generated for function calls")
-
-            if run.status == 'completed':
-                messages = self.client.beta.threads.messages.list(
-                    thread_id=thread.id
-                )
-                if not messages.data:
-                    raise RuntimeError("No messages found in thread")
-                return messages.data[0].content[0].text.value
-            else:
-                error_msg = f"Assistant run failed with status: {run.status}"
-                if hasattr(run, 'last_error') and run.last_error:
-                    error_msg += f" - {run.last_error}"
-                raise RuntimeError(error_msg)
-
-        except Exception as e:
-            print(f"Error in get_ai_response: {str(e)}")
-            return "I apologize, but I encountered an error while processing your request. Please try again."
+        if run.status == 'completed':
+            messages = self.client.beta.threads.messages.list(
+                thread_id=thread.id
+            )
+            return messages.data[0].content[0].text.value
+        else:
+            error_msg = f"Assistant run failed with status: {run.status}"
+            if hasattr(run, 'last_error'):
+                error_msg += f" - {run.last_error}"
+            raise RuntimeError(error_msg)
