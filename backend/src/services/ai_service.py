@@ -72,16 +72,18 @@ class AIService:
             "When helping with bookings:\n"
             "- Only accept bookings during opening hours\n"
             "- Reject and explain if requested time is outside opening hours\n"
+            "- Names should be 2 words separated by a space\n"
+            "- Emails should have an @ symbol\n"
             "- Collect all required information: full name, email, and desired time\n"
             "- Always require the date before creating a booking\n"
             "- For bookings longer than 1 hour, create multiple consecutive hourly timeslots\n"
             "- For example, if a user requests 1-3pm, create two timeslots: 1-2pm and 2-3pm, but these should still be part of the same booking\n"
             "- Format dates and times in ISO format (YYYY-MM-DDTHH:MM:SS+00:00)\n"
-            "- Once you have all information, ALWAYS attempt to create the booking\n"
+            "- Once you have all valid information, ALWAYS attempt to create the booking\n"
             "- Keep track of information provided across messages\n"
             "- If a booking fails, explain why and help fix the issue\n"
             "- Confirm successful bookings with a summary\n"
-            "- Never forget previously provided information"
+            "- Keep track of information provided across messages\n"
         )
 
     def _get_booking_function(self):
