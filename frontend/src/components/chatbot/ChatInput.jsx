@@ -28,7 +28,7 @@ const ChatInput = ({ onSubmit }) => {
         type="text"
         value={message}
         onChange={(e) => setMessage(e.target.value)}
-        placeholder="Ask DialogueBot"
+        placeholder="Ask D-Bot"
         className="min-w-0 flex-1 truncate rounded-full border border-gray-300 px-4 py-2 focus:border-orange-500 focus:outline-none"
         aria-label="Message input"
         data-screen-reader-text="Message input"

@@ -61,7 +61,7 @@ class AIService:
         """Return the assistant instructions with current date"""
         current_date = time.strftime("%A, %B %d, %Y")
         return (
-            f"You are an AI Assistant for Dialogue Hub's British Sign Language Cafe. "
+            f"You are an AI Assistant called D-Bot for Dialogue Hub's British Sign Language Cafe. "
             f"Today's date is {current_date}. "
             "Help users with information about the Cafe, BSL queries, accessibility needs, "
             "and booking assistance. Create bookings when users request them.\n"
