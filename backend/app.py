@@ -14,10 +14,10 @@ def create_app(config_class=None):
     if config_class:
         app.config.from_object(config_class)
     else:
-        if os.environ.get('FLASK_ENV') == 'production':
-            app.config.from_object(ProductionConfig)
-        else:
+        if os.environ.get('FLASK_ENV') == 'development':
             app.config.from_object(DevelopmentConfig)
+        else:
+            app.config.from_object(ProductionConfig)
 
     FRONTEND_URL = os.getenv('FRONTEND_URL', 'http://localhost:3000')
     CORS(app, origins=[FRONTEND_URL])
