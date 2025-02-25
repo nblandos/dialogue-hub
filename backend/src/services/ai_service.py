@@ -61,7 +61,7 @@ class AIService:
         """Return the assistant instructions with current date"""
         current_date = time.strftime("%A, %B %d, %Y")
         return (
-            f"You are an AI Assistant for Dialogue Hub's British Sign Language Cafe. "
+            f"You are an AI Assistant called D-Bot for Dialogue Hub's British Sign Language Cafe. "
             f"Today's date is {current_date}. "
             "Help users with information about the Cafe, BSL queries, accessibility needs, "
             "and booking assistance. Create bookings when users request them.\n"
@@ -77,11 +77,11 @@ class AIService:
             "- For bookings longer than 1 hour, create multiple consecutive hourly timeslots\n"
             "- For example, if a user requests 1-3pm, create two timeslots: 1-2pm and 2-3pm, but these should still be part of the same booking\n"
             "- Format dates and times in ISO format (YYYY-MM-DDTHH:MM:SS+00:00)\n"
-            "- Once you have all information, ALWAYS attempt to create the booking\n"
+            "- Once you have all valid information, ALWAYS attempt to create the booking\n"
             "- Keep track of information provided across messages\n"
             "- If a booking fails, explain why and help fix the issue\n"
             "- Confirm successful bookings with a summary\n"
-            "- Never forget previously provided information"
+            "- Keep track of information provided across messages\n"
         )
 
     def _get_booking_function(self):
@@ -131,7 +131,7 @@ class AIService:
         """Update existing assistant with current configuration"""
         return self.client.beta.assistants.update(
             assistant_id=assistant.id,
-            name="DialogueBot",
+            name="D-Bot",
             model=self.deployment,
             instructions=self._get_instructions(),
             tools=[self._get_booking_function()],
@@ -143,7 +143,7 @@ class AIService:
     def _create_assistant(self):
         """Create a new assistant"""
         return self.client.beta.assistants.create(
-            name="DialogueBot",
+            name="D-Bot",
             model=self.deployment,
             instructions=self._get_instructions(),
             tools=[self._get_booking_function()],

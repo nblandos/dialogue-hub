@@ -19,6 +19,7 @@ class Config:
     OPENAI_API_SECRET_NAME = os.getenv('OPENAI_API_SECRET_NAME')
     OPENAI_ENDPOINT_URL = os.getenv('OPENAI_ENDPOINT_URL')
     DEPLOYMENT_NAME = os.getenv('DEPLOYMENT_NAME')
+    AZURE_ASSISTANT_ID = os.getenv('AZURE_ASSISTANT_ID')
 
 
 class ProductionConfig(Config):
@@ -30,12 +31,12 @@ class ProductionConfig(Config):
             dbname=os.getenv('AZURE_POSTGRESQL_NAME')
         )
     )
-    PORT = 5000
+    PORT = int(os.getenv('PORT', 5000))
     API_URL = os.getenv('API_URL')
 
 
 class DevelopmentConfig(Config):
     SQLALCHEMY_DATABASE_URI = 'sqlite:///local.db'
     DEBUG = True
-    PORT = 5001
+    PORT = int(os.getenv('PORT', 5001))
     API_URL = 'http://localhost:5001'
