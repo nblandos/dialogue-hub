@@ -72,8 +72,6 @@ class AIService:
             "When helping with bookings:\n"
             "- Only accept bookings during opening hours\n"
             "- Reject and explain if requested time is outside opening hours\n"
-            "- Names should be 2 words separated by a space\n"
-            "- Emails should have an @ symbol\n"
             "- Collect all required information: full name, email, and desired time\n"
             "- Always require the date before creating a booking\n"
             "- For bookings longer than 1 hour, create multiple consecutive hourly timeslots\n"
