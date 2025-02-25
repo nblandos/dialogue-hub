@@ -26,7 +26,7 @@ describe('ChatInput', () => {
 
   it('renders the input field and voice button', () => {
     render(<ChatInput onSubmit={mockOnSubmit} />);
-    const input = screen.getByPlaceholderText('Ask DialogueBot');
+    const input = screen.getByPlaceholderText('Ask D-Bot');
     const voiceButton = screen.getByTestId('voice-button');
 
     expect(input).toBeInTheDocument();
@@ -35,7 +35,7 @@ describe('ChatInput', () => {
 
   it('updates input value on change', () => {
     render(<ChatInput onSubmit={mockOnSubmit} />);
-    const input = screen.getByPlaceholderText('Ask DialogueBot');
+    const input = screen.getByPlaceholderText('Ask D-Bot');
 
     fireEvent.change(input, { target: { value: 'Test message' } });
     expect(input.value).toBe('Test message');
@@ -43,7 +43,7 @@ describe('ChatInput', () => {
 
   it('submits message when form is submitted and then clears input', () => {
     render(<ChatInput onSubmit={mockOnSubmit} />);
-    const input = screen.getByPlaceholderText('Ask DialogueBot');
+    const input = screen.getByPlaceholderText('Ask D-Bot');
     const submitButton = screen.getByRole('button', { name: /send message/i });
 
     fireEvent.change(input, { target: { value: 'Hello Chat' } });
@@ -62,7 +62,7 @@ describe('ChatInput', () => {
 
   it('updates input value when voice transcript is received, and then submits correctly', () => {
     render(<ChatInput onSubmit={mockOnSubmit} />);
-    const input = screen.getByPlaceholderText('Ask DialogueBot');
+    const input = screen.getByPlaceholderText('Ask D-Bot');
     const voiceButton = screen.getByTestId('voice-button');
     const submitButton = screen.getByRole('button', { name: /send message/i });
 

@@ -131,7 +131,7 @@ class AIService:
         """Update existing assistant with current configuration"""
         return self.client.beta.assistants.update(
             assistant_id=assistant.id,
-            name="DialogueBot",
+            name="D-Bot",
             model=self.deployment,
             instructions=self._get_instructions(),
             tools=[self._get_booking_function()],
@@ -143,7 +143,7 @@ class AIService:
     def _create_assistant(self):
         """Create a new assistant"""
         return self.client.beta.assistants.create(
-            name="DialogueBot",
+            name="D-Bot",
             model=self.deployment,
             instructions=self._get_instructions(),
             tools=[self._get_booking_function()],

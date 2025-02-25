@@ -26,7 +26,7 @@ describe('Sidebar', () => {
     expect(
       screen.getByText('Hello! How can I help you today?')
     ).toBeInTheDocument();
-    expect(screen.getByPlaceholderText('Ask DialogueBot')).toBeInTheDocument();
+    expect(screen.getByPlaceholderText('Ask D-Bot')).toBeInTheDocument();
   });
 
   it('updates layout styles on window resize for vertical layout', () => {
@@ -68,7 +68,7 @@ describe('Sidebar', () => {
 
     render(<Sidebar isOpen={true} />);
 
-    const input = screen.getByPlaceholderText('Ask DialogueBot');
+    const input = screen.getByPlaceholderText('Ask D-Bot');
     const sendButton = screen.getByRole('button', { name: /send message/i });
 
     fireEvent.change(input, { target: { value: 'Test message' } });
