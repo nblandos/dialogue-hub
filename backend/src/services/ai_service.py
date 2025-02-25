@@ -5,7 +5,6 @@ from flask import current_app as app
 import time
 import json
 import requests
-import logging
 
 
 class AIService:
@@ -211,8 +210,6 @@ class AIService:
                                     headers={
                                         'Content-Type': 'application/json'}
                                 )
-                                logging.info(
-                                    f"Booking response: {response.status_code} - {response.text}")
 
                                 output_data = {
                                     "tool_call_id": tool_call.id,
@@ -226,7 +223,6 @@ class AIService:
                                 }
                                 tool_outputs.append(output_data)
                             except Exception as e:
-                                logging.error(f"Unexpected error: {str(e)}")
                                 tool_outputs.append({
                                     "tool_call_id": tool_call.id,
                                     "output": json.dumps({

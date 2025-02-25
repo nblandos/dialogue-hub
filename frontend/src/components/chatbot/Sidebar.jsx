@@ -32,13 +32,7 @@ const Sidebar = ({ isOpen }) => {
     },
   ]);
 
-  const [userId] = useState(() => {
-    const stored = localStorage.getItem('userId');
-    if (stored) return stored;
-    const newId = crypto.randomUUID();
-    localStorage.setItem('userId', newId);
-    return newId;
-  });
+  const [userId] = useState(() => crypto.randomUUID());
 
   useEffect(() => {
     const handleResize = () => {
