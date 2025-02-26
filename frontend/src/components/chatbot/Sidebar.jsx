@@ -5,7 +5,7 @@ import MessageList from './MessageList';
 const Sidebar = ({ isOpen }) => {
   // Note: you must change tailwind accessibility classes aswell for breakpoint, e.g. change 'xl' to 'md'
   const BREAKPOINT = 768; // breakpoint for mobile screen vertical sidebar
-  const HEADER_HEIGHT = 96;
+  const HEADER_HEIGHT = 88;
 
   const calcMinWidth = () => Math.min(200, window.innerWidth * 0.2);
   const calcMaxWidth = () => Math.min(1200, window.innerWidth * 0.8);
