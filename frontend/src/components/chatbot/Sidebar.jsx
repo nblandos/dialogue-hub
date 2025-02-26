@@ -170,7 +170,7 @@ const Sidebar = ({ isOpen }) => {
           </div>
           {/* Chat Input */}
           <div className="border-t">
-            <ChatInput onSubmit={handleSubmit} />
+            <ChatInput onSubmit={handleSubmit} isLoading={isLoading} />
           </div>
         </div>
 
