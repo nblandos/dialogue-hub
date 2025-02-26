@@ -1,10 +1,8 @@
 from azure.keyvault.secrets import SecretClient
 from azure.identity import DefaultAzureCredential
 from openai import AzureOpenAI
-from flask import current_app as app
 import time
 import json
-import requests
 
 
 class AIService:
@@ -70,19 +68,21 @@ class AIService:
             "- Friday: 8:00 AM - 1:00 PM (08:00-13:00)\n"
             "- Weekend: Closed\n"
             "When helping with bookings:\n"
+            "- Collect all required information: full name, email, and desired time\n"
+            "- Each timeslot is 1 hour long and starts and ends on the hour\n"
+            "- Always require the date before creating a booking\n"
+            "- For bookings longer than 1 hour, create multiple consecutive hourly timeslots, BUT only create single timeslots for 1 hour bookings\n"
+            "- For example, if a user requests 1-3pm, create two timeslots: 1-2pm and 2-3pm, but these should still be part of the same booking\n"
+            "- Format dates and times in ISO format (YYYY-MM-DDTHH:MM:SS+00:00) when making a function call\n"
+            "- However, when presenting dates to a user they should be in a human-readable format \n"
             "- Only accept bookings during opening hours\n"
             "- Reject and explain if requested time is outside opening hours\n"
-            "- Collect all required information: full name, email, and desired time\n"
-            "- Always require the date before creating a booking\n"
-            "- For bookings longer than 1 hour, create multiple consecutive hourly timeslots\n"
-            "- For example, if a user requests 1-3pm, create two timeslots: 1-2pm and 2-3pm, but these should still be part of the same booking\n"
-            "- Format dates and times in ISO format (YYYY-MM-DDTHH:MM:SS+00:00)\n"
             "- Don't ask users to format times, you should format it yourself\n"
             "- Once you have all valid information, ALWAYS ask the user to confirm the details and THEN attempt to create the booking\n"
-            "- Keep track of information provided across messages\n"
             "- If a booking fails, explain why and help fix the issue\n"
             "- Confirm successful bookings with a summary\n"
-            "- Keep track of information provided across messages\n"
+            "- Only provide relevant and necessary information in each message\n"
+            "- ALWAYS keep track of information provided across messages\n"
         )
 
     def _get_booking_function(self):
@@ -154,6 +154,8 @@ class AIService:
         )
 
     def get_ai_response(self, user_message, user_id=None):
+        from src.controllers.booking_controller import create_booking_internal
+
         """Get response using Azure OpenAI Assistant"""
         if not self.client or not self.assistant:
             raise RuntimeError("AIService is not initialized")
@@ -201,36 +203,36 @@ class AIService:
                 for tool_call in tool_calls:
                     if tool_call.function.name == "create_booking":
                         try:
-                            # Parse the function arguments
                             booking_args = json.loads(
                                 tool_call.function.arguments)
 
-                            # Make the API call to the booking route
-                            response = requests.post(
-                                f'{app.config["API_URL"]}/api/bookings/create-booking',
-                                json=booking_args,
-                                headers={'Content-Type': 'application/json'},
-                                timeout=10
-                            )
+                            try:
+                                booking = create_booking_internal(booking_args)
 
-                            if response.status_code == 201:
-                                result = response.json()
                                 tool_outputs.append({
                                     "tool_call_id": tool_call.id,
                                     "output": json.dumps({
                                         "status": "success",
                                         "message": "Booking created successfully",
-                                        "data": result.get('data', {})
+                                        "data": booking.to_dict()
                                     })
                                 })
-                            else:
-                                error_data = response.json()
+                            except ValueError as e:
                                 tool_outputs.append({
                                     "tool_call_id": tool_call.id,
                                     "output": json.dumps({
                                         "status": "error",
-                                        "message": error_data.get('message', 'Booking failed'),
-                                        "code": error_data.get('code', 'UNKNOWN_ERROR')
+                                        "message": str(e),
+                                        "code": "INVALID_DATA"
+                                    })
+                                })
+                            except Exception as e:
+                                tool_outputs.append({
+                                    "tool_call_id": tool_call.id,
+                                    "output": json.dumps({
+                                        "status": "error",
+                                        "message": str(e),
+                                        "code": "SERVER_ERROR"
                                     })
                                 })
                         except Exception as e:
@@ -238,7 +240,7 @@ class AIService:
                                 "tool_call_id": tool_call.id,
                                 "output": json.dumps({
                                     "status": "error",
-                                    "message": str(e)
+                                    "message": f"Failed to process booking request: {str(e)}"
                                 })
                             })
 

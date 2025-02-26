@@ -2,14 +2,15 @@ import { useState } from 'react';
 import { FaPaperPlane } from 'react-icons/fa';
 import VoiceInputButton from '../common/VoiceInputButton';
 
-const ChatInput = ({ onSubmit }) => {
+const ChatInput = ({ onSubmit, isLoading }) => {
   const [message, setMessage] = useState('');
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!message.trim()) return;
-    onSubmit(message);
-    setMessage('');
+    if (message.trim() && !isLoading) {
+      onSubmit(message);
+      setMessage('');
+    }
   };
 
   const handleVoiceTranscript = (transcript) => {
@@ -36,7 +37,7 @@ const ChatInput = ({ onSubmit }) => {
 
       <button
         type="submit"
-        disabled={!message.trim()}
+        disabled={isLoading || !message.trim()}
         className="flex h-10 w-10 items-center justify-center rounded-full bg-orange-500 text-white transition-colors hover:bg-orange-600 disabled:bg-gray-300"
         aria-label="Send message"
         data-screen-reader-text="Send message"
