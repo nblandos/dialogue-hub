@@ -67,7 +67,7 @@ const HomePage = () => {
         </header>
 
         {/* Popular Orders Videos Grid */}
-        <div className="mb-8 grid w-full grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="mb-8 grid w-full grid-cols-1 gap-8 px-4 sm:grid-cols-2 lg:grid-cols-3">
           {popularOrders.map((order) => (
             <div
               key={order.name}
@@ -77,44 +77,40 @@ const HomePage = () => {
               data-screen-reader-text={order.name}
             >
               <p className="mb-2 text-xl font-semibold">{order.name}</p>
-              <iframe
-                loading="lazy"
-                className="w-full max-w-xs rounded-lg shadow-md transition-transform duration-300"
-                width="315"
-                height="533"
-                ref={(el) => (videoRefs.current[order.name] = el)}
-                src={order.video}
-                title={order.name}
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-                style={{
-                  transform:
-                    hoveredVideo === order.name ? 'scale(1.05)' : 'scale(1)',
-                }}
-              ></iframe>
+              <div className="relative mt-2 w-full pt-[177.77%]">
+                <iframe
+                  loading="lazy"
+                  className="absolute left-0 top-0 h-full w-full rounded-lg shadow-md transition-transform duration-300 hover:scale-105"
+                  ref={(el) => (videoRefs.current[order.name] = el)}
+                  src={order.video}
+                  title={order.name}
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                ></iframe>
+              </div>
             </div>
           ))}
         </div>
 
         {/* Links */}
-        <div className="mb-6 mt-4 flex w-full justify-center gap-6">
+        <div className="mb-6 mt-4 flex w-full flex-col items-center justify-center gap-4 sm:flex-row sm:gap-6">
           <a
             href="/book"
-            className="flex items-center space-x-2 rounded-lg bg-blue-600 px-6 py-3 text-white shadow-md transition-all duration-200 hover:scale-105 hover:bg-blue-700"
+            className="flex w-full items-center justify-center space-x-2 rounded-lg bg-blue-600 px-6 py-3 text-white shadow-md transition-all duration-200 hover:scale-105 hover:bg-blue-700 sm:w-auto"
           >
             <FaCalendarAlt className="text-xl" />
             <span data-screen-reader-text="Book a Table">Book a Table</span>
           </a>
           <a
             href="/menu"
-            className="flex items-center space-x-2 rounded-lg bg-green-600 px-6 py-3 text-white shadow-md transition-all duration-200 hover:scale-105 hover:bg-green-700"
+            className="flex w-full items-center justify-center space-x-2 rounded-lg bg-green-600 px-6 py-3 text-white shadow-md transition-all duration-200 hover:scale-105 hover:bg-green-700 sm:w-auto"
           >
             <FaBook className="text-xl" />
             <span data-screen-reader-text="View Menu">View Menu</span>
           </a>
           <a
             href="/training"
-            className="flex items-center space-x-2 rounded-lg bg-purple-600 px-6 py-3 text-white shadow-md transition-all duration-200 hover:scale-105 hover:bg-purple-700"
+            className="flex w-full items-center justify-center space-x-2 rounded-lg bg-purple-600 px-6 py-3 text-white shadow-md transition-all duration-200 hover:scale-105 hover:bg-purple-700 sm:w-auto"
           >
             <FaGraduationCap className="text-xl" />
             <span data-screen-reader-text="Learn Sign Language">
@@ -134,15 +130,15 @@ const HomePage = () => {
           >
             Getting Here
           </h2>
-          <div className="flex w-full items-start justify-between gap-8 px-4">
-            <div className="w-2/3">
+          <div className="flex w-full flex-col items-center justify-between gap-8 px-4 md:flex-row md:items-start">
+            <div className="w-full md:w-2/3">
               <img
                 src={tubeMap}
                 alt="Tube Map"
                 className="w-full rounded-lg shadow-md"
               />
             </div>
-            <div className="w-1/3 space-y-6 text-left">
+            <div className="mt-6 w-full space-y-6 text-left md:mt-0 md:w-1/3">
               <div className="space-y-2">
                 <h3 className="text-xl font-semibold">Address</h3>
                 <p
@@ -230,26 +226,30 @@ const HomePage = () => {
           ].map((item, index) => (
             <React.Fragment key={item.name}>
               <div
-                className="flex flex-col items-center text-center"
+                className="flex w-full flex-col items-center text-center"
                 onMouseEnter={() => handleMouseEnter(item.name)}
                 onMouseLeave={() => handleMouseLeave(item.name)}
                 data-screen-reader-text={item.name}
               >
                 <p className="mb-4 text-xl font-semibold">{item.name}</p>
-                <iframe
-                  loading="lazy"
-                  width="230"
-                  height="408"
-                  ref={(el) => (videoRefs.current[item.name] = el)}
-                  src={
-                    initialMenu.find((menuItem) => menuItem.name === item.name)
-                      ?.video
-                  }
-                  title={item.name}
-                  className="scale-100 rounded-lg transition-transform hover:scale-110"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                  allowFullScreen
-                ></iframe>
+                <div
+                  className="relative h-auto w-full"
+                  style={{ width: '230px', paddingTop: '177.77%' }}
+                >
+                  <iframe
+                    loading="lazy"
+                    ref={(el) => (videoRefs.current[item.name] = el)}
+                    src={
+                      initialMenu.find(
+                        (menuItem) => menuItem.name === item.name
+                      )?.video
+                    }
+                    title={item.name}
+                    className="absolute left-0 top-0 h-full w-full rounded-lg shadow-md transition-transform hover:scale-105"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                  ></iframe>
+                </div>
               </div>
               {index < 2 && (
                 <FaArrowDown className="my-4 text-4xl text-black" />
