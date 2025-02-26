@@ -43,26 +43,26 @@ const Header = () => {
   return (
     <>
       <nav className="fixed inset-x-0 top-0 z-10 bg-orange-500 pl-6 pr-2 shadow-xl sm:pr-4 xl:pr-16">
-        <div className="flex min-h-[96px] items-center justify-between">
+        <div className="flex min-h-[4.5rem] flex-wrap items-center justify-between px-2 py-2 sm:min-h-[5.5rem] sm:px-4 md:px-6">
           <div className="flex items-center gap-2 sm:gap-4 xl:gap-10">
             {/* Chatbot Toggle Button*/}
             <button
-              className="shrink-0 text-white"
-              onClick={() => setIsChatbotOpen(!isChatbotOpen)}
-              aria-label={
-                isChatbotOpen ? 'Close AI Assistant' : 'Open AI Assistant'
-              }
+              className="shrink-0 rounded-full p-1 text-white hover:bg-orange-600 focus:outline-none"
+              onClick={(e) => {
+                e.stopPropagation();
+                setIsChatbotOpen(!isChatbotOpen);
+              }}
             >
-              <FaRobot size={36} />
+              <FaRobot className="h-7 w-7 sm:h-9 sm:w-9" />
             </button>
 
             <Link
               to="/"
-              className="mr-2 text-xl font-bold text-white sm:mr-6 sm:text-2xl xl:text-4xl"
+              className="mr-1 truncate text-base font-bold text-white sm:mr-6 sm:text-2xl xl:text-4xl"
               aria-label="Dialogue Cafe"
               data-screen-reader-text="Dialogue Cafe"
             >
-              Dialogue Cafe
+              <span className="whitespace-nowrap">Dialogue Cafe</span>
             </Link>
           </div>
 
@@ -91,7 +91,7 @@ const Header = () => {
 
             {/* Mobile Menu Toggle Button */}
             <button
-              className="ml-4 shrink-0 text-white xl:hidden"
+              className="shrink-0 rounded-full p-1 text-white hover:bg-orange-600 focus:outline-none xl:hidden"
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               aria-label={
                 isMobileMenuOpen
@@ -106,9 +106,9 @@ const Header = () => {
               }
             >
               {isMobileMenuOpen ? (
-                <FaTimes size={24} />
+                <FaTimes className="h-6 w-6 sm:h-8 sm:w-8" />
               ) : (
-                <FaUniversalAccess size={24} />
+                <FaUniversalAccess className="h-6 w-6 sm:h-8 sm:w-8" />
               )}
             </button>
           </div>

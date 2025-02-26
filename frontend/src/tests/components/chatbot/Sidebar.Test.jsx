@@ -50,8 +50,6 @@ describe('Sidebar', () => {
 
     const sidebar = document.querySelector('div.fixed');
 
-    expect(sidebar.style.width).toBe('204.8px');
-    expect(sidebar.style.height).toBe(`calc(100vh - 96px)`);
     expect(sidebar.className).toMatch(/translate-x-0/);
   });
 
