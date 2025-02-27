@@ -12,7 +12,6 @@ def mock_app():
         'OPENAI_API_SECRET_NAME': 'test-secret',
         'DEPLOYMENT_NAME': 'test-deployment',
         'OPENAI_ENDPOINT_URL': 'https://test.openai.azure.com',
-        'API_URL': 'http://localhost:5000'
     }
     return app
 

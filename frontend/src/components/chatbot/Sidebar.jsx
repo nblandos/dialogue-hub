@@ -27,7 +27,8 @@ const Sidebar = ({ isOpen }) => {
 
   const [messages, setMessages] = useState([
     {
-      content: 'Hello! How can I help you today?',
+      content:
+        'Hi, I am D-Bot! I can help you with bookings and answer your queries. How can I assist you today?',
       isUser: false,
     },
   ]);

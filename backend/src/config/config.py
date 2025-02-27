@@ -32,11 +32,9 @@ class ProductionConfig(Config):
         )
     )
     PORT = int(os.getenv('PORT', 5000))
-    API_URL = os.getenv('API_URL')
 
 
 class DevelopmentConfig(Config):
     SQLALCHEMY_DATABASE_URI = 'sqlite:///local.db'
     DEBUG = True
     PORT = int(os.getenv('PORT', 5001))
-    API_URL = 'http://localhost:5001'
