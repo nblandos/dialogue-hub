@@ -5,6 +5,18 @@ from src.models.timeslot import Timeslot
 timeslot_bp = Blueprint('timeslot', __name__)
 
 
+def get_availability_internal(start_date, end_date):
+    timeslots = Timeslot.query.filter(
+        Timeslot.start_time >= datetime.fromisoformat(start_date),
+        Timeslot.start_time <= datetime.fromisoformat(end_date)
+    ).all()
+
+    return {
+        ts.start_time.isoformat(): ts.booking_count
+        for ts in timeslots
+    }
+
+
 @timeslot_bp.route('/availability', methods=['GET'])
 def get_availability():
     """Get timeslot availabilities for a given range
@@ -23,15 +35,7 @@ def get_availability():
                 'message': 'Start and end date required'
             }), 400
 
-        timeslots = Timeslot.query.filter(
-            Timeslot.start_time >= datetime.fromisoformat(start_date),
-            Timeslot.start_time <= datetime.fromisoformat(end_date)
-        ).all()
-
-        availability = {
-            ts.start_time.isoformat(): ts.booking_count
-            for ts in timeslots
-        }
+        availability = get_availability_internal(start_date, end_date)
 
         return jsonify({
             'status': 'success',

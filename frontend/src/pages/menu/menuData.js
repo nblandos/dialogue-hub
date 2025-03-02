@@ -28,7 +28,7 @@ const initialMenu = [
     video: 'https://www.youtube.com/embed/cLClvpC7Wlw?enablejsapi=1',
   },
   {
-    name: 'Capuccino',
+    name: 'Cappuccino',
     video: 'https://www.youtube.com/embed/QCcnsE5Orkw?enablejsapi=1',
   },
   {
