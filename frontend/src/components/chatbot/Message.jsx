@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import menuVideos from '../../pages/menu/menuData';
 import trainingVideos from '../../pages/training/trainingData';
+import VideoContainer from '../common/VideoContainer';
 
 const LoadingDots = () => (
   <div className="flex space-x-1">
@@ -87,20 +88,19 @@ const Message = ({ content, isUser, isLoading }) => {
 
         if (videoItem) {
           const videoUrl = videoItem.video;
-
           const displayName = videoItem.name || videoName;
 
           return (
-            <div key={index} className="video-container my-2">
+            <div key={index} className="my-3 w-full">
               <p className="mb-1 font-medium">{displayName} (BSL):</p>
-              <iframe
-                width="100%"
-                height="200"
-                src={videoUrl}
-                title={displayName}
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-              ></iframe>
+              <div className="max-w-[250px]">
+                <VideoContainer
+                  name={displayName}
+                  videoUrl={videoUrl}
+                  enableHoverEnlarge={false}
+                  className="rounded-lg"
+                />
+              </div>
             </div>
           );
         }
