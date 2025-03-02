@@ -42,18 +42,16 @@ menu_videos = [
     {"name": "Chocolate&Custard Muffin"},
     {"name": "Plain Nata"},
     {"name": "Matcha&Raspberry Coconut Cookie"},
-    {"name": "Salted Caramel Brownie"},
+    {"name": "Salted Caramel Brownie"}
 ]
 
 training_videos = [
     {"name": "Good morning"},
     {"name": "How are you?"},
     {"name": "Good evening"},
-    {"name": "Hello"},
     {"name": "Hello-Please-Thank You"},
-    {"name": "Please"},
-    {"name": "Thank You"},
     {"name": "Change my mind"},
+    {"name": "Hello"},
     {"name": "It's a lovely day"},
     {"name": "See you later"},
     {"name": "I'm fine"},
