@@ -96,7 +96,11 @@ class AIService:
             "- You can share British Sign Language (BSL) videos from our library\n"
             "- When users ask about menu items or learning BSL, share video links from this format: [VIDEO:item_name]\n"
             "- For menu items, use format: [VIDEO:menu:item_name] (e.g. [VIDEO:menu:Coffee Latte])\n"
-            "- Only share videos that are available in our library\n"
+            "- For training phrases, use format: [VIDEO:training:phrase_name] (e.g. [VIDEO:training:Good morning])\n"
+            "- If a user asks about a menu item, suggest a video of that item\n"
+            "- If a user asks about a training phrase, suggest a video of that phrase\n"
+            "- If a menu item is unavailable, suggest similar items\n"
+            "- Do not suggest more than 5 videos at a time\n"
             "- If a user asks about learning BSL or seeing signs, suggest some videos they might be interested in\n"
             "- The frontend will automatically convert these links to embedded videos\n"
         )
