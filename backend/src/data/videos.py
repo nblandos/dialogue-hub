@@ -1,0 +1,76 @@
+menu_videos = [
+    {"name": "Single Espresso", "tag": "VIDEO:menu:Single Espresso"},
+    {"name": "Double Espresso", "tag": "VIDEO:menu:Double Espresso"},
+    {"name": "Turkish Coffee", "tag": "VIDEO:menu:Turkish Coffee"},
+    {"name": "Americano", "tag": "VIDEO:menu:Americano"},
+    {"name": "Decaf Coffee", "tag": "VIDEO:menu:Decaf Coffee"},
+    {"name": "Filter Coffee", "tag": "VIDEO:menu:Filter Coffee"},
+    {"name": "Flat White", "tag": "VIDEO:menu:Flat White"},
+    {"name": "Cappuccino", "tag": "VIDEO:menu:Cappuccino"},
+    {"name": "Coffee Latte", "tag": "VIDEO:menu:Coffee Latte"},
+    {"name": "Macchiato", "tag": "VIDEO:menu:Macchiato"},
+    {"name": "Breakfast Tea", "tag": "VIDEO:menu:Breakfast Tea"},
+    {"name": "Earl Grey", "tag": "VIDEO:menu:Earl Grey"},
+    {"name": "Pepper Mint", "tag": "VIDEO:menu:Pepper Mint"},
+    {"name": "Hot Chocolate", "tag": "VIDEO:menu:Hot Chocolate"},
+    {"name": "Chai Latte", "tag": "VIDEO:menu:Chai Latte"},
+    {"name": "Normal Milk", "tag": "VIDEO:menu:Normal Milk"},
+    {"name": "Skimmed Milk", "tag": "VIDEO:menu:Skimmed Milk"},
+    {"name": "Oat Milk", "tag": "VIDEO:menu:Oat Milk"},
+    {"name": "Soy Milk", "tag": "VIDEO:menu:Soy Milk"},
+    {"name": "Almond Milk", "tag": "VIDEO:menu:Almond Milk"},
+    {"name": "Coconut Milk", "tag": "VIDEO:menu:Coconut Milk"},
+    {"name": "White Sugar", "tag": "VIDEO:menu:White Sugar"},
+    {"name": "Brown Sugar", "tag": "VIDEO:menu:Brown Sugar"},
+    {"name": "Sweetener", "tag": "VIDEO:menu:Sweetener"},
+    {"name": "Chocolate Powder", "tag": "VIDEO:menu:Chocolate Powder"},
+    {"name": "Still Water", "tag": "VIDEO:menu:Still Water"},
+    {"name": "Sparkling Water", "tag": "VIDEO:menu:Sparkling Water"},
+    {"name": "Lemonade Lime", "tag": "VIDEO:menu:Lemonade Lime"},
+    {"name": "Lemonade Blood Orange", "tag": "VIDEO:menu:Lemonade Blood Orange"},
+    {"name": "Lemonade Ginger", "tag": "VIDEO:menu:Lemonade Ginger"},
+    {"name": "Lemonade Passion Fruit", "tag": "VIDEO:menu:Lemonade Passion Fruit"},
+    {"name": "Kombucha Citro Hops", "tag": "VIDEO:menu:Kombucha Citro Hops"},
+    {"name": "Kombucha Ginger&Hibiscus",
+        "tag": "VIDEO:menu:Kombucha Ginger&Hibiscus"},
+    {"name": "Croissant", "tag": "VIDEO:menu:Croissant"},
+    {"name": "Almond Croissant", "tag": "VIDEO:menu:Almond Croissant"},
+    {"name": "Pain Au Chocolat", "tag": "VIDEO:menu:Pain Au Chocolat"},
+    {"name": "Nutella Doughnut", "tag": "VIDEO:menu:Nutella Doughnut"},
+    {"name": "Apricot Danish", "tag": "VIDEO:menu:Apricot Danish"},
+    {"name": "Pain Aux Raisins", "tag": "VIDEO:menu:Pain Aux Raisins"},
+    {"name": "Cinnamon Bun", "tag": "VIDEO:menu:Cinnamon Bun"},
+    {"name": "Chocolate&Custard Muffin",
+        "tag": "VIDEO:menu:Chocolate&Custard Muffin"},
+    {"name": "Plain Nata", "tag": "VIDEO:menu:Plain Nata"},
+    {"name": "Matcha&Raspberry Coconut Cookie",
+        "tag": "VIDEO:menu:Matcha&Raspberry Coconut Cookie"},
+    {"name": "Salted Caramel Brownie", "tag": "VIDEO:menu:Salted Caramel Brownie"},
+]
+
+training_videos = [
+    {"name": "Good morning", "tag": "VIDEO:training:Good morning"},
+    {"name": "How are you?", "tag": "VIDEO:training:How are you?"},
+    {"name": "Good evening", "tag": "VIDEO:training:Good evening"},
+    {"name": "Hello", "tag": "VIDEO:training:Hello"},
+    {"name": "Hello-Please-Thank You", "tag": "VIDEO:training:Hello-Please-Thank You"},
+    {"name": "Please", "tag": "VIDEO:training:Hello-Please-Thank You"},
+    {"name": "Thank You", "tag": "VIDEO:training:Hello-Please-Thank You"},
+    {"name": "Change my mind", "tag": "VIDEO:training:Change my mind"},
+    {"name": "It's a lovely day", "tag": "VIDEO:training:It's a lovely day"},
+    {"name": "See you later", "tag": "VIDEO:training:See you later"},
+    {"name": "I'm fine", "tag": "VIDEO:training:I'm fine"},
+    {"name": "I don't like it", "tag": "VIDEO:training:I don't like it"},
+    {"name": "Do you like it?", "tag": "VIDEO:training:Do you like it?"},
+    {"name": "Goodbye", "tag": "VIDEO:training:Goodbye"},
+    {"name": "Yes, I like it", "tag": "VIDEO:training:Yes, I like it"},
+]
+
+
+def get_videos_by_category(category):
+    if category == "menu":
+        return menu_videos
+    elif category == "training":
+        return training_videos
+    else:
+        raise ValueError(f"Invalid category: {category}")

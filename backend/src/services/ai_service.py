@@ -92,6 +92,12 @@ class AIService:
             "- Confirm successful bookings with a summary\n"
             "- Only provide relevant and necessary information in each message\n"
             "- ALWAYS keep track of information provided across messages\n"
+            "About BSL videos:\n"
+            "- You can share British Sign Language (BSL) videos from our library\n"
+            "- When users ask about menu items or learning BSL, share video links from this format: [VIDEO:item_name]\n"
+            "- For menu items, use format: [VIDEO:menu:item_name] (e.g. [VIDEO:menu:Coffee Latte])\n"
+            "- If a user asks about learning BSL or seeing signs, suggest some videos they might be interested in\n"
+            "- The frontend will automatically convert these links to embedded videos\n"
         )
 
     def _get_tools(self):
@@ -155,6 +161,28 @@ class AIService:
                             }
                         },
                         "required": ["start_date", "end_date"]
+                    }
+                }
+            },
+            {
+                "type": "function",
+                "function": {
+                    "name": "get_videos",
+                    "description": "Get BSL video information for menu items or training phrases",
+                    "parameters": {
+                        "type": "object",
+                        "properties": {
+                            "category": {
+                                "type": "string",
+                                "enum": ["menu", "training"],
+                                "description": "Category of videos (menu or training)"
+                            },
+                            "query": {
+                                "type": "string",
+                                "description": "Optional search term to filter videos by name"
+                            }
+                        },
+                        "required": ["category"]
                     }
                 }
             }
@@ -297,6 +325,46 @@ class AIService:
                                 "output": json.dumps({
                                     "status": "success",
                                     "data": availability_data
+                                })
+                            })
+                        except ValueError as e:
+                            tool_outputs.append({
+                                "tool_call_id": tool_call.id,
+                                "output": json.dumps({
+                                    "status": "error",
+                                    "code": "INVALID_DATA",
+                                    "message": str(e)
+                                })
+                            })
+                        except Exception as e:
+                            tool_outputs.append({
+                                "tool_call_id": tool_call.id,
+                                "output": json.dumps({
+                                    "status": "error",
+                                    "code": "SERVER_ERROR",
+                                    "message": str(e)
+                                })
+                            })
+
+                    elif tool_call.function.name == "get_videos":
+                        try:
+                            args = json.loads(tool_call.function.arguments)
+                            category = args.get('category')
+                            query = args.get('query', '').lower()
+
+                            from src.data.videos import get_videos_by_category
+
+                            videos = get_videos_by_category(category)
+
+                            if query:
+                                videos = [
+                                    v for v in videos if query in v.lower()]
+
+                            tool_outputs.append({
+                                "tool_call_id": tool_call.id,
+                                "output": json.dumps({
+                                    "status": "success",
+                                    "data": videos
                                 })
                             })
                         except ValueError as e:
