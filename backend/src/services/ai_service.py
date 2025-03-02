@@ -4,6 +4,8 @@ from openai import AzureOpenAI
 import time
 import json
 
+MAX_BOOKINGS_PER_TIMESLOT = 3
+
 
 class AIService:
     def __init__(self, app=None):
@@ -65,9 +67,16 @@ class AIService:
             "and booking assistance. Create bookings when users request them.\n"
             "Opening Hours:\n"
             "- Monday to Thursday: 8:00 AM - 5:00 PM (08:00-17:00)\n"
-            "- Friday: 8:00 AM - 1:00 PM (08:00-13:00)\n"
+            "- Only on Friday: 8:00 AM - 1:00 PM (08:00-13:00)\n"
             "- Weekend: Closed\n"
             "When helping with bookings:\n"
+            "- First, always check availability for the requested time period\n"
+            f"- Each timeslot has a booking_count value - timeslots with booking_count less than {MAX_BOOKINGS_PER_TIMESLOT} are available\n"
+            "- When listing available times, you must show ALL business hours (8am-5pm Mon-Thu, 8am-1pm Fri)\n"
+            "- The get_availability function may return only timeslots that already have bookings\n"
+            "- For any business hour timeslot NOT returned by the function, assume it's completely available (0 bookings)\n"
+            "- When displaying available times, include the current booking count for each slot\n"
+            "- Suggest alternative times if requested slots are unavailable\n"
             "- Collect all required information: full name, email, and desired time\n"
             "- Each timeslot is 1 hour long and starts and ends on the hour\n"
             "- Always require the date before creating a booking\n"
@@ -85,48 +94,71 @@ class AIService:
             "- ALWAYS keep track of information provided across messages\n"
         )
 
-    def _get_booking_function(self):
+    def _get_tools(self):
         """Return the booking function configuration"""
-        return {
-            "type": "function",
-            "function": {
-                "name": "create_booking",
-                "description": "Create a booking for the BSL cafe",
-                "parameters": {
-                    "type": "object",
-                    "properties": {
-                        "user": {
-                            "type": "object",
-                            "properties": {
-                                "email": {
-                                    "type": "string",
-                                    "description": "User's email address"
-                                },
-                                "full_name": {
-                                    "type": "string",
-                                    "description": "User's full name"
-                                }
-                            },
-                            "required": ["email", "full_name"]
-                        },
-                        "timeslots": {
-                            "type": "array",
-                            "items": {
+        return [
+            {
+                "type": "function",
+                "function": {
+                    "name": "create_booking",
+                    "description": "Create a booking for the BSL cafe",
+                    "parameters": {
+                        "type": "object",
+                        "properties": {
+                            "user": {
                                 "type": "object",
                                 "properties": {
-                                    "start_time": {
+                                    "email": {
                                         "type": "string",
-                                        "description": "Start time in ISO format (YYYY-MM-DDTHH:MM:SS+00:00)"
+                                        "description": "User's email address"
+                                    },
+                                    "full_name": {
+                                        "type": "string",
+                                        "description": "User's full name"
                                     }
                                 },
-                                "required": ["start_time"]
+                                "required": ["email", "full_name"]
+                            },
+                            "timeslots": {
+                                "type": "array",
+                                "items": {
+                                    "type": "object",
+                                    "properties": {
+                                        "start_time": {
+                                            "type": "string",
+                                            "description": "Start time in ISO format (YYYY-MM-DDTHH:MM:SS+00:00)"
+                                        }
+                                    },
+                                    "required": ["start_time"]
+                                }
                             }
-                        }
-                    },
-                    "required": ["user", "timeslots"]
+                        },
+                        "required": ["user", "timeslots"]
+                    }
+                }
+            },
+            {
+                "type": "function",
+                "function": {
+                    "name": "get_availability",
+                    "description": "Get timeslot availabilities for a given range",
+                    "parameters": {
+                        "type": "object",
+                        "properties": {
+                            "start_date": {
+                                "type": "string",
+                                "description": "Start date in ISO format (YYYY-MM-DDTHH:MM:SS+00:00)"
+                            },
+                            "end_date": {
+                                "type": "string",
+                                "description": "End date in ISO format (YYYY-MM-DDTHH:MM:SS+00:00)"
+                            }
+                        },
+                        "required": ["start_date", "end_date"]
+                    }
                 }
             }
-        }
+        ]
 
     def _update_assistant(self, assistant):
         """Update existing assistant with current configuration"""
@@ -135,7 +167,7 @@ class AIService:
             name="D-Bot",
             model=self.deployment,
             instructions=self._get_instructions(),
-            tools=[self._get_booking_function()],
+            tools=self._get_tools(),
             tool_resources={},
             temperature=0.7,
             top_p=1
@@ -147,15 +179,13 @@ class AIService:
             name="D-Bot",
             model=self.deployment,
             instructions=self._get_instructions(),
-            tools=[self._get_booking_function()],
+            tools=self._get_tools(),
             tool_resources={},
             temperature=0.7,
             top_p=1
         )
 
     def get_ai_response(self, user_message, user_id=None):
-        from src.controllers.booking_controller import create_booking_internal
-
         """Get response using Azure OpenAI Assistant"""
         if not self.client or not self.assistant:
             raise RuntimeError("AIService is not initialized")
@@ -186,6 +216,7 @@ class AIService:
         start_time = time.time()
 
         while run.status not in ['completed', 'failed']:
+
             if time.time() - start_time > timeout_seconds:
                 raise RuntimeError("Timeout waiting for assistant response.")
 
@@ -207,6 +238,8 @@ class AIService:
                                 tool_call.function.arguments)
 
                             try:
+                                from src.routes.booking_routes import create_booking_internal
+
                                 booking = create_booking_internal(booking_args)
 
                                 tool_outputs.append({
@@ -241,6 +274,47 @@ class AIService:
                                 "output": json.dumps({
                                     "status": "error",
                                     "message": f"Failed to process booking request: {str(e)}"
+                                })
+                            })
+
+                    elif tool_call.function.name == "get_availability":
+                        try:
+                            from src.routes.timeslot_routes import get_availability_internal
+
+                            args = json.loads(tool_call.function.arguments)
+
+                            if not args.get('start_date') or not args.get('end_date'):
+                                raise ValueError(
+                                    "Missing required start_date or end_date")
+
+                            availability_data = get_availability_internal(
+                                args['start_date'],
+                                args['end_date']
+                            )
+
+                            tool_outputs.append({
+                                "tool_call_id": tool_call.id,
+                                "output": json.dumps({
+                                    "status": "success",
+                                    "data": availability_data
+                                })
+                            })
+                        except ValueError as e:
+                            tool_outputs.append({
+                                "tool_call_id": tool_call.id,
+                                "output": json.dumps({
+                                    "status": "error",
+                                    "code": "INVALID_DATA",
+                                    "message": str(e)
+                                })
+                            })
+                        except Exception as e:
+                            tool_outputs.append({
+                                "tool_call_id": tool_call.id,
+                                "output": json.dumps({
+                                    "status": "error",
+                                    "code": "SERVER_ERROR",
+                                    "message": str(e)
                                 })
                             })
 
