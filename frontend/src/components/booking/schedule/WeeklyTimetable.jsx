@@ -112,8 +112,6 @@ const WeeklyTimetable = () => {
   };
 
   const formatSelectedSlots = (slots) => {
-    if (slots.length === 0) return '';
-
     const [dateStr] = slots[0].split('T');
     const date = parseISO(dateStr);
 
