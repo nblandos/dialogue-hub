@@ -14,9 +14,9 @@ const MenuPage = () => {
       if (sortOption === 'name') {
         return a.name.localeCompare(b.name);
       }
-      if (sortOption === 'price') {
-        return parseFloat(a.price.slice(1)) - parseFloat(b.price.slice(1));
-      }
+      // if (sortOption === 'price') {
+      //   return parseFloat(a.price.slice(1)) - parseFloat(b.price.slice(1));
+      // }
     });
 
   return (

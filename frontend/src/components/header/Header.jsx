@@ -52,6 +52,12 @@ const Header = () => {
                 e.stopPropagation();
                 setIsChatbotOpen(!isChatbotOpen);
               }}
+              aria-label={
+                isChatbotOpen ? 'Close AI Assistant' : 'Open AI Assistant'
+              }
+              data-screen-reader-text={
+                isChatbotOpen ? 'Close AI Assistant' : 'Open AI Assistant'
+              }
             >
               <FaRobot className="h-7 w-7 sm:h-9 sm:w-9" />
             </button>
