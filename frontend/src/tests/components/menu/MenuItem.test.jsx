@@ -2,56 +2,58 @@ import { describe, it, expect, vi } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 import MenuItem from '../../../components/menu/MenuItem';
 
+// Mock the VideoContainer component to simplify tests
+vi.mock('../../../components/common/VideoContainer', () => ({
+  default: ({ name, videoUrl }) => (
+    <div data-testid="video-container" data-name={name} data-url={videoUrl}>
+      Video Container Mock
+    </div>
+  ),
+}));
+
 describe('MenuItem', () => {
-  it('renders the name and price', () => {
-    render(
-      <MenuItem name="Test Coffee" price="£2.50" video="https://example.com" />
-    );
+  const defaultProps = {
+    name: 'Test Coffee',
+    video: 'https://example.com/video',
+  };
+
+  it('renders the name correctly', () => {
+    render(<MenuItem {...defaultProps} />);
     expect(screen.getByText('Test Coffee')).toBeInTheDocument();
-    expect(screen.getByText('(£2.50)')).toBeInTheDocument();
   });
 
-  it('sets the iframe src to the provided video link', () => {
-    const testUrl = 'https://www.youtube.com/embed/TEST?enablejsapi=1';
-    render(<MenuItem name="Video Test" price="£1.00" video={testUrl} />);
-    const iframe = screen.getByTitle('Video Test');
-    expect(iframe.getAttribute('src')).toBe(testUrl);
+  it('renders the name and price when price is provided', () => {
+    render(<MenuItem {...defaultProps} price="£3.50" />);
+    expect(screen.getByText('Test Coffee')).toBeInTheDocument();
+    expect(screen.getByText('(£3.50)')).toBeInTheDocument();
   });
 
-  it('sends play command on mouse over', () => {
-    // mock contentWindow.postMessage method
-    const postMessageMock = vi.fn();
-    Object.defineProperty(window.HTMLIFrameElement.prototype, 'contentWindow', {
-      writable: true,
-      value: { postMessage: postMessageMock },
-    });
+  it('does not render price when not provided', () => {
+    render(<MenuItem {...defaultProps} />);
+    expect(screen.queryByText(/\(.*\)/)).not.toBeInTheDocument();
+  });
 
-    render(
-      <MenuItem name="Hover Test" price="£2.00" video="https://example.com" />
-    );
-    const iframe = screen.getByTitle('Hover Test');
-    fireEvent.mouseOver(iframe);
-    expect(postMessageMock).toHaveBeenCalledWith(
-      '{"event":"command","func":"playVideo","args":""}',
-      '*'
+  it('renders the VideoContainer with correct props', () => {
+    render(<MenuItem {...defaultProps} />);
+    const videoContainer = screen.getByTestId('video-container');
+    expect(videoContainer).toBeInTheDocument();
+    expect(videoContainer).toHaveAttribute('data-name', 'Test Coffee');
+    expect(videoContainer).toHaveAttribute(
+      'data-url',
+      'https://example.com/video'
     );
   });
 
-  it('sends pause command on mouse out', () => {
-    const postMessageMock = vi.fn();
-    Object.defineProperty(window.HTMLIFrameElement.prototype, 'contentWindow', {
-      writable: true,
-      value: { postMessage: postMessageMock },
-    });
+  it('applies hover transformation when mouse enters and leaves', () => {
+    const { container } = render(<MenuItem {...defaultProps} />);
+    const menuItem = container.firstChild;
 
-    render(
-      <MenuItem name="Hover Test" price="£2.00" video="https://example.com" />
-    );
-    const iframe = screen.getByTitle('Hover Test');
-    fireEvent.mouseOut(iframe);
-    expect(postMessageMock).toHaveBeenCalledWith(
-      '{"event":"command","func":"pauseVideo","args":""}',
-      '*'
-    );
+    expect(menuItem).toHaveStyle('transform: scale(1)');
+
+    fireEvent.mouseEnter(menuItem);
+    expect(menuItem).toHaveStyle('transform: scale(1.05)');
+
+    fireEvent.mouseLeave(menuItem);
+    expect(menuItem).toHaveStyle('transform: scale(1)');
   });
 });

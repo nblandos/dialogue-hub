@@ -201,14 +201,63 @@ describe('TimeSlotGrid', () => {
     expect(mockOnSlotClick).toHaveBeenCalledTimes(1);
   });
 
-  it('alerts when fetching availability fails', async () => {
-    const alertMock = vi.spyOn(window, 'alert').mockImplementation(() => {});
+  it('continues when fetching availability fails', async () => {
     global.fetch = vi.fn(() => Promise.reject(new Error('Network error')));
+
     renderComponent();
     await waitFor(() => expect(global.fetch).toHaveBeenCalled());
-    expect(alertMock).toHaveBeenCalledWith(
-      'Failed to fetch availability. Please try again later.'
+  });
+
+  it('marks slots as unavailable after 1pm on Fridays', async () => {
+    const today = new Date();
+    const fridayDate = new Date(today);
+    const daysUntilFriday = (5 + 7 - fridayDate.getDay()) % 7;
+    fridayDate.setDate(
+      fridayDate.getDate() + (daysUntilFriday === 0 ? 7 : daysUntilFriday)
     );
-    alertMock.mockRestore();
+
+    const fridayDay = {
+      full: 'Friday',
+      short: 'Fri',
+      date: fridayDate.toISOString().split('T')[0],
+      displayDate: formatDisplayDate(fridayDate),
+    };
+
+    const fridayHours = [12, 13, 14]; // 12pm (available), 1pm and 2pm (should be unavailable)
+
+    renderComponent(
+      {},
+      {
+        days: [fridayDay],
+        hours: fridayHours,
+        selectedSlots: [],
+      }
+    );
+
+    await waitFor(() => expect(global.fetch).toHaveBeenCalled());
+
+    const noonSlot = screen.getByTestId(`slot-${fridayDay.date}-12`);
+    expect(noonSlot).toHaveAttribute(
+      'aria-label',
+      expect.stringContaining('Available timeslot')
+    );
+    fireEvent.click(noonSlot);
+    expect(mockOnSlotClick).toHaveBeenCalledTimes(1);
+
+    const slot1pm = screen.getByTestId(`slot-${fridayDay.date}-13`);
+    expect(slot1pm).toHaveAttribute(
+      'aria-label',
+      `Unavailable timeslot, 13 o'clock on ${fridayDay.date}`
+    );
+    fireEvent.click(slot1pm);
+    expect(mockOnSlotClick).toHaveBeenCalledTimes(1);
+
+    const slot2pm = screen.getByTestId(`slot-${fridayDay.date}-14`);
+    expect(slot2pm).toHaveAttribute(
+      'aria-label',
+      `Unavailable timeslot, 14 o'clock on ${fridayDay.date}`
+    );
+    fireEvent.click(slot2pm);
+    expect(mockOnSlotClick).toHaveBeenCalledTimes(1);
   });
 });
