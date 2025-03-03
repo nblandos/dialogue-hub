@@ -18,7 +18,11 @@ const ChatInput = ({ onSubmit, isLoading }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="flex items-center gap-2 p-2">
+    <form
+      role="form"
+      onSubmit={handleSubmit}
+      className="flex items-center gap-2 p-2"
+    >
       <VoiceInputButton
         onTranscript={handleVoiceTranscript}
         buttonStyle="chat"
