@@ -1,5 +1,5 @@
+from unittest.mock import MagicMock, patch
 import pytest
-from unittest.mock import patch
 from datetime import datetime, timezone, timedelta
 
 
@@ -86,19 +86,26 @@ def test_create_booking_invalid_data(client):
 
 
 def test_create_booking_email_failure(client, valid_booking_data):
-    with patch('src.routes.booking_routes.email_service.send_confirmation',
-               side_effect=Exception('Failed to send confirmation email')):
-        response = client.post(
-            '/api/bookings/create-booking',
-            json=valid_booking_data,
-            headers={'Content-Type': 'application/json'}
-        )
+    with patch('src.routes.booking_routes.booking_service.create_booking') as mock_create:
+        mock_booking = MagicMock()
+        mock_booking.user.email = 'test@example.com'
+        mock_booking.date = '2025-03-04'
+        mock_booking.time_range = '10:00 - 11:00'
+        mock_create.return_value = mock_booking
 
-        assert response.status_code == 500
-        data = response.get_json()
-        assert data['status'] == 'error'
-        assert data['code'] == 'EMAIL_ERROR'
-        assert 'confirmation email' in str(data['message'])
+        with patch('src.routes.booking_routes.email_service.send_confirmation',
+                   side_effect=Exception('Failed to send confirmation email')):
+            response = client.post(
+                '/api/bookings/create-booking',
+                json=valid_booking_data,
+                headers={'Content-Type': 'application/json'}
+            )
+
+            assert response.status_code == 500
+            data = response.get_json()
+            assert data['status'] == 'error'
+            assert data['code'] == 'EMAIL_ERROR'
+            assert 'confirmation email' in str(data['message'])
 
 
 def test_create_booking_missing_body(client):

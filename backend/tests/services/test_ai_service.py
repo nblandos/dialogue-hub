@@ -893,3 +893,28 @@ def test_run_failed_without_last_error(mock_openai):
 
     with pytest.raises(RuntimeError, match="^Assistant run failed with status: failed$"):
         service.get_ai_response("Hello")
+
+
+def test_get_ai_response_stores_thread_in_active_threads(mock_openai):
+    from src.services.ai_service import AIService
+    from unittest.mock import MagicMock, PropertyMock
+
+    service = AIService()
+    service.client = mock_openai
+    service.assistant = MagicMock(id="test-assistant")
+
+    user_id = "test_user"
+    assert user_id not in service.active_threads
+
+    # Mock thread creation
+    thread_mock = MagicMock(id="thread-id")
+    mock_openai.beta.threads.create.return_value = thread_mock
+
+    run_mock = MagicMock()
+    type(run_mock).status = PropertyMock(return_value="completed")
+    mock_openai.beta.threads.runs.create.return_value = run_mock
+
+    service.get_ai_response("Hello, D-Bot!", user_id=user_id)
+
+    assert user_id in service.active_threads
+    assert service.active_threads[user_id] is thread_mock
