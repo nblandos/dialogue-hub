@@ -22,18 +22,24 @@ describe('MessageList', () => {
   it('calls scrollIntoView when messages are updated', () => {
     vi.useFakeTimers();
 
-    const { container, rerender } = render(<MessageList messages={[]} />);
-    const messagesEnd = container.lastChild;
-    messagesEnd.scrollIntoView = vi.fn();
+    const scrollIntoViewMock = vi.fn();
+    const originalScrollIntoView = HTMLElement.prototype.scrollIntoView;
+    HTMLElement.prototype.scrollIntoView = scrollIntoViewMock;
 
-    const newMessages = [
-      { content: 'New message', isUser: false, isLoading: false },
-    ];
-    rerender(<MessageList messages={newMessages} />);
+    try {
+      const { rerender } = render(<MessageList messages={[]} />);
 
-    vi.advanceTimersByTime(110);
-    expect(messagesEnd.scrollIntoView).toHaveBeenCalledWith({
-      behavior: 'smooth',
-    });
+      const newMessages = [
+        { content: 'New message', isUser: false, isLoading: false },
+      ];
+      rerender(<MessageList messages={newMessages} />);
+
+      vi.advanceTimersByTime(110);
+      expect(scrollIntoViewMock).toHaveBeenCalledWith({
+        behavior: 'smooth',
+      });
+    } finally {
+      HTMLElement.prototype.scrollIntoView = originalScrollIntoView;
+    }
   });
 });

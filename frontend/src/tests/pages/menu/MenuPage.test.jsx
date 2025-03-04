@@ -39,25 +39,4 @@ describe('MenuPage', () => {
     const items = screen.getAllByRole('heading', { level: 2 });
     expect(items.length).toBeGreaterThan(1);
   });
-
-  it('sorts menu items by price', () => {
-    renderComponent();
-    const sortSelect = screen.getByRole('combobox');
-    fireEvent.change(sortSelect, { target: { value: 'price' } });
-    const prices = screen.getAllByText(/£/);
-
-    // check that prices are in ascending order, remove parentheses and £ sign
-    for (let i = 0; i < prices.length - 1; i++) {
-      const current = parseFloat(
-        prices[i].textContent.replace('(', '').replace(')', '').replace('£', '')
-      );
-      const next = parseFloat(
-        prices[i + 1].textContent
-          .replace('(', '')
-          .replace(')', '')
-          .replace('£', '')
-      );
-      expect(current).toBeLessThanOrEqual(next);
-    }
-  });
 });

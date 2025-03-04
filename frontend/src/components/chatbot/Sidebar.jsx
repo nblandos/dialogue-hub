@@ -5,7 +5,6 @@ import MessageList from './MessageList';
 const Sidebar = ({ isOpen }) => {
   // Note: you must change tailwind accessibility classes aswell for breakpoint, e.g. change 'xl' to 'md'
   const BREAKPOINT = 768; // breakpoint for mobile screen vertical sidebar
-  const HEADER_HEIGHT = 88;
 
   const calcMinWidth = () => Math.min(200, window.innerWidth * 0.2);
   const calcMaxWidth = () => Math.min(1200, window.innerWidth * 0.8);
@@ -24,6 +23,7 @@ const Sidebar = ({ isOpen }) => {
   const [isVerticalLayout, setIsVerticalLayout] = useState(
     window.innerWidth < BREAKPOINT
   );
+  const [headerHeight, setHeaderHeight] = useState(0);
 
   const [messages, setMessages] = useState([
     {
@@ -35,10 +35,39 @@ const Sidebar = ({ isOpen }) => {
 
   const [userId] = useState(() => crypto.randomUUID());
 
+  const updateHeaderHeight = () => {
+    const headerElement = document.querySelector('nav');
+    if (headerElement) {
+      setHeaderHeight(headerElement.offsetHeight);
+    }
+  };
+
+  useEffect(() => {
+    updateHeaderHeight();
+    // Create a resize observer to detect header height changes
+    const resizeObserver = new ResizeObserver(() => {
+      updateHeaderHeight();
+    });
+
+    const headerElement = document.querySelector('nav');
+    if (headerElement) {
+      resizeObserver.observe(headerElement);
+    }
+
+    return () => {
+      if (headerElement) {
+        resizeObserver.unobserve(headerElement);
+      }
+      resizeObserver.disconnect();
+    };
+  }, []);
+
   useEffect(() => {
     const handleResize = () => {
       const vertical = window.innerWidth < BREAKPOINT;
       setIsVerticalLayout(vertical);
+
+      updateHeaderHeight();
 
       if (vertical) {
         // Reset to vertical defaults
@@ -47,7 +76,7 @@ const Sidebar = ({ isOpen }) => {
       } else {
         // Reset to horizontal defaults
         setWidth(getDefaultWidth());
-        setHeight(window.innerHeight - HEADER_HEIGHT);
+        setHeight(window.innerHeight - headerHeight);
       }
     };
 
@@ -153,15 +182,15 @@ const Sidebar = ({ isOpen }) => {
   const sidebarStyle = {
     width: !isVerticalLayout ? `${width}px` : '100%',
     height: !isVerticalLayout
-      ? `calc(100vh - ${HEADER_HEIGHT}px)`
+      ? `calc(100vh - ${headerHeight}px)`
       : `${height}px`,
-    top: !isVerticalLayout ? `${HEADER_HEIGHT}px` : 'auto',
+    top: !isVerticalLayout ? `${headerHeight}px` : 'auto',
   };
 
   return (
     <div
       style={sidebarStyle}
-      className={`fixed bottom-0 left-0 z-40 bg-white shadow-lg transition-transform duration-300 ease-in-out ${transformClasses}`}
+      className={`fixed bottom-0 left-0 z-20 bg-white shadow-lg transition-transform duration-300 ease-in-out ${transformClasses}`}
     >
       <div className="relative h-full">
         <div className="flex h-full flex-col">

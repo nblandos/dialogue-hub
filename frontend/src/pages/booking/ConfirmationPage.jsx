@@ -105,13 +105,13 @@ function ConfirmationPage() {
           case 'INVALID_REQUEST':
             throw new Error('Missing booking data. Please fill in all fields.');
           case 'INVALID_DATA':
-            throw new Error(data.message || 'Booking data is invalid.');
+            throw new Error(data.message);
           case 'EMAIL_ERROR':
             throw new Error('Booking created but email confirmation failed.');
           case 'SERVER_ERROR':
             throw new Error('A server error occurred. Please try again later.');
           default:
-            throw new Error(data.message || 'Failed to create booking.');
+            throw new Error(data.message);
         }
       }
 

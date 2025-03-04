@@ -7,7 +7,6 @@ from src.config.config import Config
 class TestConfig(Config):
     TESTING = True
     SQLALCHEMY_DATABASE_URI = 'sqlite:///:memory:'
-    # Remove Azure-related configs since they're not needed for these tests
     DEBUG = True
     MAIL_SUPPRESS_SEND = True
 

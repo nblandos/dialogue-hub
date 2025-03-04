@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React from 'react';
 import { initialMenu, popularOrders } from './homeData';
 import {
   FaArrowDown,
@@ -6,32 +6,10 @@ import {
   FaCalendarAlt,
   FaGraduationCap,
 } from 'react-icons/fa';
+import VideoContainer from '../../components/common/VideoContainer';
 import tubeMap from './images/tube_map.png';
 
 const HomePage = () => {
-  const [hoveredVideo, setHoveredVideo] = useState(null);
-  const videoRefs = useRef({});
-
-  const handleMouseEnter = (name) => {
-    setHoveredVideo(name);
-    if (videoRefs.current[name]) {
-      videoRefs.current[name].contentWindow.postMessage(
-        '{"event":"command","func":"playVideo","args":""}',
-        '*'
-      );
-    }
-  };
-
-  const handleMouseLeave = (name) => {
-    setHoveredVideo(null);
-    if (videoRefs.current[name]) {
-      videoRefs.current[name].contentWindow.postMessage(
-        '{"event":"command","func":"pauseVideo","args":""}',
-        '*'
-      );
-    }
-  };
-
   return (
     <div className="flex flex-col items-center bg-gray-100 p-6 pt-32 lg:flex-row lg:items-start">
       <div className="flex w-full flex-col items-center rounded-lg border-gray-300 bg-white p-4 text-center lg:w-3/4">
@@ -72,21 +50,15 @@ const HomePage = () => {
             <div
               key={order.name}
               className="flex flex-col items-center text-center"
-              onMouseEnter={() => handleMouseEnter(order.name)}
-              onMouseLeave={() => handleMouseLeave(order.name)}
               data-screen-reader-text={order.name}
             >
               <p className="mb-2 text-xl font-semibold">{order.name}</p>
-              <div className="relative mt-2 w-full pt-[177.77%]">
-                <iframe
-                  loading="lazy"
-                  className="absolute left-0 top-0 h-full w-full rounded-lg shadow-md transition-transform duration-300 hover:scale-105"
-                  ref={(el) => (videoRefs.current[order.name] = el)}
-                  src={order.video}
-                  title={order.name}
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                  allowFullScreen
-                ></iframe>
+              <div className="w-full max-w-[350px]">
+                <VideoContainer
+                  name={order.name}
+                  videoUrl={order.video}
+                  enableHoverEnlarge={true}
+                />
               </div>
             </div>
           ))}
@@ -227,28 +199,21 @@ const HomePage = () => {
             <React.Fragment key={item.name}>
               <div
                 className="flex w-full flex-col items-center text-center"
-                onMouseEnter={() => handleMouseEnter(item.name)}
-                onMouseLeave={() => handleMouseLeave(item.name)}
                 data-screen-reader-text={item.name}
               >
                 <p className="mb-4 text-xl font-semibold">{item.name}</p>
-                <div
-                  className="relative h-auto w-full"
-                  style={{ width: '230px', paddingTop: '177.77%' }}
-                >
-                  <iframe
-                    loading="lazy"
-                    ref={(el) => (videoRefs.current[item.name] = el)}
-                    src={
+                <div className="w-full max-w-[230px]">
+                  {' '}
+                  {/* Control max width */}
+                  <VideoContainer
+                    name={item.name}
+                    videoUrl={
                       initialMenu.find(
                         (menuItem) => menuItem.name === item.name
                       )?.video
                     }
-                    title={item.name}
-                    className="absolute left-0 top-0 h-full w-full rounded-lg shadow-md transition-transform hover:scale-105"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowFullScreen
-                  ></iframe>
+                    enableHoverEnlarge={true}
+                  />
                 </div>
               </div>
               {index < 2 && (
