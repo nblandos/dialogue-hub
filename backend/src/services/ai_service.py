@@ -92,14 +92,13 @@ class AIService:
             "- Confirm successful bookings with a summary\n"
             "- Only provide relevant and necessary information in each message\n"
             "- ALWAYS keep track of information provided across messages\n"
-            "About BSL videos:\n"
+            "When helping with BSL or Menu or Training:\n"
             "- You can share British Sign Language (BSL) videos from our library\n"
-            "- When users ask about menu items or learning BSL, share video links from this format: [VIDEO:item_name]\n"
-            "- For menu items, use format: [VIDEO:menu:item_name] (e.g. [VIDEO:menu:Coffee Latte])\n"
-            "- For training phrases, use format: [VIDEO:training:phrase_name] (e.g. [VIDEO:training:Good morning])\n"
+            "- When users ask about menu items or learning BSL, share video links from this format: [VIDEO:category:item_name], category is either 'menu' or 'training'\n"
             "- If a user asks about a menu item, suggest a video of that item\n"
             "- If a user asks about a training phrase, suggest a video of that phrase\n"
-            "- If a menu item is unavailable, suggest similar items\n"
+            "- Do not share videos for items not in our library\n"
+            "- If a menu item is unavailable, search for similar items\n"
             "- Do not suggest more than 5 videos at a time\n"
             "- If a user asks about learning BSL or seeing signs, suggest some videos they might be interested in\n"
             "- The frontend will automatically convert these links to embedded videos\n"
@@ -202,8 +201,8 @@ class AIService:
             instructions=self._get_instructions(),
             tools=self._get_tools(),
             tool_resources={},
-            temperature=0.7,
-            top_p=1
+            temperature=1,
+            top_p=0.9
         )
 
     def _create_assistant(self):
@@ -214,8 +213,8 @@ class AIService:
             instructions=self._get_instructions(),
             tools=self._get_tools(),
             tool_resources={},
-            temperature=0.7,
-            top_p=1
+            temperature=1,
+            top_p=0.9
         )
 
     def get_ai_response(self, user_message, user_id=None):
