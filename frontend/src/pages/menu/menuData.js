@@ -28,44 +28,12 @@ const initialMenu = [
     video: 'https://www.youtube.com/embed/cLClvpC7Wlw?enablejsapi=1',
   },
   {
-    name: 'Capuccino',
-    video: 'https://www.youtube.com/embed/QCcnsE5Orkw?enablejsapi=1',
-  },
-  {
-    name: 'Coffee Latte',
-    video: 'https://www.youtube.com/embed/jAFvsngFVKA?enablejsapi=1',
-  },
-  {
-    name: 'Macchiato',
-    video: 'https://www.youtube.com/embed/doGliOg9KZo?enablejsapi=1',
-  },
-  {
     name: 'Breakfast Tea',
     video: 'https://www.youtube.com/embed/cJraaj-G23U?enablejsapi=1',
   },
   {
-    name: 'Earl Grey',
-    video: 'https://www.youtube.com/embed/Q9pLCXIapjU?enablejsapi=1',
-  },
-  {
-    name: 'Pepper Mint',
-    video: 'https://www.youtube.com/embed/4E-GXOYgoNE?enablejsapi=1',
-  },
-  {
     name: 'Hot Chocolate',
     video: 'https://www.youtube.com/embed/Ief4HjAx5FA?enablejsapi=1',
-  },
-  {
-    name: 'Chai Latte',
-    video: 'https://www.youtube.com/embed/QeAtUyAjjZE?enablejsapi=1',
-  },
-  {
-    name: 'Normal Milk',
-    video: 'https://www.youtube.com/embed/N9pjyODuW6g?enablejsapi=1',
-  },
-  {
-    name: 'Skimmed Milk',
-    video: 'https://www.youtube.com/embed/MZDTpMX_YSQ?enablejsapi=1',
   },
   {
     name: 'Oat Milk',
@@ -134,10 +102,6 @@ const initialMenu = [
   {
     name: 'Croissant',
     video: 'https://www.youtube.com/embed/y5fKVS0ngEg?enablejsapi=1',
-  },
-  {
-    name: 'Almond Croissant',
-    video: 'https://www.youtube.com/embed/VKSP4gTohAI?enablejsapi=1',
   },
   {
     name: 'Pain Au Chocolat',
