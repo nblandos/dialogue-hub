@@ -26,9 +26,9 @@ describe('MenuPage', () => {
   it('filters menu items based on search term', () => {
     renderComponent();
     const searchInput = screen.getByPlaceholderText('Search...');
-    fireEvent.change(searchInput, { target: { value: 'latte' } });
+    fireEvent.change(searchInput, { target: { value: 'milk' } });
     // check that items that don't contain the search term are not rendered
-    const filteredItems = screen.queryAllByText(/latte/i);
+    const filteredItems = screen.queryAllByText(/milk/i);
     expect(filteredItems.length).toBeGreaterThan(0);
   });
 

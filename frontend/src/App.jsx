@@ -7,7 +7,7 @@ import BookingSuccessPage from './pages/booking/BookingSuccessPage';
 import MenuPage from './pages/menu/MenuPage';
 import TrainingPage from './pages/training/TrainingPage';
 import HomePage from './pages/home/HomePage';
-import Footer from './components/Footer/Footer';
+import Footer from './components/footer/Footer';
 
 function App() {
   const { pathname } = useLocation();
