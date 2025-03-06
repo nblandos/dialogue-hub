@@ -214,3 +214,39 @@
 .dyslexic-font {
   font-family: 'OpenDyslexic', 'Comic Sans MS', sans-serif;
 }
+
+.footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  background-color: white;
+}
+
+.footer-links, .footer-socials {
+  display: flex;
+  gap: 10px;
+}
+
+.footer-link, .footer-social-link, .footer-address-link {
+  text-decoration: none;
+  color: #333;
+  font-weight: bold;
+  transition: transform 0.2s, color 0.2s;
+}
+
+.footer-link:hover, .footer-social-link:hover, .footer-address-link:hover {
+  transform: scale(1.1);
+  color: rgb(0, 106, 253);
+}
+
+.footer-logo {
+  width: 350px;
+  height: auto;
+}
+
+.footer-address {
+  text-align: right;
+  color: #555;
+  font-weight: bold;
+}
