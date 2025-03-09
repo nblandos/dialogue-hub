@@ -202,7 +202,7 @@ def test_get_ai_response_with_booking_function(mock_create_booking, mock_openai)
     tool_call.function.name = "create_booking"
     tool_call.function.arguments = json.dumps({
         "user": {"email": "test@example.com", "full_name": "Test User"},
-        "timeslots": [{"start_time": "2023-06-01T10:00:00+00:00"}]
+        "timeslots": [{"start_time": "2025-06-01T10:00:00+00:00"}]
     })
 
     run_action = MagicMock()
@@ -219,7 +219,7 @@ def test_get_ai_response_with_booking_function(mock_create_booking, mock_openai)
     booking_mock.to_dict.return_value = {
         "id": "booking-1",
         "user": {"email": "test@example.com"},
-        "timeslots": [{"start_time": "2023-06-01T10:00:00+00:00"}]
+        "timeslots": [{"start_time": "2025-06-01T10:00:00+00:00"}]
     }
     mock_create_booking.return_value = booking_mock
 
@@ -252,8 +252,8 @@ def test_get_ai_response_with_availability_function(mock_get_availability, mock_
     tool_call.id = "tool-call-id"
     tool_call.function.name = "get_availability"
     tool_call.function.arguments = json.dumps({
-        "start_date": "2023-06-01T09:00:00+00:00",
-        "end_date": "2023-06-01T17:00:00+00:00"
+        "start_date": "2025-06-01T09:00:00+00:00",
+        "end_date": "2025-06-01T17:00:00+00:00"
     })
 
     run_action = MagicMock()
@@ -267,8 +267,8 @@ def test_get_ai_response_with_availability_function(mock_get_availability, mock_
     mock_openai.beta.threads.runs.submit_tool_outputs.return_value = run_completed
 
     mock_get_availability.return_value = {
-        "2023-06-01T10:00:00+00:00": 1,
-        "2023-06-01T11:00:00+00:00": 0
+        "2025-06-01T10:00:00+00:00": 1,
+        "2025-06-01T11:00:00+00:00": 0
     }
 
     content_mock = MagicMock()

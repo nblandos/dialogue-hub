@@ -28,12 +28,44 @@ const initialMenu = [
     video: 'https://www.youtube.com/embed/cLClvpC7Wlw?enablejsapi=1',
   },
   {
+    name: 'Cappuccino',
+    video: 'https://www.youtube.com/embed/om_rAraXRqM?enablejsapi=1',
+  },
+  {
+    name: 'Coffee Latte',
+    video: 'https://www.youtube.com/embed/f27JOKn4G0M?enablejsapi=1',
+  },
+  {
+    name: 'Macchiato',
+    video: 'https://www.youtube.com/embed/J0QlU1TioAg?enablejsapi=1',
+  },
+  {
     name: 'Breakfast Tea',
+    video: 'https://www.youtube.com/embed/VmIoqq3qNfE?enablejsapi=1',
+  },
+  {
+    name: 'Earl Grey',
     video: 'https://www.youtube.com/embed/cJraaj-G23U?enablejsapi=1',
+  },
+  {
+    name: 'Pepper Mint Tea',
+    video: 'https://www.youtube.com/embed/cjCoADGVv8Q?enablejsapi=1',
   },
   {
     name: 'Hot Chocolate',
     video: 'https://www.youtube.com/embed/Ief4HjAx5FA?enablejsapi=1',
+  },
+  {
+    name: 'Chai Latte',
+    video: 'https://www.youtube.com/embed/zq9Y1PWsZtE?enablejsapi=1',
+  },
+  {
+    name: 'Normal Milk',
+    video: 'https://www.youtube.com/embed/tRLiTM4St90?enablejsapi=1',
+  },
+  {
+    name: 'Skimmed Milk',
+    video: 'https://www.youtube.com/embed/Bfh8wmI_4YQ?enablejsapi=1',
   },
   {
     name: 'Oat Milk',
@@ -108,10 +140,6 @@ const initialMenu = [
     video: 'https://www.youtube.com/embed/lHgwZco2fW8?enablejsapi=1',
   },
   {
-    name: 'Nutella Doughnut',
-    video: 'https://www.youtube.com/embed/rY6-SZD_N2k?enablejsapi=1',
-  },
-  {
     name: 'Apricot Danish',
     video: 'https://www.youtube.com/embed/Urk63YQwS3M?enablejsapi=1',
   },
@@ -126,10 +154,6 @@ const initialMenu = [
   {
     name: 'Chocolate&Custard Muffin',
     video: 'https://www.youtube.com/embed/lHd20tLqWls?enablejsapi=1',
-  },
-  {
-    name: 'Plain Nata',
-    video: 'https://www.youtube.com/embed/5VKBVTCsyi8?enablejsapi=1',
   },
   {
     name: 'Matcha&Raspberry Coconut Cookie',

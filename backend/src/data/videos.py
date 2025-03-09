@@ -11,7 +11,7 @@ menu_videos = [
     {"name": "Macchiato"},
     {"name": "Breakfast Tea"},
     {"name": "Earl Grey"},
-    {"name": "Pepper Mint"},
+    {"name": "Pepper Mint Tea"},
     {"name": "Hot Chocolate"},
     {"name": "Chai Latte"},
     {"name": "Normal Milk"},
@@ -33,14 +33,11 @@ menu_videos = [
     {"name": "Kombucha Citro Hops"},
     {"name": "Kombucha Ginger&Hibiscus"},
     {"name": "Croissant"},
-    {"name": "Almond Croissant"},
     {"name": "Pain Au Chocolat"},
-    {"name": "Nutella Doughnut"},
     {"name": "Apricot Danish"},
     {"name": "Pain Aux Raisins"},
     {"name": "Cinnamon Bun"},
     {"name": "Chocolate&Custard Muffin"},
-    {"name": "Plain Nata"},
     {"name": "Matcha&Raspberry Coconut Cookie"},
     {"name": "Salted Caramel Brownie"}
 ]
