@@ -1,194 +1,155 @@
 # COMP0016 Group 26: Avanade – AgeTech Diversibility Café Scheduling for Elderly Users​
 
-An accessible timeslot booking tool for the Dialogue Hub's [Cafe](https://dialoguehub.co.uk/dialogue-cafe). Our tool provides an AI chatbot to assist with booking and is designed with accessibility in mind.
+An accessible timeslot booking website for Dialogue Hub's Café, featuring an AI assistant to assist users with bookings and other queries.
 
-## Group Members
+## Deployment Guide
 
-- Nicholas Blandos
-- Emir Durahim
-- Efe Tekin
-- Pratham Shah
+### Introduction
 
-## Setup
+The project has already been deployed and can be found [here](https://purple-coast-0af99a203.4.azurestaticapps.net/)
 
-Instructions on how to setup project for development
+This guide outlines the process for deployment in case you would like to do it in your own resource group.
 
-### Prerequisites
+### Development
 
-Install the following before running:
+These instructions outline how to run the project locally, if you would like to skip to only deploying the project, then only follow the Azure Set Up section and keep track of the necessary environment variables.
 
-- Docker (docker --version)
-- Docker Compose (docker-compose --version)
-- Python (python --version / python3 --version)
-- Pip (pip --version / pip3 --version)
-- Node (node --version)
-- NPM (npm --version)
+#### Prerequisites
 
-Can verify installations by checking version
-Note: Docker is optional and only necessary if you want to run backend and frontend in one command
+- Git
+- Docker
+- Azure CLI
 
-### Backend Setup
-
-Navigate to backend directory `cd backend`
-
-#### Configuring Virtual Environment
-
-To activate a virtual environment in VSCode:
-
-- Press <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>P</kbd> and search 'Python: Select Interpreter'
-- Press **+Create Virtual Environment**, Select **Venv**, Then select your preferred Python3 version, Finally check **backend/requirements.txt** as dependencies to install and click **OK**
-- The virtual environment with the required packages should have been created
-- Reload your terminal and the new venv should be active
-- You should have a **.venv** folder which contains information about the virtual enviroment, can delete this to remove the virtual environment
-
-#### Applying Migrations (Local Database Setup)
-
-- Run `flask db upgrade` to apply migrations to the database (This will create the local database file)
-- If you make changes to the models, you will need to generate a new migration file by running `flask db migrate -m "migration message"`
-
-### Frontend Setup
-
-Navigate to the frontend directory `cd frontend`
-
-- Run `npm install` to install frontend packages
-
-### VSCode Extensions Setup
-
-To improve your workflow, I recommend installing the following VSCode extensions:
-
-- Vitest (for frontend unit testing)
-- Prettier (frontend code formatter)
-- ESLint (frontend code linter)
-- autopep8 (backend code formatter)
-- Flake8 (backend code linter)
-- Tailwind CSS Intellisense (autocompletion for TailwindCSS - frontend CSS library)
-
-In VSCode settings you can enable format on save so that the formatters take effect on save
-
-## Add Environment Variables
-
-Environment variables are used to store sensitive information such as API keys, passwords, etc. These are stored in a `.env` file in the root of the respective directories.
-
-### Frontend Environment Variables
-
-Add the following environment variables to a `.env` file in the frontend directory:
+Clone the GitHub Repository with the following command:
 
 ```bash
-VITE_API_URL=http://localhost:5001
+git clone https://github.com/nblandos/dialogue-hub.git
 ```
 
-### Backend Environment Variables
+#### Environment Variables
 
-Add the following environment variables to a `.env` file in the backend directory:
+In the 'backend' directory create a '.env' file, the file should contain the following:
 
-```bash
-SENDER_EMAIL=""
-SENDER_PASSWORD=""
-
+```
+SENDER_EMAIL= Confirmation email sender
+SENDER_PASSWORD= 16 digit app password for email
 KEY_VAULT_NAME=
 OPENAI_ENDPOINT_URL=
 OPENAI_API_SECRET_NAME=
 DEPLOYMENT_NAME=
-
+AZURE_ASSISTANT_ID=
 AZURE_CLIENT_ID=
 AZURE_CLIENT_SECRET=
 AZURE_TENANT_ID=
-AZURE_ASSISTANT_ID=
 ```
 
-### Azure Authentication
+You must set up an email for the confirmation email sender and generate an app password for it. The rest of the Azure related variables can be derived from the next section.
 
-You may also need to authenticate with Azure to access the key vault. To do this, you can run the following command in the backend directory:
+#### Azure Set Up
+
+1. Login to your azure account in the CLI with the following command:
+
+   ```bash
+   az login
+   ```
+
+2. On the Azure portal, create a resource group
+
+3. In Azure create an 'App Registration'
+
+   - Under 'Manage', 'Certificates and Secrets', create a new 'client secret'
+   - Make sure to copy the value of the client secret which will be AZURE_CLIENT_SECRET
+   - In the 'Overview' section of the App Registration, you can find the 'Application (client) ID' which is AZURE_CLIENT_ID and the 'Directory (tenant) ID' which is AZURE_TENANT_ID
+
+4. Create an 'Azure OpenAI' resource in the resource group
+
+   - The OPENAI_ENDPOINT_URL can be found in the 'Keys and Endpoints' section under 'Resource Management'
+   - Also copy one of the API KEYS here for later use
+   - Go to the Azure AI Foundry Portal and Navigate to 'Assistants'. Create a new Assistant, AZURE_ASSISTANT_ID is the 'Assistant id' of this assistant
+   - Additionally, the name of the AI model deployment chosen for this assistant is DEPLOYMENT_NAME, e.g. 'gpt-4'
+
+5. Next create a 'Key Vault' resource
+   - Under 'Objects', 'Secrets', add the copied API key for the OpenAI resource
+   - OPENAI_API_SECRET_NAME should be the name of this secret
+   - KEY_VAULT_NAME should be the name of the key vault
+   - Under 'Access Policies', add the App Registration created in 3), with Secret retrieval permissions
+
+Alternatively, if you already have access to our existing resource group and would like to use it, please contact us for the corresponding environment variables.
+
+#### Running the Project Locally
+
+Once you have created the necessary environment variables, you can run the project locally with the following command:
 
 ```bash
-az login
+docker compose up --build
 ```
 
-## Running the Project
+The frontend will be accessible at: http://localhost:3000/  
+The backend will be accessible at: http://localhost:5001/
 
-These are instructions on how to run the project after you have completed setup shown above
+#### Running Tests
 
-> [!NOTE]
-> Make sure to quit port in terminal with <kbd>Ctrl</kbd> + <kbd>C</kbd> otherwise port will be in use if you re-run, an easy way to kill active ports in terminal is `npx kill-port PORT-NUMBER`
+**Prerequisites**
 
-### Frontend Only
+It is expected that you have 'pip', 'Python3', 'Node' and 'npm' installed for this section
 
-- Navigate to `frontend/`
-- Run `npm run dev`
-- Frontend should run on port 3000 and can be accessed at http://localhost:3000/
+- In the backend, run 'pip install -r requirements.txt' preferably in a virtual environment
+- In the frontend, run 'npm install'
 
-### Backend Only
+**Commands to run**
 
-- Navigate to `backend/`
-- Run `python app.py`
-- Frontend should run on port 5001 and can be accessed at http://localhost:5001/
-
-### Frontend + Backend with Docker Compose
-
-- Navigate to `/` root directory
-- Run `docker compose build` to build an image, You only need to rebuild image if you change something that affects the docker image, e.g. dependencies
-- Run `docker compose up` to run both the backend and frontend on the ports mentioned above
-- Run `docker compose down` to stop and remove Docker containers (cleans up docker environment), <kbd>Ctrl</kbd> + <kbd>C</kbd> to stop docker should be enough unless there is issues
-- You can check docker-compose.yaml file in root and Dockerfile in backend + frontend to see how Docker is configured
-
-## Helpful Commands (For testing, etc.)
-
-### To Run Backend Unit Tests
-
-- Run from `backend/` directory
+To run frontend tests and show coverage use the following command in frontend/:
 
 ```bash
-pytest -v
+npm run test:coverage
 ```
 
-> [!NOTE]
-> -v flag is optional but shows more details about the specific tests that passed/failed
-
-### To Check Backend Unit Test Coverage
-
-- Run from `backend/` directory
+To run backend tests and show coverage use the following command in backend/:
 
 ```bash
 coverage run -m pytest
 coverage report
 ```
 
-### To Run Frontend Unit Tests
+### Production Guide
 
-- Run from `frontend/` directory
+The following instructions describe how to set up Azure resources to deploy the project on the web, we assume that Azure Set Up has already been completed from the Development Guide.
 
-```bash
-npm run test:run
-```
+This diagram illustrates a high-level system architecture which represents how the project will be deployed
 
-Alternatively, to update with file changes:
+![System Architecture](./frontend/public/system-arch.svg)
 
-```bash
-npm run test
-```
+#### Backend Deployment
 
-### To Check Frontend Unit Test Coverage
+1. In your resource group, create a new resource 'Web App + Database'
 
-- Run from `frontend/` directory
+   - For runtime stack, select 'Python 3.12'
+   - For Database Engine, select 'PostgreSQL – Flexible Server'
+   - Under this resource, navigate to 'Settings', 'Environment variables', here you should add all the environment variables mentioned in the Development Guide
+   - While here, Select AZURE_POSTGRESQL_CONNECTIONSTRING and copy the password string after 'Password=' for use later
 
-```bash
-npm run test:coverage
-```
+2. Under your 'App Service' resource, navigate to 'Settings', 'Service Connector'
 
-### To Run Frontend E2E (Cypress) Tests
+   - There should already be a 'DB for PostgreSQL flexible server' connector, select it and press edit
+   - In 'Client Type', select 'Django'
+   - Under 'Authentication', select 'Connection String' and paste the previously copied password
+   - Check 'Store Secret in Key Vault' and under 'Key Vault Connection', 'Create New', finally select your existing Key Vault and finish creation
 
-- Run from `frontend/` directory
-- First have frontend running with `npm run dev`
+3. Finally, navigate to 'Development Tools', 'SSH' under the App Service resource
 
-```bash
-npm run test:e2e:run
-```
+   - Press 'Go' and you should be taken to a terminal
+   - Run 'flask db upgrade' to perform database migrations
 
-Alternatively, to update with file changes:
+4. The backend should now be deployed as an App Service
 
-```bash
-npm run test:e2e
-```
+#### Frontend Deployment
 
-> [!NOTE]
-> Check package.json scripts for all frontend commands
+1. In your resource group, create a new resource 'Static Web App'
+
+2. For the source control section, you need to have access to the GitHub repository, either contact us to be added to the repository or fork the existing repository and select it here and create the resource
+
+3. Under this Static Web App, navigate to 'Settings', 'Environment variables', add a variable called 'VITE_API_URL' which holds the base URL of the backend web app
+
+4. Under the previously created App Service for the backend, add an environment variable called 'FRONTEND_URL' which holds the URL of the Static Web App.
+
+The website should now be deployed and accessible at the URL of the Static Web App
