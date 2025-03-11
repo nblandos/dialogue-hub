@@ -60,6 +60,43 @@ class AIService:
     def _get_instructions(self):
         """Return the assistant instructions with current date"""
         current_date = time.strftime("%A, %B %d, %Y")
+
+        faq_instructions = "Frequently Asked Questions:\n"
+        faq_responses = [
+            ("GENERAL INFORMATION", ".")
+            ("What is Dialogue Café?","Dialogue Café is an inclusive coffee space where deaf and hard-of-hearing individuals work as baristas, offering a unique experience that promotes British Sign Language (BSL) and deaf culture. Our aim is to create an interactive and welcoming environment where customers can engage in sign language while enjoying high-quality coffee and food."),
+            ("Where is Dialogue Café located?","Currently, Dialogue Café operates at the University of East London Docklands Campus within the Royal Docks Centre for Sustainability. A second location is set to open in Stratford (Newham) around April-May 2025."),
+            ("What are the opening hours of Dialogue Café?","Currently, Monday to Thursday between 08:00-17:00 Friday 08:00-13:00. Dialogue Café is closed on weekends."),
+            ("How can I contact Dialogue Café?", "You can reach us via: Email: info@dialoguehub.co.uk, Social Media: Instagram: dialogue.hub, LinkedIn : Dialogue Hub and Dialogue Café UK, Website: www.dialoguehub.co.uk"),
+            ("Is there a membership or sign-up required to visit?","No, Dialogue Café is open to everyone! You do not need a membership or prior sign-up to visit. Simply drop by, place an order, and enjoy your experience."),
+            ("ORDERING AND MENU", ".")
+            ("What's British Sign Language (BSL)?", "British Sign Language (BSL) is the primary language of the deaf community in the UK. It uses hand movements, facial expressions, and body language to communicate. At Dialogue Café, we encourage customers to engage with BSL by ordering using sign language, making it a fun and interactive experience."),
+            ("How do I order food and drinks in BSL?","Ordering in BSL is simple! Our café provides easy-to-follow visual guides, and our friendly deaf baristas are happy to assist you. You can also use our digital screens with step-by-step instructions to learn and sign your order. If you're new to BSL, don't worry—we'll guide you through the process and make it an enjoyable experience"),
+            ("What payment methods do you accept?", "We are cashless and we accept all major credit and debit cards, contactless payments, and mobile wallets (Apple Pay, Google Pay)."),
+            ("Do you offer vegetarian or vegan options?", "Yes, we offer a variety of vegetarian and vegan options on our menu."),
+            ("Can I see the menu online?", "Yes, our menu is available on our website at www.dialoguehub.co.uk."),
+            ("Do you have gluten-free options?", "Yes, we offer gluten-free options on our menu."),
+            ("Are there any special promotions or discounts available?", "We are currently applying 15% to UEL Students.")
+            ("Can I place an order in advance?", "Currently, we do not accept advance orders."),
+            ("FACILITIES AND SERVICES", ".")
+            ("Do you provide Wi-Fi for customers?", "Yes, we offer free Wi-Fi for all customers."),
+            ("Is there a quiet space for studying or working?", "Yes, we have a designated quiet area for studying or working."),
+            ("Do you have accessibility features for people with disabilities?", "Yes, Dialogue Café is designed to be accessible to everyone, including individuals with disabilities. We have wheelchair ramps, accessible restrooms, and staff trained in British Sign Language (BSL) to assist customers."),
+            ("Do you offer take-away or delivery services?", "Yes, we offer take-away services. Delivery services are not available at the moment."),
+            ("EVENTS AND COMMUNITY", ".")
+            ("Does Dialogue Café host any events or workshops?", "Yes. We do have school workshop and corporate workshop programmes. We are currently working on our event calendar."),
+            ("Can I get more information on School Workshop programme?", "Yes. It's on our web page. For more details, please contact us via email."),
+            ("Can I get more information on Corporate Workshop Programme?", "Yes. It's on our web page. For more details, please contact us via email."),
+            ("How can I participate in events at the café?", "It's free and open to public. For more details, please contact us via email."),
+            ("Can I host my own event at Dialogue Café", "Yes. It's on our web page. For more details, please contact us via email."),
+            ("Are there networking opportunities at the café?", "Yes. For more details, please contact us via email."),
+            ("Can I speak to a staff member if my question isn't answered by D-Bot?", "Yes. Any questions can be also answered through info@dialoguehub.co.uk"),
+        ]
+
+
+        for question, answer in faq_responses:
+            faq_instructions += f"Q: {question}\nA: {answer}\n\n"
+        
         return (
             f"You are an AI Assistant called D-Bot for Dialogue Hub's British Sign Language Cafe. "
             f"Today's date is {current_date}. "
