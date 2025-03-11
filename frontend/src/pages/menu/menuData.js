@@ -41,11 +41,11 @@ const initialMenu = [
   },
   {
     name: 'Breakfast Tea',
-    video: 'https://www.youtube.com/embed/VmIoqq3qNfE?enablejsapi=1',
+    video: 'https://www.youtube.com/embed/cJraaj-G23U?enablejsapi=1',
   },
   {
     name: 'Earl Grey',
-    video: 'https://www.youtube.com/embed/cJraaj-G23U?enablejsapi=1',
+    video: 'https://www.youtube.com/embed/VmIoqq3qNfE?enablejsapi=1',
   },
   {
     name: 'Pepper Mint Tea',
