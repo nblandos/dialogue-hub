@@ -4,19 +4,19 @@ import MenuDiv from '../../components/menu/MenuDiv';
 
 const MenuPage = () => {
   const [searchTerm, setSearchTerm] = useState('');
-  const [sortOption, setSortOption] = useState('name');
+  const [sortOption, setSortOption] = useState('asc');
 
   const filteredMenu = initialMenu
     .filter((item) =>
       item.name.toLowerCase().includes(searchTerm.toLowerCase())
     )
     .sort((a, b) => {
-      if (sortOption === 'name') {
+      if (sortOption === 'asc') {
         return a.name.localeCompare(b.name);
       }
-      // if (sortOption === 'price') {
-      //   return parseFloat(a.price.slice(1)) - parseFloat(b.price.slice(1));
-      // }
+      if (sortOption === 'desc') {
+        return b.name.localeCompare(a.name);
+      }
     });
 
   return (
@@ -50,11 +50,11 @@ const MenuPage = () => {
           className="rounded-lg border border-gray-300 p-2"
           value={sortOption}
           onChange={(e) => setSortOption(e.target.value)}
-          aria-label="Sort By"
-          data-screen-reader-text="Sort By"
+          aria-label="Sort Alphabetically"
+          data-screen-reader-text="Sort Alphabetically"
         >
-          <option value="name">Sort by Name</option>
-          <option value="price">Sort by Price</option>
+          <option value="asc">A - Z</option>
+          <option value="desc">Z - A</option>
         </select>
       </div>
       <MenuDiv filteredMenu={filteredMenu} />

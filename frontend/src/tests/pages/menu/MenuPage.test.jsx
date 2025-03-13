@@ -32,10 +32,18 @@ describe('MenuPage', () => {
     expect(filteredItems.length).toBeGreaterThan(0);
   });
 
-  it('sorts menu items by name', () => {
+  it('sorts menu items alphabetically', () => {
     renderComponent();
     const sortSelect = screen.getByRole('combobox');
-    fireEvent.change(sortSelect, { target: { value: 'name' } });
+    fireEvent.change(sortSelect, { target: { value: 'asc' } });
+    const items = screen.getAllByRole('heading', { level: 2 });
+    expect(items.length).toBeGreaterThan(1);
+  });
+
+  it('sorts menu items in reverse alphabetically', () => {
+    renderComponent();
+    const sortSelect = screen.getByRole('combobox');
+    fireEvent.change(sortSelect, { target: { value: 'desc' } });
     const items = screen.getAllByRole('heading', { level: 2 });
     expect(items.length).toBeGreaterThan(1);
   });
